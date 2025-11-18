@@ -1,38 +1,200 @@
-from typing import Optional
-from fastapi import APIRouter, Depends, HTTPException, Query
+import importlib
+from typing import Optional, List, Set
+from pathlib import Path
+from uuid import uuid4
+from fastapi import APIRouter, Depends, HTTPException, Query, Response, UploadFile, File
 from sqlalchemy.orm import Session
-from sqlalchemy import or_, asc, desc, func, text
+from sqlalchemy import asc, desc, func, text, cast as sa_cast, literal
+from sqlalchemy.types import Text
 from app.db.session import get_db
-from app.db.models import Property, User
+from app.db.models import Property, PropertyImage, User,Favorite
 from app.schemas.property import PropertyCreate, PropertyOut, PropertyUpdate
 from app.deps import get_current_user
+from app.api.ml_price_router import (
+    PriceInput as MLPriceInput,
+)
 
 router = APIRouter(prefix="/properties", tags=["properties"])
 
 ORDER_MAP = {
     "id": Property.id,
     "price": Property.price,
+    "rent_price": Property.rent_price,
     "area_sqm": Property.area_sqm,
     "bedrooms": Property.bedrooms,
 }
 
-TRGM_LIMIT = 0.2
+TRGM_LIMIT = 0.20
+
 
 def _rank(q: str):
-    return func.coalesce(
-        func.greatest(
-            func.similarity(func.coalesce(Property.city, ""), q),
-            func.similarity(func.coalesce(Property.neighborhood, ""), q),
-            func.similarity(func.coalesce(Property.title, ""), q),
-        ),
-        0.0,
+    """Similarity rank across city, neighborhood, title. Force SQL TEXT types."""
+    empty_txt = literal("", Text())
+    city = func.coalesce(sa_cast(Property.city, Text), empty_txt)
+    neigh = func.coalesce(sa_cast(Property.neighborhood, Text), empty_txt)
+    title = func.coalesce(sa_cast(Property.title, Text), empty_txt)
+    return func.greatest(
+        func.similarity(city, q),
+        func.similarity(neigh, q),
+        func.similarity(title, q),
     )
 
+
+def _favorite_id_set(db: Session, user_id: int, prop_ids: List[int]) -> Set[int]:
+    if not prop_ids:
+        return set()
+    rows = (
+        db.query(Favorite.property_id)
+        .filter(Favorite.user_id == user_id, Favorite.property_id.in_(prop_ids))
+        .all()
+    )
+    return {pid for (pid,) in rows}
+
+
+@router.get("/search")
+def search_properties(
+    db: Session = Depends(get_db),
+    _user=Depends(get_current_user),
+    q: Optional[str] = Query(None),
+    city: Optional[str] = None,
+    min_price: Optional[float] = None,
+    max_price: Optional[float] = None,
+    min_rent: Optional[float] = None,
+    max_rent: Optional[float] = None,
+    bedrooms_min: Optional[int] = None,
+    bedrooms_max: Optional[int] = None,
+    area_min: Optional[float] = None,
+    area_max: Optional[float] = None,
+    is_for_sale: Optional[bool] = None,
+    is_for_rent: Optional[bool] = None,
+    sort: str = Query("-id", regex="^-?(id|price|rent_price|area_sqm|bedrooms)$"),
+    page: int = Query(1, ge=1),
+    page_size: int = Query(20, ge=1, le=100),
+):
+    base = db.query(Property).filter(Property.is_active.is_(True))
+
+    if is_for_sale is not None:
+        base = base.filter(Property.is_for_sale.is_(is_for_sale))
+    if is_for_rent is not None:
+        base = base.filter(Property.is_for_rent.is_(is_for_rent))
+
+    if min_price is not None:
+        base = base.filter(Property.price >= min_price)
+    if max_price is not None:
+        base = base.filter(Property.price <= max_price)
+    if min_rent is not None:
+        base = base.filter(Property.rent_price >= min_rent)
+    if max_rent is not None:
+        base = base.filter(Property.rent_price <= max_rent)
+
+    if bedrooms_min is not None:
+        base = base.filter(Property.bedrooms >= bedrooms_min)
+    if bedrooms_max is not None:
+        base = base.filter(Property.bedrooms <= bedrooms_max)
+    if area_min is not None:
+        base = base.filter(Property.area_sqm >= area_min)
+    if area_max is not None:
+        base = base.filter(Property.area_sqm <= area_max)
+    if city:
+        base = base.filter(Property.city.ilike(f"%{city}%"))
+
+    using_trgm = False
+    if q:
+        try:
+            db.execute(text("SELECT set_limit(:lim)"), {"lim": TRGM_LIMIT})
+            r = _rank(q)
+            base = base.filter(r > TRGM_LIMIT)
+            using_trgm = True
+        except Exception:
+            db.rollback()
+            ilike = f"%{q}%"
+            base = base.filter(
+                func.coalesce(Property.city, "").ilike(ilike)
+                | func.coalesce(Property.neighborhood, "").ilike(ilike)
+                | func.coalesce(Property.title, "").ilike(ilike)
+            )
+
+    subq = base.subquery()
+    overall = db.query(
+        func.count(subq.c.id),
+        func.avg(subq.c.price),
+        func.min(subq.c.price),
+        func.max(subq.c.price),
+        func.avg(subq.c.rent_price),
+        func.min(subq.c.rent_price),
+        func.max(subq.c.rent_price),
+    ).one()
+
+    total = int(overall[0] or 0)
+    avg_sale, min_sale, max_sale = overall[1], overall[2], overall[3]
+    avg_rent, min_rent_v, max_rent_v = overall[4], overall[5], overall[6]
+    total_pages = (total + page_size - 1) // page_size if page_size else 1
+
+    sale_count = (
+        db.query(func.count(subq.c.id)).filter(subq.c.is_for_sale.is_(True)).scalar() or 0
+    )
+    rent_count = (
+        db.query(func.count(subq.c.id)).filter(subq.c.is_for_rent.is_(True)).scalar() or 0
+    )
+
+    desc_order = sort.startswith("-")
+    field = sort[1:] if desc_order else sort
+    col = ORDER_MAP[field]
+
+    if q and using_trgm:
+        try:
+            r = _rank(q)
+            base = base.order_by(
+                r.desc().nulls_last(),
+                (desc(col) if desc_order else asc(col)).nulls_last(),
+            )
+        except Exception:
+            db.rollback()
+            base = base.order_by((desc(col) if desc_order else asc(col)).nulls_last())
+    else:
+        base = base.order_by((desc(col) if desc_order else asc(col)).nulls_last())
+
+    rows = base.offset((page - 1) * page_size).limit(page_size).all()
+    prop_ids = [r.id for r in rows]
+    fav_set = _favorite_id_set(db, _user.id, prop_ids)
+
+    items = []
+    for r in rows:
+        d = PropertyOut.model_validate(r, from_attributes=True).model_dump()
+        d["is_favorited"] = (r.id in fav_set)
+        items.append(d)
+
+    return {
+        "page": page,
+        "page_size": page_size,
+        "total": total,
+        "total_pages": total_pages,
+        "stats": {
+            "sale": {
+                "count": int(sale_count),
+                "avg_price": float(avg_sale) if avg_sale is not None else None,
+                "min_price": float(min_sale) if min_sale is not None else None,
+                "max_price": float(max_sale) if max_sale is not None else None,
+            },
+            "rent": {
+                "count": int(rent_count),
+                "avg_rent": float(avg_rent) if avg_rent is not None else None,
+                "min_rent": float(min_rent_v) if min_rent_v is not None else None,
+                "max_rent": float(max_rent_v) if max_rent_v is not None else None,
+            },
+        },
+        "data": items,
+    }
+
+
 @router.get("/count")
-def property_count(db: Session = Depends(get_db), q: Optional[str] = None, city: Optional[str] = None):
+def property_count(
+    db: Session = Depends(get_db),
+    q: Optional[str] = None,
+    city: Optional[str] = None,
+):
     qset = db.query(Property).filter(Property.is_active.is_(True))
     if q:
-        db.execute(text("SELECT set_limit(:lim)"), {"lim": TRGM_LIMIT})
         qset = qset.filter(_rank(q) > TRGM_LIMIT)
     if city:
         qset = qset.filter(Property.city.ilike(f"%{city}%"))
@@ -54,10 +216,13 @@ def create_property(
     db.add(p)
     db.commit()
     db.refresh(p)
-    return p
+
+    d = PropertyOut.model_validate(p, from_attributes=True).model_dump()
+    d["is_favorited"] = False
+    return d
 
 
-@router.get("", response_model=list[PropertyOut])
+@router.get("", response_model=List[PropertyOut])
 def list_properties(
     db: Session = Depends(get_db),
     _user=Depends(get_current_user),
@@ -95,24 +260,45 @@ def list_properties(
     col = ORDER_MAP[field]
 
     if q:
-        db.execute(text("SELECT set_limit(:lim)"), {"lim": TRGM_LIMIT})
         rank = _rank(q)
         qset = qset.filter(rank > TRGM_LIMIT)
-        qset = qset.order_by(rank.desc().nulls_last(),
-                             (desc(col) if desc_order else asc(col)).nulls_last())
+        qset = qset.order_by(
+            rank.desc().nulls_last(),
+            (desc(col) if desc_order else asc(col)).nulls_last(),
+        )
     else:
         qset = qset.order_by((desc(col) if desc_order else asc(col)).nulls_last())
 
-    offset = (page - 1) * page_size
-    return qset.offset(offset).limit(page_size).all()
+    rows = qset.offset((page - 1) * page_size).limit(page_size).all()
+    prop_ids = [r.id for r in rows]
+    fav_set = _favorite_id_set(db, _user.id, prop_ids)
+
+    out: List[dict] = []
+    for r in rows:
+        d = PropertyOut.model_validate(r, from_attributes=True).model_dump()
+        d["is_favorited"] = (r.id in fav_set)
+        out.append(d)
+
+    return out
 
 
 @router.get("/{prop_id}", response_model=PropertyOut)
-def get_property(prop_id: int, db: Session = Depends(get_db), _user=Depends(get_current_user)):
+def get_property(
+    prop_id: int,
+    db: Session = Depends(get_db),
+    _user=Depends(get_current_user),
+):
     p = db.get(Property, prop_id)
     if not p:
         raise HTTPException(status_code=404, detail="not found")
-    return p
+
+    d = PropertyOut.model_validate(p, from_attributes=True).model_dump()
+    d["is_favorited"] = bool(
+        db.query(Favorite)
+        .filter(Favorite.user_id == _user.id, Favorite.property_id == p.id)
+        .first()
+    )
+    return d
 
 
 @router.patch("/{prop_id}", response_model=PropertyOut)
@@ -130,9 +316,17 @@ def update_property(
 
     for k, v in payload.model_dump(exclude_unset=True).items():
         setattr(p, k, v)
+
     db.commit()
     db.refresh(p)
-    return p
+
+    d = PropertyOut.model_validate(p, from_attributes=True).model_dump()
+    d["is_favorited"] = bool(
+        db.query(Favorite)
+        .filter(Favorite.user_id == user.id, Favorite.property_id == p.id)
+        .first()
+    )
+    return d
 
 
 @router.delete("/{prop_id}", status_code=204)
@@ -149,4 +343,148 @@ def delete_property(
 
     db.delete(p)
     db.commit()
-    return
+    return Response(status_code=204)
+
+
+@router.post("/{prop_id}/images", status_code=201)
+async def add_property_image(
+    prop_id: int,
+    file: UploadFile = File(...),
+    is_cover: bool = False,
+    sort_order: int = 0,
+    db: Session = Depends(get_db),
+    user=Depends(get_current_user),
+):
+    p = db.get(Property, prop_id)
+    if not p:
+        raise HTTPException(404, "not found")
+    if p.owner_id != user.id:
+        raise HTTPException(403, "not owner")
+
+    UPLOAD_DIR = Path("static/uploads")
+    UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+
+    suffix = Path(file.filename).suffix or ".jpg"
+    if suffix.lower() not in {".png", ".jpg", ".jpeg", ".webp", ".gif"}:
+        raise HTTPException(400, "unsupported file type")
+
+    name = f"{uuid4().hex}{suffix.lower()}"
+    dest = UPLOAD_DIR / name
+    with dest.open("wb") as f:
+        f.write(await file.read())
+
+    url = f"/static/uploads/{name}"
+
+    if is_cover:
+        db.query(PropertyImage).filter(PropertyImage.property_id == prop_id).update(
+            {PropertyImage.is_cover: False}
+        )
+
+    img = PropertyImage(
+        property_id=prop_id,
+        url=url,
+        is_cover=bool(is_cover),
+        sort_order=int(sort_order or 0),
+    )
+    db.add(img)
+    db.commit()
+    db.refresh(img)
+
+    return {"id": img.id, "url": img.url, "is_cover": img.is_cover, "sort_order": img.sort_order}
+
+
+@router.get("/{prop_id}/images")
+def list_property_images(
+    prop_id: int,
+    db: Session = Depends(get_db),
+    _user=Depends(get_current_user),
+):
+    imgs = (
+        db.query(PropertyImage)
+        .filter(PropertyImage.property_id == prop_id)
+        .order_by(PropertyImage.sort_order.asc(), PropertyImage.id.asc())
+        .all()
+    )
+    return [
+        {"id": i.id, "url": i.url, "is_cover": i.is_cover, "sort_order": i.sort_order}
+        for i in imgs
+    ]
+
+
+@router.patch("/{prop_id}/images/{img_id}")
+def update_property_image(
+    prop_id: int,
+    img_id: int,
+    is_cover: Optional[bool] = None,
+    sort_order: Optional[int] = None,
+    db: Session = Depends(get_db),
+    user=Depends(get_current_user),
+):
+    p = db.get(Property, prop_id)
+    if not p:
+        raise HTTPException(404, "not found")
+    if p.owner_id != user.id:
+        raise HTTPException(403, "not owner")
+
+    img = db.get(PropertyImage, img_id)
+    if not img or img.property_id != prop_id:
+        raise HTTPException(404, "image not found")
+
+    if is_cover:
+        db.query(PropertyImage).filter(PropertyImage.property_id == prop_id).update(
+            {PropertyImage.is_cover: False}
+        )
+        img.is_cover = True
+
+    if sort_order is not None:
+        img.sort_order = int(sort_order)
+
+    db.commit()
+    db.refresh(img)
+    return {"id": img.id, "url": img.url, "is_cover": img.is_cover, "sort_order": img.sort_order}
+
+
+@router.delete("/{prop_id}/images/{img_id}", status_code=204)
+def delete_property_image(
+    prop_id: int,
+    img_id: int,
+    db: Session = Depends(get_db),
+    user=Depends(get_current_user),
+):
+    p = db.get(Property, prop_id)
+    if not p:
+        raise HTTPException(404, "not found")
+    if p.owner_id != user.id:
+        raise HTTPException(403, "not owner")
+
+    img = db.get(PropertyImage, img_id)
+    if not img or img.property_id != prop_id:
+        raise HTTPException(404, "image not found")
+
+    db.delete(img)
+    db.commit()
+    return Response(status_code=204)
+
+
+@router.post("/estimate")
+def estimate_price(inp: MLPriceInput):
+    """
+    Estimate price for an ad-hoc property payload.
+    Uses the same normalization and pricing logic as /ml/price/predict.
+    Enforces safe defaults for missing numeric fields to avoid NaNs.
+    """
+    try:
+        ml = importlib.import_module("app.api.ml_price_router")
+        payload = ml._normalize(inp.model_dump())
+
+        # Default missing numerics so the model never sees NaN
+        pt = str(payload.get("property_type", "")).title()
+        if payload.get("floor") is None:
+            payload["floor"] = 2.0 if pt == "Apartment" else 1.0
+        if payload.get("building_age") is None:
+            payload["building_age"] = 10.0  # stable default if not provided
+
+        y = ml._predict_controlled(ml._get_model(), payload)
+        return {"price_jod": round(max(0.0, y), 2)}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))

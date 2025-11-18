@@ -1,0 +1,145 @@
+import argparse, json, os, uuid, math
+from datetime import datetime
+import numpy as np, pandas as pd
+from joblib import dump
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.pipeline import Pipeline
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import GradientBoostingRegressor
+
+rng = np.random.default_rng(42)
+def _parse_building_age(x):
+    if pd.isna(x): return np.nan
+    s = str(x).strip().lower()
+    if s in {"0–11 months","0-11 months","0 to 11 months","0–11 month"}: return 0.5
+    for band, val in {
+        "10–19 years":15, "10-19 years":15,
+        "20–29 years":25, "20-29 years":25,
+        "30–39 years":35, "30-39 years":35,
+        "40–49 years":45, "40-49 years":45,
+    }.items():
+        if band in s: return float(val)
+    if "year" in s:
+        try: return float("".join(ch for ch in s if ch.isdigit() or ch==".")) 
+        except: return np.nan
+    try: return float(s)
+    except: return np.nan
+
+def _bool(v):
+    if isinstance(v, (bool, np.bool_)): return bool(v)
+    s = str(v).strip().lower()
+    return s in {"1","true","yes","y","t","فurnished","مفروش"}
+
+def _clip01(x): return np.minimum(1.0, np.maximum(0.0, x))
+
+def _weights(df: pd.DataFrame) -> np.ndarray:
+    w = np.ones(len(df), dtype=float)
+    is_ap = df["property_type"].str.title().eq("Apartment")
+    furn = df["furnished"].astype(bool)
+    w *= np.where(is_ap & furn, 0.6, 1.0) 
+    rank = df["area_sqm"].rank(pct=True)
+    w *= 0.9 + 0.2 * rank  
+    w = np.clip(w, 0.3, 3.0)
+    w *= len(w) / w.sum()
+    return w
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--csv", required=True)
+    ap.add_argument("--outdir", default="models")
+    ap.add_argument("--seed", type=int, default=42)
+    args = ap.parse_args()
+
+    os.makedirs(args.outdir, exist_ok=True)
+    df = pd.read_csv(args.csv)
+
+    def col(name):
+        m = {c.strip().lower().replace(" ","_"): c for c in df.columns}
+        return m.get(name, name)
+
+    y = df[col("price")].astype(float)
+    prop = df[col("property_type")].astype(str).str.title()
+    city = df[col("city")].astype(str)
+    neigh = df[col("neighborhood")].astype(str)
+    bedrooms = pd.to_numeric(df.get(col("bedrooms")), errors="coerce")
+    bathrooms = pd.to_numeric(df.get(col("bathrooms")), errors="coerce")
+    area = pd.to_numeric(df.get(col("area_sqm")), errors="coerce")
+    floor = pd.to_numeric(df.get(col("floor")), errors="coerce")
+    ba_raw = df.get(col("building_age"))
+    building_age = ba_raw.map(_parse_building_age) if ba_raw is not None else np.nan
+    furn_raw = df.get(col("furnished"))
+    furnished = furn_raw.map(_bool) if furn_raw is not None else False
+    is_apartment = prop.eq("Apartment").astype(int)
+    furn_apt = (furnished.astype(int) * is_apartment).astype(float)
+    X = pd.DataFrame({
+        "bedrooms": bedrooms,
+        "bathrooms": bathrooms,
+        "area_sqm": area,
+        "area_log": np.log1p(area),
+        "floor": floor,                 """apartments level, villas/houses: storeys"""
+        "building_age": building_age,
+        "furn_apt": furn_apt,           """ONLY driver for furnished effect"""
+        "city": city,
+        "neighborhood": neigh,
+        "property_type": prop,
+    })
+    mask = y.notna() & X.notna().all(axis=1)
+    X = X[mask]
+    y2 = y[mask]
+    Xtr, Xte, ytr, yte = train_test_split(X, y2, test_size=0.2, random_state=args.seed)
+    num = ["bedrooms","bathrooms","area_sqm","area_log","floor","building_age","furn_apt"]
+    cat = ["city","neighborhood","property_type"]
+    pre = ColumnTransformer(
+        transformers=[
+            ("num", "passthrough", num),
+            ("oh", OneHotEncoder(handle_unknown="ignore", sparse_output=False), cat),
+        ],
+        remainder="drop",
+        verbose_feature_names_out=False,
+    )
+    gbr = GradientBoostingRegressor(
+        learning_rate=0.08,
+        n_estimators=500,
+        max_depth=3,
+        random_state=args.seed,
+    )
+    pipe = Pipeline([
+        ("prep", pre),
+        ("gbr", gbr),
+    ])
+    wtr = _weights(Xtr.assign(furnished=furnished[mask].loc[Xtr.index], property_type=Xtr["property_type"]))
+    pipe.fit(Xtr, ytr, gbr__sample_weight=wtr)
+    pred_tr = pipe.predict(Xtr)
+    pred_te = pipe.predict(Xte)
+    rmse = math.sqrt(mean_squared_error(yte, pred_te))
+    mae  = mean_absolute_error(yte, pred_te)
+    r2   = r2_score(yte, pred_te)
+    mape = float(np.mean(np.abs((yte - pred_te) / np.clip(np.abs(yte), 1.0, None))) * 100)
+    mid = uuid.uuid4().hex[:10]
+    mpath = os.path.join(args.outdir, f"aqarak_price_model_{mid}.joblib")
+    dump(pipe, mpath)
+
+    meta = {
+        "model_path": mpath,
+        "created_at": datetime.utcnow().isoformat()+"Z",
+        "model_id": mid,
+        "metrics": {
+            "MAE_JOD": round(float(mae), 2),
+            "RMSE_JOD": round(float(rmse), 2),
+            "MAPE_%": round(float(mape), 2),
+            "R2": round(float(r2), 4),
+            "N_train": int(len(Xtr)),
+            "N_test": int(len(Xte)),
+        },
+        "features": {"numeric": num, "categorical": cat},
+        "config": {"furnished_apartment_only": True}
+    }
+    with open(os.path.join(args.outdir, f"aqarak_price_model_{mid}.json"), "w") as f:
+        json.dump(meta, f, indent=2)
+
+    print(json.dumps(meta, indent=2))
+
+if __name__ == "__main__":
+    main()

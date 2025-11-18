@@ -1,0 +1,32 @@
+{
+  "model_path": "/Users/abdalrhman/Downloads/Aqarak/backend/models/aqarak_price_model_ddd7c1117c.joblib",
+  "created_at": "2025-11-09T06:39:18.120810Z",
+  "model_id": "ddd7c1117c",
+  "metrics": {
+    "MAE_JOD": 55523.72,
+    "RMSE_JOD": 171283.03,
+    "MAPE_%": 423.58,
+    "R2": 0.5235,
+    "N_train": 3770,
+    "N_test": 943
+  },
+  "features": {
+    "numeric": [
+      "bedrooms",
+      "bathrooms",
+      "area_sqm",
+      "area_log",
+      "floor",
+      "building_age",
+      "furn_apt"
+    ],
+    "categorical": [
+      "city",
+      "neighborhood",
+      "property_type"
+    ]
+  },
+  "config": {
+    "furnished_apartment_only": true
+  }
+}

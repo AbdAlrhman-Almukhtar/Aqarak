@@ -3,7 +3,7 @@ from typing import Iterable, Optional
 from jose import jwt
 from passlib.context import CryptContext
 
-_pwd = CryptContext(schemes=["bcrypt_sha256"], deprecated="auto")
+_pwd = CryptContext(schemes=["bcrypt", "bcrypt_sha256", "pbkdf2_sha256"], deprecated="auto")
 
 def hash_password(password: str) -> str:
     return _pwd.hash(password)
@@ -20,7 +20,12 @@ def create_access_token(
 ) -> str:
     now = datetime.now(timezone.utc)
     exp = now + timedelta(minutes=minutes)
-    payload = {"sub": subject, "iat": int(now.timestamp()), "nbf": int(now.timestamp()), "exp": int(exp.timestamp())}
+    payload = {
+        "sub": subject,
+        "iat": int(now.timestamp()),
+        "nbf": int(now.timestamp()),
+        "exp": int(exp.timestamp()),
+    }
     return jwt.encode(payload, secret, algorithm=alg)
 
 def decode_token(

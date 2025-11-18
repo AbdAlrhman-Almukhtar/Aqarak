@@ -1,8 +1,8 @@
-"""move constraints into Property and add area check
+"""merge heads
 
-Revision ID: de593ba69beb
-Revises: d194efe5417a
-Create Date: 2025-10-30 15:41:51.559429
+Revision ID: 8e9dcd15f1c7
+Revises: bc8cd58d5755, d194efe5417a
+Create Date: 2025-11-02 14:56:47.271308
 
 """
 from typing import Sequence, Union
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'de593ba69beb'
-down_revision: Union[str, Sequence[str], None] = 'd194efe5417a'
+revision: str = '8e9dcd15f1c7'
+down_revision: Union[str, Sequence[str], None] = ('bc8cd58d5755', 'd194efe5417a')
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

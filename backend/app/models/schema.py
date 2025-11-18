@@ -1,0 +1,1 @@
+from app.connectors.database import Base

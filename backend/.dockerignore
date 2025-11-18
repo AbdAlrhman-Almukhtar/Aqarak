@@ -1,0 +1,7 @@
+scripts/
+*.csv
+data/
+notebooks/
+__pycache__/
+*.joblib
+*.png
