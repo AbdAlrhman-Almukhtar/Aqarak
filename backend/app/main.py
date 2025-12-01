@@ -13,7 +13,6 @@ from app.api.properties import router as properties_router
 from app.api.favorites import router as favorites_router
 from app.api.uploads import router as uploads_router
 from app.api.ml_price_router import router as ml_price_router
-
 app = FastAPI(title="Aqarak API")
 allow_origins = (
     ["*"]
@@ -36,7 +35,6 @@ app.include_router(ml_price_router)
 if os.getenv("OPENAI_API_KEY"):
     from app.api.chat import router as chat_router
     app.include_router(chat_router)
-    
 app.mount("/static", StaticFiles(directory="static"), name="static")
 @app.on_event("startup")
 def _bootstrap_db():
@@ -51,12 +49,11 @@ def _bootstrap_db():
 async def _init_rate_limiter():
     url = settings.REDIS_URL or "redis://localhost:6379/0"
     try:
-        r = redis.from_url(url, encoding="utf-8", decode_responses=True)
+        r = redis.from_url(url, encoding="utf-8",decode_responses=True)
         await FastAPILimiter.init(r)
-        logging.info("Rate limiter initialized with %s", url)
+        logging.info("Rate limiter initialized with %s",url)
     except Exception as e:
-        logging.warning("Rate limiter disabled: %s", e)
-
+        logging.warning("Rate limiter disabled: %s",e)
 @app.get("/")
 def root():
     return {"ok": True}

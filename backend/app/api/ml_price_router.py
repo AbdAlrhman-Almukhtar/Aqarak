@@ -21,14 +21,14 @@ APT_FURNISHED_FLOOR = 0.08
 APT_FURNISHED_BOOST = 2.0
 
 APT_GF_PREMIUM = 0.11
-APT_UP_STEP   = 0.035
-APT_B1_DROP   = 0.20
+APT_UP_STEP = 0.035
+APT_B1_DROP = 0.20
 APT_DOWN_STEP = 0.035
-APT_UP_CAP    = 0.20
-APT_DOWN_CAP  = 0.35
+APT_UP_CAP= 0.20
+APT_DOWN_CAP= 0.35
 HV_STORIES_STEP = 0.05
 HV_STORIES_CAP  = 0.15
-MARKET_BLEND = 0.35
+MARKET_BLEND= 0.35
 
 _PSQM_BASE = {
     ("amman", "abdoun", "apartment"): 950.0,
@@ -81,7 +81,103 @@ class PriceInput(BaseModel):
             raise ValueError(f"property_type must be one of {sorted(PTYPES)}")
         return v2
 
+
+
+_NEIGH_MAP = {
+    "shmesani": "Shmaisani",
+    "um uthina": "Um Uthaiena",
+    "rabieh": "Al Rabiah",
+    "swefieh": "Swefieh",
+    "abdoun": "Abdoun",
+    "abdoun al janobi": "Abdoun",
+    "abdoun al shamali": "Abdoun",
+    "dabouq": "Dabouq",
+    "deir ghbar": "Deir Ghbar",
+    "mecca st": "Mecca St",
+    "mecca street": "Mecca St",
+    "mecca": "Mecca St",
+    "jabal amman": "Jabal Amman",
+    "khalda": "Khalda",
+    "tla ali": "Tla Ali",
+    "tla al ali": "Tla Ali",
+    "tla al ali al shamali": "Tla Ali",
+    "tla al ali al sharqi": "Tla Ali",
+    "jubeiha": "Jubaiha",
+    "jubaiha": "Jubaiha",
+    "university": "University District",
+    "university street": "University District",
+    "seventh circle": "7th Circle",
+    "7th circle": "7th Circle",
+    "al gardens": "Gardens",
+    "gardens": "Gardens",
+    "um uthaiena al gharbi": "Um Uthaiena",
+    "um uthaiena al sharqi": "Um Uthaiena",
+    "nazzal": "Hai Nazzal",
+    "yasmeen": "Daheit Al Yasmeen",
+    "al yasmeen": "Daheit Al Yasmeen",
+    "rasheed": "Daheit Al Rasheed",
+    "al rasheed": "Daheit Al Rasheed",
+    "hussain": "Jabal Al Hussain",
+    "jabal hussain": "Jabal Al Hussain",
+    "lweibdeh": "Jabal Al-Lweibdeh",
+    "al lweibdeh": "Jabal Al-Lweibdeh",
+    "nuzha": "Jabal Al Nuzha",
+    "al nuzha": "Jabal Al Nuzha",
+    "taj": "Jabal Al-Taj",
+    "al taj": "Jabal Al-Taj",
+    "bayader": "Al Bayader",
+    "al bayader wadi al seer": "Al Bayader",
+    "bnayyat": "Al Bnayyat",
+    "jandaweel": "Al Jandaweel",
+    "kursi": "Al Kursi",
+    "rawnaq": "Al Rawnaq",
+    "ridwan": "Al Ridwan",
+    "urdon st": "Al Urdon Street",
+    "urdon street": "Al Urdon Street",
+    "yadudah": "Al Yadudah",
+    "summaq": "Um El Summaq",
+    "um summaq": "Um El Summaq",
+    "umm summaq": "Um El Summaq",
+    "bunayat": "Al Bnayyat",
+    "jubeiha": "Jubaiha",
+    "jubaiha": "Jubaiha",
+    "university": "University District",
+    "ashrafyeh": "Al Ashrafyeh",
+    "al ashrafyeh": "Al Ashrafyeh",
+    "muqabalain": "Al Muqabalain",
+    "al muqabalain": "Al Muqabalain",
+    "qwaismeh": "Al Qwaismeh",
+    "al qwaismeh": "Al Qwaismeh",
+    "nakheel": "Dahiet Al-Nakheel",
+    "al nakheel": "Dahiet Al-Nakheel",
+    "rawda": "Dahiet Al-Rawda",
+    "al rawda": "Dahiet Al-Rawda",
+    "zohor": "Jabal Al Zohor",
+    "al zohor": "Jabal Al Zohor",
+    "zohoor": "Jabal Al Zohor",
+    "al zohoor": "Jabal Al Zohor",
+    "nathif": "Jabal Al-Nathif",
+    "al nathif": "Jabal Al-Nathif",
+    "marj al hamam": "Marj El Hamam",
+    "tabarbour": "Tabarboor",
+    "kamaliya": "Al Kamaliya",
+    "al kamaliya": "Al Kamaliya",
+    "haj hassan": "Daheit Al-Haj Hassan",
+    "al haj hassan": "Daheit Al-Haj Hassan",
+    "ameer hasan": "Daheit Al Ameer Hasan",
+    "al ameer hasan": "Daheit Al Ameer Hasan",
+}
+
+def _fix_neighborhood(n: str) -> str:
+    s = str(n).strip().lower()
+    if s in _NEIGH_MAP:
+        return _NEIGH_MAP[s]
+    return s.title()
+
 def _normalize(d: dict) -> dict:
+    if "neighborhood" in d:
+        d["neighborhood"] = _fix_neighborhood(d["neighborhood"])
+
     pt = str(d.get("property_type","")).title()
     if pt in {"House","Villa","Townhouse"} and d.get("floor") is None:
         tf = d.get("total_floors")
@@ -94,9 +190,9 @@ def _normalize(d: dict) -> dict:
             d["area_sq"] = a * a
     except (TypeError, ValueError):
         pass
-
+    
     return d
-
+    
 def _norm(s) -> str:
     return str(s or "").strip().lower()
 def _psqm_baseline(payload: dict) -> float:
@@ -204,6 +300,9 @@ def predict(inp: PriceInput):
         y = _predict_controlled(_get_model(), payload)
         return {"price_jod": round(max(0.0, y), 2)}
     except Exception as e:
+        import traceback
+        traceback.print_exc()
+        print(f"Prediction error: {e}")
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.post("/predict-batch")

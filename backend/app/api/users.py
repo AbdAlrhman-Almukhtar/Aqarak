@@ -7,7 +7,7 @@ from app.db.models import User
 from app.schemas.user import UserOut
 from app.schemas.auth import UserCreate
 from app.core.security import hash_password
-from app.deps import get_current_user  # add
+from app.deps import get_current_user
 
 router = APIRouter(prefix="/users", tags=["users"])
 
@@ -21,6 +21,7 @@ class UserOut(BaseModel):
 
 class UserUpdate(BaseModel):
     name: Optional[str] = None
+    password: Optional[str] = None
 @router.post("", response_model=UserOut, status_code=201)
 def create_user(payload: UserCreate, db: Session = Depends(get_db)):
     if db.query(User).filter(User.email == payload.email).first():
@@ -47,6 +48,8 @@ def update_me(
 ):
     if payload.name is not None:
         user.name = payload.name.strip() or None
+    if payload.password:
+        user.password_hash = hash_password(payload.password)
     db.add(user)
     db.commit()
     db.refresh(user)

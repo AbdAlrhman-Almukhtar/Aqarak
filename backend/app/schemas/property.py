@@ -5,15 +5,19 @@ class PropertyCreate(BaseModel):
     title: str
     description: Optional[str] = None
     is_for_sale: bool = True
-    price: Optional[confloat(gt=0)] = None  # type: ignore
+    price: Optional[confloat(gt=0)] = None
     is_for_rent: bool = False
-    rent_price: Optional[confloat(gt=0)] = None  # type: ignore
+    rent_price: Optional[confloat(gt=0)] = None
     city: Optional[str] = None
     neighborhood: Optional[str] = None
-    bedrooms: Optional[conint(ge=0)] = None  # type: ignore
-    bathrooms: Optional[conint(ge=0)] = None  # type: ignore
-    area_sqm: Optional[conint(ge=0)] = None  # type: ignore
-    owner_id: int
+    bedrooms: Optional[conint(ge=0)] = None
+    bathrooms: Optional[conint(ge=0)] = None
+    area_sqm: Optional[conint(ge=0)] = None
+    property_type: Optional[str] = None
+    furnished: bool = False
+    floor: Optional[int] = None
+    building_age: Optional[int] = None
+    owner_id: Optional[int] = None
 
     @field_validator("price", "rent_price", "area_sqm", "bedrooms", "bathrooms", mode="before")
     def _empty_to_none(cls, v):
@@ -55,10 +59,23 @@ class PropertyOut(BaseModel):
     bedrooms: Optional[int] = None
     bathrooms: Optional[int] = None
     area_sqm: Optional[int] = None
+    property_type: Optional[str] = None
+    furnished: bool
+    floor: Optional[int] = None
+    building_age: Optional[int] = None
     is_active: bool
     owner_id: int
     is_favorited: Optional[bool] = None
+    cover_image: Optional[str] = None
+    images: Optional[list[str]] = None
     model_config = ConfigDict(from_attributes=True)
+
+    @field_validator("images", mode="before")
+    def _extract_images(cls, v):
+        if not v:
+            return []
+            return []
+        return [x.url if hasattr(x, "url") else x for x in v]
 class PropertyUpdate(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
@@ -71,6 +88,10 @@ class PropertyUpdate(BaseModel):
     bedrooms: Optional[int] = None
     bathrooms: Optional[int] = None
     area_sqm: Optional[int] = None
+    property_type: Optional[str] = None
+    furnished: Optional[bool] = None
+    floor: Optional[int] = None
+    building_age: Optional[int] = None
     is_active: Optional[bool] = None
 
     @field_validator("price", "rent_price", "area_sqm", "bedrooms", "bathrooms", mode="before")

@@ -9,7 +9,7 @@ from sqlalchemy.types import Text
 from app.db.session import get_db
 from app.db.models import Property, PropertyImage, User,Favorite
 from app.schemas.property import PropertyCreate, PropertyOut, PropertyUpdate
-from app.deps import get_current_user
+from app.deps import get_current_user, get_optional_user
 from app.api.ml_price_router import (
     PriceInput as MLPriceInput,
 )
@@ -28,7 +28,6 @@ TRGM_LIMIT = 0.20
 
 
 def _rank(q: str):
-    """Similarity rank across city, neighborhood, title. Force SQL TEXT types."""
     empty_txt = literal("", Text())
     city = func.coalesce(sa_cast(Property.city, Text), empty_txt)
     neigh = func.coalesce(sa_cast(Property.neighborhood, Text), empty_txt)
@@ -67,6 +66,12 @@ def search_properties(
     area_max: Optional[float] = None,
     is_for_sale: Optional[bool] = None,
     is_for_rent: Optional[bool] = None,
+    property_type: Optional[str] = None,
+    furnished: Optional[bool] = None,
+    floor_min: Optional[int] = None,
+    floor_max: Optional[int] = None,
+    age_min: Optional[int] = None,
+    age_max: Optional[int] = None,
     sort: str = Query("-id", regex="^-?(id|price|rent_price|area_sqm|bedrooms)$"),
     page: int = Query(1, ge=1),
     page_size: int = Query(20, ge=1, le=100),
@@ -97,6 +102,21 @@ def search_properties(
         base = base.filter(Property.area_sqm <= area_max)
     if city:
         base = base.filter(Property.city.ilike(f"%{city}%"))
+
+    if property_type:
+        base = base.filter(Property.property_type == property_type)
+    if furnished is not None:
+        base = base.filter(Property.furnished.is_(furnished))
+    
+    if floor_min is not None:
+        base = base.filter(Property.floor >= floor_min)
+    if floor_max is not None:
+        base = base.filter(Property.floor <= floor_max)
+        
+    if age_min is not None:
+        base = base.filter(Property.building_age >= age_min)
+    if age_max is not None:
+        base = base.filter(Property.building_age <= age_max)
 
     using_trgm = False
     if q:
@@ -162,6 +182,11 @@ def search_properties(
     for r in rows:
         d = PropertyOut.model_validate(r, from_attributes=True).model_dump()
         d["is_favorited"] = (r.id in fav_set)
+        
+        imgs = sorted(r.images, key=lambda x: x.sort_order)
+        d["images"] = [i.url for i in imgs]
+        d["cover_image"] = next((i.url for i in imgs if i.is_cover), d["images"][0] if d["images"] else None)
+        
         items.append(d)
 
     return {
@@ -201,31 +226,59 @@ def property_count(
     return {"count": qset.count()}
 
 
+@router.get("/me", response_model=List[PropertyOut])
+def list_my_properties(
+    db: Session = Depends(get_db),
+    user=Depends(get_current_user),
+):
+    rows = (
+        db.query(Property)
+        .filter(Property.owner_id == user.id)
+        .order_by(desc(Property.id))
+        .all()
+    )
+    
+    prop_ids = [r.id for r in rows]
+    fav_set = _favorite_id_set(db, user.id, prop_ids)
+
+    out = []
+    for r in rows:
+        d = PropertyOut.model_validate(r, from_attributes=True).model_dump()
+        d["is_favorited"] = (r.id in fav_set)
+        
+        imgs = sorted(r.images, key=lambda x: x.sort_order)
+        d["images"] = [i.url for i in imgs]
+        d["cover_image"] = next((i.url for i in imgs if i.is_cover), d["images"][0] if d["images"] else None)
+        
+        out.append(d)
+    return out
+
+
 @router.post("", response_model=PropertyOut, status_code=201)
 def create_property(
     payload: PropertyCreate,
     db: Session = Depends(get_db),
     user=Depends(get_current_user),
 ):
-    if user.id != payload.owner_id:
-        raise HTTPException(status_code=403, detail="owner mismatch")
-    if not db.get(User, payload.owner_id):
-        raise HTTPException(status_code=404, detail="owner not found")
-
-    p = Property(**payload.model_dump())
+    data = payload.model_dump()
+    data['owner_id'] = user.id
+    
+    p = Property(**data)
     db.add(p)
     db.commit()
     db.refresh(p)
 
     d = PropertyOut.model_validate(p, from_attributes=True).model_dump()
     d["is_favorited"] = False
+    d["images"] = []
+    d["cover_image"] = None
     return d
 
 
 @router.get("", response_model=List[PropertyOut])
 def list_properties(
     db: Session = Depends(get_db),
-    _user=Depends(get_current_user),
+    _user=Depends(get_optional_user),
     q: Optional[str] = Query(None, description="free-text search"),
     city: Optional[str] = None,
     min_price: Optional[float] = None,
@@ -271,12 +324,17 @@ def list_properties(
 
     rows = qset.offset((page - 1) * page_size).limit(page_size).all()
     prop_ids = [r.id for r in rows]
-    fav_set = _favorite_id_set(db, _user.id, prop_ids)
+    fav_set = _favorite_id_set(db, _user.id, prop_ids) if _user else set()
 
     out: List[dict] = []
     for r in rows:
         d = PropertyOut.model_validate(r, from_attributes=True).model_dump()
         d["is_favorited"] = (r.id in fav_set)
+        
+        imgs = sorted(r.images, key=lambda x: x.sort_order)
+        d["images"] = [i.url for i in imgs]
+        d["cover_image"] = next((i.url for i in imgs if i.is_cover), d["images"][0] if d["images"] else None)
+        
         out.append(d)
 
     return out
@@ -286,7 +344,7 @@ def list_properties(
 def get_property(
     prop_id: int,
     db: Session = Depends(get_db),
-    _user=Depends(get_current_user),
+    _user=Depends(get_optional_user),
 ):
     p = db.get(Property, prop_id)
     if not p:
@@ -294,10 +352,15 @@ def get_property(
 
     d = PropertyOut.model_validate(p, from_attributes=True).model_dump()
     d["is_favorited"] = bool(
-        db.query(Favorite)
+        _user and db.query(Favorite)
         .filter(Favorite.user_id == _user.id, Favorite.property_id == p.id)
         .first()
     )
+    
+    imgs = sorted(p.images, key=lambda x: x.sort_order)
+    d["images"] = [i.url for i in imgs]
+    d["cover_image"] = next((i.url for i in imgs if i.is_cover), d["images"][0] if d["images"] else None)
+    
     return d
 
 
@@ -322,10 +385,15 @@ def update_property(
 
     d = PropertyOut.model_validate(p, from_attributes=True).model_dump()
     d["is_favorited"] = bool(
-        db.query(Favorite)
+        user and db.query(Favorite)
         .filter(Favorite.user_id == user.id, Favorite.property_id == p.id)
         .first()
     )
+    
+    imgs = sorted(p.images, key=lambda x: x.sort_order)
+    d["images"] = [i.url for i in imgs]
+    d["cover_image"] = next((i.url for i in imgs if i.is_cover), d["images"][0] if d["images"] else None)
+    
     return d
 
 
@@ -361,19 +429,20 @@ async def add_property_image(
     if p.owner_id != user.id:
         raise HTTPException(403, "not owner")
 
-    UPLOAD_DIR = Path("static/uploads")
-    UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
-
     suffix = Path(file.filename).suffix or ".jpg"
     if suffix.lower() not in {".png", ".jpg", ".jpeg", ".webp", ".gif"}:
         raise HTTPException(400, "unsupported file type")
 
-    name = f"{uuid4().hex}{suffix.lower()}"
-    dest = UPLOAD_DIR / name
-    with dest.open("wb") as f:
-        f.write(await file.read())
-
-    url = f"/static/uploads/{name}"
+    content = await file.read()
+    
+    from app.services.s3 import get_s3_service
+    s3 = get_s3_service()
+    url = s3.upload_file(
+        file_content=content,
+        filename=file.filename,
+        content_type=file.content_type or "image/jpeg",
+        folder="property-images"
+    )
 
     if is_cover:
         db.query(PropertyImage).filter(PropertyImage.property_id == prop_id).update(
@@ -397,7 +466,7 @@ async def add_property_image(
 def list_property_images(
     prop_id: int,
     db: Session = Depends(get_db),
-    _user=Depends(get_current_user),
+    _user=Depends(get_optional_user),
 ):
     imgs = (
         db.query(PropertyImage)
@@ -465,24 +534,16 @@ def delete_property_image(
     db.commit()
     return Response(status_code=204)
 
-
 @router.post("/estimate")
 def estimate_price(inp: MLPriceInput):
-    """
-    Estimate price for an ad-hoc property payload.
-    Uses the same normalization and pricing logic as /ml/price/predict.
-    Enforces safe defaults for missing numeric fields to avoid NaNs.
-    """
     try:
         ml = importlib.import_module("app.api.ml_price_router")
         payload = ml._normalize(inp.model_dump())
-
-        # Default missing numerics so the model never sees NaN
         pt = str(payload.get("property_type", "")).title()
         if payload.get("floor") is None:
             payload["floor"] = 2.0 if pt == "Apartment" else 1.0
         if payload.get("building_age") is None:
-            payload["building_age"] = 10.0  # stable default if not provided
+            payload["building_age"] = 10.0
 
         y = ml._predict_controlled(ml._get_model(), payload)
         return {"price_jod": round(max(0.0, y), 2)}

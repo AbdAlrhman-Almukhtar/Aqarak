@@ -1,0 +1,592 @@
+1. Core Legal Framework
+
+Main modern real-estate law
+	•	Real Estate Ownership Law No. 13 of 2019
+	•	Consolidates and replaces many older land laws (including the Ottoman Land Code of 1858).
+	•	Regulates ownership, transfer, and registration of land and buildings in Jordan.
+	•	All real estate transactions must be registered at the Department of Lands and Survey (DLS) to be legally valid. Unregistered contracts have no legal effect.
+
+Key related laws
+	•	Landlords and Tenants Law No. 11 of 1994, as amended by Law No. 14 of 2013
+Governs rental contracts, landlord–tenant relations, and eviction rules.
+	•	Leasing and Selling Immovable Assets to Non-Jordanians Law No. 47 of 2006
+Sets conditions and restrictions for foreign (non-Jordanian) ownership and leasing of real estate.
+	•	Economic Boycott Law No. 11 of 1995
+Prohibits dealing in property with nationals of certain “hostile” states.
+	•	Disposal of Immovable Assets by Juristic Persons Law No. 61 of 1953
+Regulates property ownership by companies (juristic persons) and ensures transactions match their permitted business activities.
+	•	Jordanian Civil Code No. 43 of 1976
+	•	Defines original real rights (ownership, disposition, usufruct, residence, etc.).
+	•	Applies as a fallback for leases and property issues not covered in special laws.
+
+
+2. Constitutional Protection of Property
+	•	Article 6 (Constitution 1952)
+	•	All Jordanians are equal before the law.
+	•	State must provide work, education, tranquility, and equal opportunity.
+	•	Article 11
+	•	Private property may only be expropriated for public benefit and with fair compensation, as defined by law.
+	•	Article 12
+	•	No forced loans or confiscation of movable or immovable property except according to law.
+
+These articles guarantee private ownership and set strict conditions for expropriation.
+
+
+3. Types of Property: Movable vs Immovable
+
+Definition
+	•	Immovable property: Anything fixed in place that cannot be moved without damage or deformation (land, buildings, etc.).
+	•	Movable property: Everything else.
+
+Movable property – ownership rules
+	•	Possession is the key:
+	•	If someone permissibly possesses an unowned movable intending to own it, they can become its owner.
+	•	The general rule: possession is strong evidence of ownership.
+	•	Courts often treat the possessor of a movable item as the owner unless proven otherwise.
+
+Immovable property – ownership rules
+	•	Immovable property (land/buildings) is subject to formal procedures:
+	•	Ownership must be proven and transferred through the official land registration system.
+	•	Requirements vary by location, type, size, and use of the land.
+	•	In “settled” areas, transactions not registered at the DLS are null and void.
+
+
+4. Buying Real Estate in Jordan
+
+4.1 Due diligence and pre-sale contracts
+	•	Buyer or lawyer should:
+	•	Obtain the title deed (Sanad al-Milkiya) from DLS.
+	•	Check for encumbrances (mortgages, disputes, easements).
+	•	After due diligence:
+	•	Parties usually sign a preliminary sale agreement specifying:
+	•	Price
+	•	Payment schedule
+	•	Timeline
+	•	Conditions and penalties
+	•	This secures the deal while approvals and financing are completed.
+
+4.2 Government approvals
+	•	Jordanian citizens
+	•	No special approval beyond normal DLS registration.
+	•	Foreign individuals (non-Jordanians)
+	•	Must obtain prior approval from the Ministry of Interior (and sometimes higher authorities).
+	•	Typical steps:
+	•	DLS coordinates with Ministry of Interior to approve the transaction.
+	•	Large or strategically located properties may require approval from:
+	•	Minister of Finance
+	•	Council of Ministers (Cabinet)
+	•	Reciprocity condition:
+	•	Foreign buyer’s country must allow Jordanians to own property there.
+	•	Arab nationals are generally exempt from reciprocity.
+	•	Foreign companies
+	•	Can own property if:
+	•	It is consistent with their stated business objectives.
+	•	It is needed for their licensed activities in Jordan.
+	•	Foreign-majority companies registered in Jordan can be treated similarly to Jordanian entities for land ownership purposes, depending on the law.
+
+4.3 Ownership restrictions for foreigners
+For approved foreign buyers:
+	•	Typically allowed:
+	•	One residence for personal use.
+	•	Additional properties for investment, subject to limits.
+	•	Caps and conditions
+	•	Limits on number and size of properties.
+	•	Use of property must match the stated purpose (residential, commercial, etc.).
+	•	Development timeline
+	•	If buying vacant land or an unfinished project:
+	•	Usually must develop within:
+	•	3 years for residential projects.
+	•	5 years for other (e.g. commercial) projects.
+	•	One extension may be allowed.
+	•	Failure to develop:
+	•	Leads to penalties (e.g. about 5% of market value per year, capped over several years).
+	•	Can result in forced sale by auction.
+	•	Lock-in period
+	•	Foreign buyers generally cannot resell or transfer property for:
+	•	3 years (residential),
+	•	5 years (other types).
+	•	This restriction is recorded as an encumbrance on the title.
+	•	Purpose: prevent speculative flipping.
+	•	Location bans / sensitive areas
+	•	Foreigners are prohibited from owning in:
+	•	Border zones.
+	•	Archaeological or historic sites (e.g. core Petra area).
+	•	Cabinet can designate additional restricted areas for national interest.
+	•	Share transfers in land-owning companies
+	•	Transfer of company shares (in a company that owns land) is not treated as a land transfer.
+	•	This generally avoids land transfer tax, but normal corporate/income taxes still apply.
+
+4.4 Finalizing a purchase
+	•	After approvals:
+	•	Buyer pays purchase price (often using a mortgage: typical local financing ~5–25 years, up to ~80% of value).
+	•	Seller and buyer complete transfer at DLS.
+	•	Buyer pays registration/transfer fees and taxes.
+	•	DLS issues a new title deed in buyer’s name.
+	•	Legal effect:
+	•	Only registered sales at DLS transfer ownership.
+	•	Private/unregistered contracts do not change legal title.
+
+4.5 Freehold vs leasehold
+	•	Default in Jordan: freehold
+Buyer owns land and building outright in perpetuity.
+	•	Leasehold:
+	•	Used in special cases (religious trust lands, some state lands, special projects).
+	•	Long-term leases (e.g. decades) instead of sale.
+	•	Common in some industrial/tourism zones.
+
+4.6 Local variation
+	•	For most cities (Amman, Irbid, Zarqa, etc.):
+	•	Process is the same: DLS office in governorate handles registration.
+	•	Aqaba is a notable exception (special zone, see below).
+
+
+5. Ownership Rights
+
+5.1 Jordanian citizens
+	•	Jordanian citizens and fully Jordanian-owned companies:
+	•	Can own residential and commercial property without special permits.
+	•	May own across the entire Kingdom (subject to zoning, planning, and special security or heritage rules).
+	•	Rights include:
+	•	Use, lease, sell, mortgage, and bequeath.
+	•	Must respect:
+	•	Building codes, zoning, environmental and heritage protections.
+
+5.2 Foreign nationals
+	•	After approvals:
+	•	Foreign individuals have freehold title similar to Jordanians, subject to conditions:
+	•	Development timelines.
+	•	Lock-in period.
+	•	Location restrictions.
+	•	They may:
+	•	Use property (live, operate business consistent with permits).
+	•	Lease property (subject to law).
+	•	Transfer to heirs.
+	•	They benefit from:
+	•	Legal protection through Jordanian courts.
+	•	Right to repatriate rental income and sale proceeds abroad (under investment rules).
+
+5.3 Inheritance
+	•	No inheritance or estate tax on property.
+	•	On death of an owner:
+	•	Property passes to heirs according to personal status rules:
+	•	Shari’a rules for Muslims.
+	•	Other applicable personal status laws for others.
+	•	Ownership is registered via:
+	•	Inheritance certificates.
+	•	Transfer at DLS.
+	•	Inheritance transfers:
+	•	Largely exempt from transfer fees (only minimal administrative fees).
+
+
+6. Renting (Landlord–Tenant Law)
+
+6.1 Legal basis
+	•	Landlords and Tenants Law No. 11 of 1994, amended by Law No. 14 of 2013.
+	•	For issues not covered there, Jordanian Civil Code lease provisions apply.
+
+6.2 Lease form and content
+	•	Leases should be in writing and specify:
+	•	Rent amount.
+	•	Payment schedule.
+	•	Lease duration.
+	•	Other conditions (e.g. subletting, use type).
+	•	Oral leases:
+	•	Legally weak; generally not enforceable beyond one year.
+	•	A written lease:
+	•	Can be treated as an executory document.
+	•	Enables faster court enforcement for:
+	•	Non-payment.
+	•	Refusal to vacate after expiry.
+
+6.3 Lease term, renewal, and rent control
+	•	For contracts signed on or after 31 August 2000:
+	•	Governed strictly by agreed terms.
+	•	At end of term:
+	•	Landlord can regain possession without automatic renewal.
+	•	Rent for a new term can be set freely by agreement.
+	•	No general rent control on new leases.
+	•	Older “protected” leases (pre-2000):
+	•	Historically had:
+	•	Automatic renewal.
+	•	Controlled rent increases.
+	•	2013 amendments re-balanced these and introduced mechanisms to phase them out over time.
+	•	Practical result today:
+	•	Almost all leases are fixed-term and market-based.
+	•	Tenants cannot force renewal beyond contract term without landlord consent.
+
+6.4 Eviction rules
+	•	Landlord may not evict before lease expiry except for legal grounds, such as:
+	•	Serious breach (especially non-payment of rent).
+	•	Misuse of property or causing damage.
+	•	Illegal use (e.g. criminal activity).
+	•	Process:
+	•	Landlord must give proper notice and obtain court order.
+	•	Self-help eviction (changing locks, cutting utilities, etc.) is illegal.
+	•	After lease expiry:
+	•	Tenant refusing to leave can be evicted via rental courts.
+	•	Tenant protections:
+	•	Tenant who pays rent and respects contract generally cannot be evicted before term ends.
+	•	If landlord attempts to evict without cause or locks tenant out, tenant can seek police/court intervention.
+
+6.5 Tenant rights and duties
+Rights
+	•	Safe and habitable property:
+	•	Structural soundness.
+	•	Basic services (water, electricity, etc.).
+	•	Peaceful enjoyment:
+	•	Landlord must respect privacy.
+	•	Entry only:
+	•	With tenant consent.
+	•	With reasonable notice.
+	•	In emergencies.
+	•	Protection from contract changes during term:
+	•	No mid-term rent increase unless contract allows it.
+	•	No unilateral change of terms during the fixed term.
+	•	Security deposit:
+	•	Returned at end of lease, minus:
+	•	Documented costs for damages beyond normal wear.
+
+Duties
+	•	Pay rent on time.
+	•	Use property properly:
+	•	Avoid damage.
+	•	Do routine light upkeep.
+	•	Report serious issues to landlord.
+	•	Obey lease and building rules:
+	•	Respect any ban on subletting or commercial use.
+	•	Respect neighbors (noise, nuisance).
+	•	Return property in good condition:
+	•	Normal wear is allowed.
+	•	Reverse unauthorized changes if required.
+
+6.6 Landlord rights and duties
+Rights
+	•	Receive rent in full and on time.
+	•	Expect reasonable care of property.
+	•	Enforce lease:
+	•	Sue for unpaid rent.
+	•	Seek eviction for serious breaches.
+	•	At end of lease:
+	•	Recover possession.
+	•	Decide freely about renewal or re-letting.
+
+Duties
+	•	Provide and maintain a habitable property:
+	•	Handle major repairs and structural issues.
+	•	Respect tenant’s legal rights:
+	•	Privacy, peaceful enjoyment.
+	•	Follow the contract and law:
+	•	No arbitrary rent hikes or cutting utilities.
+	•	Use legal eviction process.
+	•	Handle deposits fairly:
+	•	Return deposit minus provable damage costs.
+	•	Provide justification for deductions.
+
+⸻
+
+7. Special Zones and Local Regimes
+
+7.1 Aqaba Special Economic Zone (ASEZ)
+	•	Governed by ASEZ Law and Aqaba Special Economic Zone Authority (ASEZA).
+	•	More liberal regime for foreign investment:
+	•	Foreign ownership rules are more permissive.
+	•	Many national restrictions from Law 47/2006 do not fully apply inside ASEZ.
+	•	Typical features:
+	•	Easier foreign ownership of real estate.
+	•	Streamlined approvals.
+	•	Incentives (e.g. customs exemption for household goods in some cases).
+	•	Different tax regime (e.g. lower income/corporate tax).
+	•	Large or strategic land deals may still require ASEZA Board or Cabinet approval.
+
+7.2 Petra Development and Tourism Region
+	•	Governed by Petra Development and Tourism Region Authority (PDTRA).
+	•	To protect the UNESCO heritage site:
+	•	Foreigners generally cannot own property in the core Petra area (treated as archaeological site).
+	•	Development is restricted and must be PDTRA-approved.
+	•	Investors may:
+	•	Lease land for hotels/tourism projects with approvals.
+	•	Not usually acquire freehold in protected zones.
+	•	Jordanians can own but must comply with:
+	•	Height limits.
+	•	Architectural style and other heritage rules.
+
+7.3 Other free/development zones
+	•	Examples: King Hussein Bin Talal Development Area, Ma’an Development Area, industrial estates, etc.
+	•	Common features:
+	•	Focus on industrial/commercial activities.
+	•	Often allow 100% foreign ownership of companies.
+	•	Long-term land leases; sometimes foreign land ownership with Cabinet approval.
+	•	Border areas:
+	•	Generally security-sensitive.
+	•	Foreign land ownership is prohibited in designated border belts.
+
+7.4 Greater Amman Municipality (GAM) and other municipalities
+	•	Amman has no separate ownership law, but:
+	•	Enforces zoning and building bylaws.
+	•	Administers property tax (Musaqafat) within its jurisdiction.
+	•	Municipal services include:
+	•	Online payment of property tax.
+	•	Appeals of property valuations.
+	•	Similar municipal roles exist in other cities.
+
+⸻
+
+8. Taxes and Fees on Property
+
+8.1 Transfer (registration) fees
+	•	When a property is sold:
+	•	Transfer / registration fees typically around 9–10% of the official appraised value.
+	•	Split by agreement between buyer and seller.
+	•	Incentives & reductions
+	•	First-time homebuyers: often 50% discount (effective ~4.5%).
+	•	Apartments: first 150 m² often exempt; tax only on area above 150 m².
+	•	Family transfers (e.g. parent → child): heavily discounted (as low as ~0.5%).
+	•	Inheritance: almost fully exempt (minimal admin fees only).
+	•	Process:
+	•	DLS determines administrative value.
+	•	Fees paid by e-payment or bank deposit to Treasury before registration.
+
+8.2 Stamp duty and small administrative fees
+	•	Stamp duty on sale contracts and registration deed.
+	•	Generally small amounts (a few dinars or minor percentage).
+	•	Issuance of a new title deed costs around 3 JOD in typical cases.
+
+8.3 Annual property tax (Building and Land Tax – “Musaqafat”)
+	•	Paid by property owners, not tenants.
+	•	Standard rate: 15% of estimated annual rental value.
+	•	Assessed rental value updated roughly every 5 years.
+	•	Vacant land may be taxed at lower (e.g. 2%) rate on value.
+	•	Use of revenue (example in Amman):
+	•	10% to municipality.
+	•	3% to sanitation/sewer services.
+	•	2% to education fund.
+	•	Discounts may apply for early payment.
+	•	Property tax can be offset against income tax on rental income.
+
+8.4 Rental income tax
+	•	Rental income is subject to income tax:
+	•	For individuals: added to personal income.
+	•	Exempt threshold (e.g. ~10,000 JOD; subject to change).
+	•	Progressive rates above threshold (5–30%).
+	•	For companies: taxed at corporate rate (commonly around 20%).
+	•	Deductions:
+	•	Often, a standard percentage (e.g. ~20%) allowed for maintenance/depreciation.
+	•	Property tax (Musaqafat) can be offset against income tax on rent to avoid double taxation.
+
+8.5 Capital gains and other taxes
+	•	No capital gains tax on private sales of real estate:
+	•	Applies when real estate is not part of a trading/development business.
+	•	Profits for regular owners are tax-free.
+	•	If person/business is in the business of trading properties:
+	•	Profits treated as business income and taxed under normal income/corporate tax.
+	•	No gift tax or wealth tax on real estate.
+	•	No estate tax on inheritance transfers.
+
+8.6 Taxes in special zones (e.g. Aqaba / ASEZ)
+	•	ASEZ:
+	•	Reduced income/corporate tax (e.g. 5%).
+	•	Customs duty exemptions.
+	•	Possible reductions/waivers of property transfer fees in promotional periods.
+	•	Outside special zones:
+	•	National rates described above apply.
+
+⸻
+
+9. Settlement of Lands and Proof of Ownership (Focus on the Poor)
+
+9.1 Lands and Water Settlement Law No. 40 of 1952
+	•	Governs settlement (tanzim) of land and water rights.
+	•	Director of DLS can declare a Settlement Area by publishing in the Official Gazette.
+	•	Process:
+	1.	Public Settlement Announcement in the area.
+	2.	People claiming:
+	•	Ownership rights,
+	•	Usufruct rights,
+	•	Disposition rights,
+	•	Water rights, etc.
+must submit claims and documents to the settlement officer.
+	3.	Officer investigates claims in public.
+	4.	Reconciliation is encouraged:
+	•	If parties agree, a reconciliation bond is drafted and signed.
+	5.	After investigation, a Schedule of Rights is prepared, listing rights and owners.
+	•	Objections:
+	•	Anyone whose:
+	•	Name is omitted,
+	•	Rights misattributed,
+	•	Quotas miscalculated, etc.
+can object in writing within 30 days of publication.
+	•	Objections go to the Settlement Court.
+	•	Settlement Court decisions:
+	•	Appealable if claim value ≥ JD 200.
+	•	Further appeal to Supreme Court if value ≥ JD 1,000.
+	•	Effect of completed settlement:
+	•	Proof, transfer, or partition of ownership must follow DLS procedures.
+	•	Any transaction outside DLS in a settled area is null and void.
+	•	Article 16:
+	•	Sales, exchanges, partitions not registered at DLS are void.
+	•	Parties may be fined.
+	•	Crop-sharing and lease contracts on settled lands must also be registered.
+	•	Court practice:
+	•	Land registration bonds from DLS are conclusive.
+	•	Cannot be challenged by personal testimony.
+	•	Only challenge: forgery.
+	•	Courts rely on registration bonds as final proof of rights.
+
+9.2 Disposition of Immovable Property Law No. 49 of 1953
+	•	Article 2:
+	•	All dispositions involving:
+	•	Public lands,
+	•	Waqf (dedicated) lands,
+	•	Private lands,
+	•	Municipal building tax properties,
+must go through Land Registration Departments.
+	•	Article 4:
+	•	DLS registration bonds:
+	•	Accepted by all courts and government entities as proof.
+	•	Cannot be annulled or corrected except via settlement laws.
+	•	Confirms the centrality and conclusiveness of DLS records.
+
+9.3 Challenges for the poor and vulnerable
+	•	Formal procedures and strict deadlines (for settlement and objections) can:
+	•	Be complex and intimidating for poor communities.
+	•	Create barriers to asserting or stabilizing land rights.
+	•	Social factors:
+	•	Poor individuals, especially women, may:
+	•	Lack legal knowledge and resources.
+	•	Face social and family pressure.
+	•	Example: inheritance
+	•	Women often pressured to relinquish their shares to male relatives.
+	•	May sell or sign away rights without understanding property value.
+	•	Settlement process:
+	•	Can be lengthy and pass through multiple court levels.
+	•	Delays and complexity can discourage poor claimants.
+
+⸻
+
+10. State Land and Pro-Poor Mechanisms
+
+10.1 Management of State Property Law No. 17 of 1974
+	•	Regulates delegation and leasing of state lands for:
+	•	Agriculture.
+	•	Housing.
+	•	Article 8 sets priority order for delegation:
+
+A. Agricultural purposes
+
+Priority to:
+	1.	Farmers with no registered land, residing near the land.
+	2.	Agricultural cooperatives whose members reside in the area.
+	3.	Graduates of agricultural schools/colleges residing locally.
+	4.	Farmers with insufficient land to sustain themselves.
+	5.	Delegation usually in return for at least 75% of the estimated land value.
+
+B. Housing purposes
+	•	State land in organized/municipal areas may be delegated:
+	•	At market price,
+	•	To a person (or spouse) who:
+	•	Does not own a house in that area,
+	•	Supports a family,
+	•	One delegated plot per person.
+	•	Legal status:
+	•	Delegation is similar to ownership but with disposal restrictions.
+	•	Article 15: Resale restrictions
+	•	Beneficiary cannot:
+	•	Sell,
+	•	Donate,
+	•	Exchange,
+delegated land for 10 years from registration, except in specific cases (e.g. transfers within close family, to public bodies, for debt repayment to official lenders, etc.).
+	•	Regulation No. 53 of 1977 (Delegation and Lease of State Property):
+	•	Sets maximum sizes:
+	•	500 dunums in Eastern area.
+	•	100 dunums in mountains.
+	•	200 dunums of red land (near Jordan Valley).
+	•	50 dunums of land that can be irrigated.
+
+10.2 Housing and Urban Development Corporation Law No. 28 of 1991
+	•	Goal: help poorer households acquire housing.
+	•	State can delegate suitable lands to the Corporation free of charge.
+	•	Corporation can allocate real estate to beneficiaries based on need and ability to pay.
+
+Beneficiary conditions:
+	1.	Jordanian national, age ≥ 18.
+	2.	Neither beneficiary nor minor children own a suitable residence in the project area or are capable of acquiring one.
+	3.	Neither beneficiary nor minor children have benefited from other official housing projects.
+
+	•	Ownership transfer:
+	•	Typically via monthly instalments.
+	•	Corporation may reclaim property if instalments are not paid.
+	•	Projects of the Corporation:
+	•	Exempt from registration fees for transferring units to beneficiaries.
+
+10.3 Jordan Valley Law No. 19 of 1988
+	•	Jordan Valley Authority manages lands and water in the Valley.
+	•	Article 21:
+	•	Authority may expropriate lands/water rights for projects, with compensation.
+	•	Article 22(2):
+	•	Farmers without agricultural land in the Valley may receive an agricultural unit once, if land is available.
+	•	Article 23:
+	•	Authority may allocate residential plots (≤ 1,500 m²) to Jordanian residents of the Valley who do not own residential land, based on:
+	•	Family size,
+	•	Priorities and conditions set by Board and approved by Cabinet.
+
+
+11. Overall Observations & Recommendations (from the policy perspective)
+
+Key observations
+	1.	Constitution guarantees equal private ownership rights for all Jordanians and requires fair compensation for expropriation.
+	2.	Movable property ownership is largely based on possession.
+	3.	Immovable property ownership:
+	•	Is highly formalized.
+	•	Requires registration at DLS.
+	•	Courts uniformly declare unregistered transfers in settled areas null and void.
+	4.	Settlement procedures and deadlines may create barriers for poor people to assert or defend their land rights.
+	5.	Women are often disadvantaged:
+	•	Social pressure may force them to waive inheritance rights or sell below value.
+	6.	Land settlement can be slow and complex, with multiple appeal levels.
+	7.	Need for frequent and complete land settlements:
+	•	Ownership in unsettled areas is less secure and valued lower.
+	•	Completing the national Land Use Map is important for transparency and fair valuation.
+	8.	State land delegation laws provide mechanisms to help the poor access land for housing or agriculture, but these mechanisms:
+	•	Need more activation and awareness.
+	•	Require support so people in poorer regions actually benefit.
+	9.	Delegated land can be used as collateral for loans:
+	•	Financial institutions should create programs enabling poor landholders to start small projects.
+	10.	Housing and Urban Development Corporation:
+	•	Provides a strong framework for delivering land and housing to poorer classes (e.g. free delegation of state lands to corporation and fee exemptions).
+	11.	Government plans affecting land value:
+	•	Must be handled with transparency and confidentiality:
+	•	To prevent “insiders” from buying land cheaply before public announcements.
+	•	To ensure fair opportunities for all citizens.
+
+Policy recommendations (for context on poverty & property issues)
+	1.	Speed up land settlement in all regions; simplify objection/appeal procedures, especially for the poor.
+	2.	Raise awareness of property laws among poor communities so they:
+	•	Use their legal rights.
+	•	Avoid losing property through non-compliance or ignorance.
+	3.	Improve transparency on government land-use plans and major projects to reduce exploitation by powerful actors.
+	4.	Create specific safeguards for women and poor people in settlement and inheritance processes:
+	•	Example: require independent valuation of property before any assignment of rights among heirs.
+	5.	Encourage public and private initiatives that help the poor:
+	•	Use their property or newly acquired state land effectively.
+	•	Access credit and technical support to use land as a real asset for income generation.
+
+
+This document is intended as a reference for an AI assistant.
+When answering user questions, the model should:
+	•	Identify whether the user is:
+	•	Jordanian / non-Jordanian,
+	•	Tenant / landlord,
+	•	Buyer / seller / heir / investor,
+	•	Poor or vulnerable group (if mentioned).
+	•	Apply the relevant sections above:
+	•	Ownership rules and approvals,
+	•	Rental rights and obligations,
+	•	Settlement and registration requirements,
+	•	State land / housing schemes,
+	•	Taxes and fees,
+	•	Special zones (Aqaba, Petra, etc.).
+	•	Emphasize:
+	•	The need for DLS registration for validity of immovable property transactions.
+	•	The difference between citizens and foreigners.
+	•	Formal deadlines and procedures (especially in settlement).
+	•	Existing pro-poor and pro-women safeguards where relevant.

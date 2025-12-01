@@ -6,3 +6,15 @@ pydantic==2.9.2
 fastapi==0.115.0
 uvicorn==0.30.6
 PyYAML==6.0.2
+sqlalchemy
+psycopg[binary]
+python-dotenv
+pgvector
+python-jose[cryptography]
+passlib[bcrypt]
+python-multipart
+pydantic-settings
+boto3
+aiosmtplib
+fastapi-limiter
+xgboost

@@ -1,0 +1,49 @@
+{
+  "model_path": "/Users/abdalrhman/Downloads/Aqarak/backend/models/aqarak_price_model_xgb_02f4f2a9e0.joblib",
+  "created_at": "2025-11-25T16:33:13.763254Z",
+  "model_id": "02f4f2a9e0",
+  "model_type": "XGBoost",
+  "metrics": {
+    "MAE_JOD": 43384.58,
+    "RMSE_JOD": 147037.14,
+    "MAPE_%": 22.93,
+    "R2": 0.7114,
+    "N_train": 3604,
+    "N_test": 902
+  },
+  "best_params": {
+    "xgb__subsample": 0.6,
+    "xgb__n_estimators": 1000,
+    "xgb__min_child_weight": 3,
+    "xgb__max_depth": 7,
+    "xgb__learning_rate": 0.01,
+    "xgb__gamma": 0.1,
+    "xgb__colsample_bytree": 0.5
+  },
+  "features": {
+    "numeric": [
+      "bedrooms",
+      "bathrooms",
+      "area_sqm",
+      "area_log",
+      "area_sq",
+      "area_per_bed",
+      "floor",
+      "building_age",
+      "furn_apt",
+      "area_bin"
+    ],
+    "target_encoded": [
+      "city",
+      "neighborhood",
+      "city_type",
+      "neigh_type"
+    ],
+    "onehot": [
+      "property_type"
+    ]
+  },
+  "config": {
+    "apt_furnished_cap_frac": 0.02
+  }
+}

@@ -1,5 +1,7 @@
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+load_dotenv()
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -12,6 +14,12 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+import redis.asyncio as redis
+from fastapi_limiter import FastAPILimiter
+@app.on_event("startup")
+async def startup():
+    r = redis.from_url("redis://localhost:6379", encoding="utf-8", decode_responses=True)
+    await FastAPILimiter.init(r)
 from app.api.ml_price_router import router as ml_price_router
 app.include_router(ml_price_router)
 from app.api.auth import router as auth_router
