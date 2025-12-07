@@ -50,7 +50,7 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F4F1E8] flex">
+    <div className="min-h-screen bg-background flex">
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -59,8 +59,8 @@ export default function Signup() {
         >
           <div className="mb-8 text-center">
             <img src={logo} alt="Aqarak" className="h-12 mx-auto mb-4" />
-            <h1 className="text-3xl font-bold text-[#0B1B34] mb-2">Create Account</h1>
-            <p className="text-gray-600">Join Aqarak to find your dream property</p>
+            <h1 className="text-3xl font-bold text-primary mb-2">Create Account</h1>
+            <p className="text-muted-foreground">Join Aqarak to find your dream property</p>
           </div>
 
           {error && (
@@ -76,77 +76,77 @@ export default function Signup() {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label htmlFor="name" className="block text-sm font-semibold text-[#0B1B34] mb-2">
+              <label htmlFor="name" className="block text-sm font-semibold text-primary mb-2">
                 Full Name
               </label>
               <div className="relative">
-                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <input
                   id="name"
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-white border border-[#0B1B34]/10 rounded-xl text-[#0B1B34] placeholder-gray-400 focus:outline-none focus:border-secondary transition-colors"
+                  className="w-full pl-12 pr-4 py-3 bg-card border border-border rounded-xl text-primary placeholder:text-muted-foreground focus:outline-none focus:border-secondary transition-colors"
                   placeholder="John Doe"
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="phone" className="block text-sm font-semibold text-[#0B1B34] mb-2">
+              <label htmlFor="phone" className="block text-sm font-semibold text-primary mb-2">
                 Phone Number
               </label>
               <div className="relative">
-                <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <input
                   id="phone"
                   type="tel"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   required
-                  className="w-full pl-12 pr-4 py-3 bg-white border border-[#0B1B34]/10 rounded-xl text-[#0B1B34] placeholder-gray-400 focus:outline-none focus:border-secondary transition-colors"
+                  className="w-full pl-12 pr-4 py-3 bg-card border border-border rounded-xl text-primary placeholder:text-muted-foreground focus:outline-none focus:border-secondary transition-colors"
                   placeholder="079 123 4567"
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-[#0B1B34] mb-2">
+              <label htmlFor="email" className="block text-sm font-semibold text-primary mb-2">
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full pl-12 pr-4 py-3 bg-white border border-[#0B1B34]/10 rounded-xl text-[#0B1B34] placeholder-gray-400 focus:outline-none focus:border-secondary transition-colors"
+                  className="w-full pl-12 pr-4 py-3 bg-card border border-border rounded-xl text-primary placeholder:text-muted-foreground focus:outline-none focus:border-secondary transition-colors"
                   placeholder="you@example.com"
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-semibold text-[#0B1B34] mb-2">
+              <label htmlFor="password" className="block text-sm font-semibold text-primary mb-2">
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <input
                   id="password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full pl-12 pr-4 py-3 bg-white border border-[#0B1B34]/10 rounded-xl text-[#0B1B34] placeholder-gray-400 focus:outline-none focus:border-secondary transition-colors"
+                  className="w-full pl-12 pr-4 py-3 bg-card border border-border rounded-xl text-primary placeholder:text-muted-foreground focus:outline-none focus:border-secondary transition-colors"
                   placeholder="••••••••"
                 />
               </div>
               {password && (
                 <div className="mt-2 flex items-center gap-2">
-                  <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                  <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
                     <div
                       className={`h-full transition-all ${
                         passwordStrength === 'strong' ? 'bg-green-500 w-full' :
@@ -167,18 +167,18 @@ export default function Signup() {
             </div>
 
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-semibold text-[#0B1B34] mb-2">
+              <label htmlFor="confirmPassword" className="block text-sm font-semibold text-primary mb-2">
                 Confirm Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <input
                   id="confirmPassword"
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
-                  className="w-full pl-12 pr-4 py-3 bg-white border border-[#0B1B34]/10 rounded-xl text-[#0B1B34] placeholder-gray-400 focus:outline-none focus:border-secondary transition-colors"
+                  className="w-full pl-12 pr-4 py-3 bg-card border border-border rounded-xl text-primary placeholder:text-muted-foreground focus:outline-none focus:border-secondary transition-colors"
                   placeholder="••••••••"
                 />
                 {confirmPassword && (
@@ -196,7 +196,7 @@ export default function Signup() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-secondary hover:bg-secondary/90 text-white font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-secondary hover:bg-secondary/90 text-secondary-foreground font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <>
@@ -210,7 +210,7 @@ export default function Signup() {
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-gray-600">
+            <p className="text-muted-foreground">
               Already have an account?{' '}
               <Link to="/login" className="text-secondary font-semibold hover:underline">
                 Sign in
@@ -220,12 +220,12 @@ export default function Signup() {
         </motion.div>
       </div>
 
-      <div className="hidden lg:flex lg:w-1/2 bg-[#0B1B34] items-center justify-center p-12">
+      <div className="hidden lg:flex lg:w-1/2 bg-primary items-center justify-center p-12">
         <div className="max-w-md text-center">
-          <h2 className="text-4xl font-bold text-white mb-6">
+          <h2 className="text-4xl font-bold text-primary-foreground mb-6">
             Start Your Property Journey
           </h2>
-          <p className="text-xl text-gray-300">
+          <p className="text-xl text-primary-foreground/80">
             Join thousands of users who trust Aqarak for their real estate needs.
           </p>
         </div>

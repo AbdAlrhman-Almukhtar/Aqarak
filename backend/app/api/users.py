@@ -15,13 +15,16 @@ class UserOut(BaseModel):
     id: int
     email: EmailStr
     name: Optional[str] = None
+    phone: Optional[str] = None
 
     class Config:
         from_attributes = True 
 
 class UserUpdate(BaseModel):
     name: Optional[str] = None
+    phone: Optional[str] = None
     password: Optional[str] = None
+
 @router.post("", response_model=UserOut, status_code=201)
 def create_user(payload: UserCreate, db: Session = Depends(get_db)):
     if db.query(User).filter(User.email == payload.email).first():
@@ -48,6 +51,8 @@ def update_me(
 ):
     if payload.name is not None:
         user.name = payload.name.strip() or None
+    if payload.phone is not None:
+        user.phone = payload.phone.strip() or None
     if payload.password:
         user.password_hash = hash_password(payload.password)
     db.add(user)

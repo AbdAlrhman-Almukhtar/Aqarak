@@ -143,7 +143,13 @@ export default function ListProperty() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F4F1E8]">
+    <div className="min-h-screen bg-background relative overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+        <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-secondary/20 opacity-20 blur-[100px]"></div>
+      </div>
+
       <header className="fixed z-[1000] inset-x-0 top-0 pt-6 flex justify-center pointer-events-none">
         <div className="pointer-events-auto">
           <PillNav
@@ -159,13 +165,13 @@ export default function ListProperty() {
         </div>
       </header>
 
-      <div className="container mx-auto px-4 pt-48 pb-20">
+      <div className="container mx-auto px-4 pt-48 pb-20 relative z-10">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-[#0B1B34]">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-primary">
               List Your <span className="text-secondary">Property</span>
             </h1>
-            <p className="text-xl text-[#0B1B34]/70">
+            <p className="text-xl text-muted-foreground">
               Create a new property listing and test S3 image upload
             </p>
           </div>
@@ -187,12 +193,12 @@ export default function ListProperty() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="bg-white rounded-2xl p-8 shadow-lg">
+          <form onSubmit={handleSubmit} className="bg-card rounded-2xl p-8 shadow-lg border border-border">
             <div className="mb-8">
-              <h2 className="text-2xl font-bold text-[#0B1B34] mb-4">Basic Information</h2>
+              <h2 className="text-2xl font-bold text-primary mb-4">Basic Information</h2>
               
               <div className="mb-4">
-                <label className="block text-sm font-semibold text-[#0B1B34] mb-2">
+                <label className="block text-sm font-semibold text-primary mb-2">
                   Property Title *
                 </label>
                 <input
@@ -201,13 +207,13 @@ export default function ListProperty() {
                   value={formData.title}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary"
+                  className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary text-primary placeholder:text-muted-foreground"
                   placeholder="e.g., Modern Apartment in Abdoun"
                 />
               </div>
 
               <div className="mb-4">
-                <label className="block text-sm font-semibold text-[#0B1B34] mb-2">
+                <label className="block text-sm font-semibold text-primary mb-2">
                   Description
                 </label>
                 <textarea
@@ -215,14 +221,14 @@ export default function ListProperty() {
                   value={formData.description}
                   onChange={handleInputChange}
                   rows={4}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary"
+                  className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary text-primary placeholder:text-muted-foreground"
                   placeholder="Describe your property..."
                 />
               </div>
             </div>
 
             <div className="mb-8">
-              <h2 className="text-2xl font-bold text-[#0B1B34] mb-4">Listing Type</h2>
+              <h2 className="text-2xl font-bold text-primary mb-4">Listing Type</h2>
               <div className="flex gap-6">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
@@ -232,7 +238,7 @@ export default function ListProperty() {
                     onChange={handleInputChange}
                     className="w-5 h-5 text-secondary rounded focus:ring-2 focus:ring-secondary"
                   />
-                  <span className="text-[#0B1B34] font-medium">For Sale</span>
+                  <span className="text-primary font-medium">For Sale</span>
                 </label>
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
@@ -242,17 +248,17 @@ export default function ListProperty() {
                     onChange={handleInputChange}
                     className="w-5 h-5 text-secondary rounded focus:ring-2 focus:ring-secondary"
                   />
-                  <span className="text-[#0B1B34] font-medium">For Rent</span>
+                  <span className="text-primary font-medium">For Rent</span>
                 </label>
               </div>
             </div>
 
             <div className="mb-8">
-              <h2 className="text-2xl font-bold text-[#0B1B34] mb-4">Pricing</h2>
+              <h2 className="text-2xl font-bold text-primary mb-4">Pricing</h2>
               <div className="grid md:grid-cols-2 gap-4">
                 {formData.is_for_sale && (
                   <div>
-                    <label className="block text-sm font-semibold text-[#0B1B34] mb-2">
+                    <label className="block text-sm font-semibold text-primary mb-2">
                       Sale Price (JOD) *
                     </label>
                     <input
@@ -261,14 +267,14 @@ export default function ListProperty() {
                       value={formData.price}
                       onChange={handleInputChange}
                       required={formData.is_for_sale}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary"
+                      className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary text-primary placeholder:text-muted-foreground"
                       placeholder="150000"
                     />
                   </div>
                 )}
                 {formData.is_for_rent && (
                   <div>
-                    <label className="block text-sm font-semibold text-[#0B1B34] mb-2">
+                    <label className="block text-sm font-semibold text-primary mb-2">
                       Monthly Rent (JOD) *
                     </label>
                     <input
@@ -277,7 +283,7 @@ export default function ListProperty() {
                       value={formData.rent_price}
                       onChange={handleInputChange}
                       required={formData.is_for_rent}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary"
+                      className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary text-primary placeholder:text-muted-foreground"
                       placeholder="500"
                     />
                   </div>
@@ -286,27 +292,27 @@ export default function ListProperty() {
             </div>
 
             <div className="mb-8">
-              <h2 className="text-2xl font-bold text-[#0B1B34] mb-4">Location</h2>
+              <h2 className="text-2xl font-bold text-primary mb-4">Location</h2>
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-[#0B1B34] mb-2">City</label>
+                  <label className="block text-sm font-semibold text-primary mb-2">City</label>
                   <input
                     type="text"
                     name="city"
                     value={formData.city}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary"
+                    className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary text-primary placeholder:text-muted-foreground"
                     placeholder="Amman"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-[#0B1B34] mb-2">Neighborhood</label>
+                  <label className="block text-sm font-semibold text-primary mb-2">Neighborhood</label>
                   <input
                     type="text"
                     name="neighborhood"
                     value={formData.neighborhood}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary"
+                    className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary text-primary placeholder:text-muted-foreground"
                     placeholder="Abdoun"
                   />
                 </div>
@@ -314,16 +320,16 @@ export default function ListProperty() {
             </div>
 
             <div className="mb-8">
-              <h2 className="text-2xl font-bold text-[#0B1B34] mb-4">Property Details</h2>
+              <h2 className="text-2xl font-bold text-primary mb-4">Property Details</h2>
               
               <div className="grid md:grid-cols-2 gap-4 mb-4">
                 <div>
-                  <label className="block text-sm font-semibold text-[#0B1B34] mb-2">Property Type</label>
+                  <label className="block text-sm font-semibold text-primary mb-2">Property Type</label>
                   <select
                     name="property_type"
                     value={formData.property_type}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary bg-white"
+                    className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary text-primary"
                   >
                     {['Apartment', 'House', 'Townhouse', 'Villa', 'Farm'].map(t => (
                       <option key={t} value={t}>{t}</option>
@@ -339,44 +345,44 @@ export default function ListProperty() {
                       onChange={handleInputChange}
                       className="w-5 h-5 text-secondary rounded focus:ring-2 focus:ring-secondary"
                     />
-                    <span className="text-[#0B1B34] font-medium">Furnished</span>
+                    <span className="text-primary font-medium">Furnished</span>
                   </label>
                 </div>
               </div>
 
               <div className="grid md:grid-cols-3 gap-4 mb-4">
                 <div>
-                  <label className="block text-sm font-semibold text-[#0B1B34] mb-2">Bedrooms</label>
+                  <label className="block text-sm font-semibold text-primary mb-2">Bedrooms</label>
                   <input
                     type="number"
                     name="bedrooms"
                     value={formData.bedrooms}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary"
+                    className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary text-primary placeholder:text-muted-foreground"
                     placeholder="3"
                     min="0"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-[#0B1B34] mb-2">Bathrooms</label>
+                  <label className="block text-sm font-semibold text-primary mb-2">Bathrooms</label>
                   <input
                     type="number"
                     name="bathrooms"
                     value={formData.bathrooms}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary"
+                    className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary text-primary placeholder:text-muted-foreground"
                     placeholder="2"
                     min="0"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-[#0B1B34] mb-2">Area (sqm)</label>
+                  <label className="block text-sm font-semibold text-primary mb-2">Area (sqm)</label>
                   <input
                     type="number"
                     name="area_sqm"
                     value={formData.area_sqm}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary"
+                    className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary text-primary placeholder:text-muted-foreground"
                     placeholder="150"
                     min="0"
                   />
@@ -385,24 +391,24 @@ export default function ListProperty() {
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-[#0B1B34] mb-2">Floor Number</label>
+                  <label className="block text-sm font-semibold text-primary mb-2">Floor Number</label>
                   <input
                     type="number"
                     name="floor"
                     value={formData.floor}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary"
+                    className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary text-primary placeholder:text-muted-foreground"
                     placeholder="e.g. 2 (0 for Ground)"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-[#0B1B34] mb-2">Building Age (Years)</label>
+                  <label className="block text-sm font-semibold text-primary mb-2">Building Age (Years)</label>
                   <input
                     type="number"
                     name="building_age"
                     value={formData.building_age}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary"
+                    className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary text-primary placeholder:text-muted-foreground"
                     placeholder="e.g. 5"
                     min="0"
                   />
@@ -411,9 +417,9 @@ export default function ListProperty() {
             </div>
 
             <div className="mb-8">
-              <h2 className="text-2xl font-bold text-[#0B1B34] mb-4">Photos (Max 5)</h2>
+              <h2 className="text-2xl font-bold text-primary mb-4">Photos (Max 5)</h2>
               
-              <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center">
+              <div className="border-2 border-dashed border-border rounded-xl p-8 text-center bg-background/50">
                 <input
                   type="file"
                   accept="image/*"
@@ -426,11 +432,11 @@ export default function ListProperty() {
                   htmlFor="image-upload"
                   className="cursor-pointer inline-flex flex-col items-center"
                 >
-                  <Upload className="w-12 h-12 text-gray-400 mb-4" />
-                  <span className="text-[#0B1B34] font-semibold mb-2">
+                  <Upload className="w-12 h-12 text-muted-foreground mb-4" />
+                  <span className="text-primary font-semibold mb-2">
                     Click to upload images
                   </span>
-                  <span className="text-sm text-gray-500">
+                  <span className="text-sm text-muted-foreground">
                     PNG, JPG, WEBP up to 10MB each
                   </span>
                 </label>
@@ -467,14 +473,14 @@ export default function ListProperty() {
               <button
                 type="button"
                 onClick={() => navigate('/buy')}
-                className="flex-1 px-6 py-4 border-2 border-[#0B1B34] text-[#0B1B34] font-semibold rounded-xl hover:bg-[#0B1B34] hover:text-white transition"
+                className="flex-1 px-6 py-4 border-2 border-primary text-primary font-semibold rounded-xl hover:bg-primary hover:text-primary-foreground transition"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className="flex-1 px-6 py-4 bg-secondary text-white font-semibold rounded-xl hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 px-6 py-4 bg-secondary text-secondary-foreground font-semibold rounded-xl hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? 'Creating...' : 'List Property'}
               </button>

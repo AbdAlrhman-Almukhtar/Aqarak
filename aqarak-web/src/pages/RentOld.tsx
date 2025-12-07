@@ -18,7 +18,7 @@ export default function RentOld() {
   );
 
   return (
-    <div className="min-h-screen bg-[#F4F1E8]">
+    <div className="min-h-screen bg-background">
       <header className="fixed z-[1000] inset-x-0 top-0 pt-6 flex justify-center pointer-events-none">
         <div className="pointer-events-auto">
           <PillNav
@@ -26,20 +26,20 @@ export default function RentOld() {
             logoAlt="Aqarak"
             items={navItems}
             activeHref="/rent"
-            baseColor="#0B1B34"
-            pillColor="#F4F1E8"
+            baseColor="var(--primary)"
+            pillColor="var(--background)"
             hoveredPillTextColor="#ffffff"
-            pillTextColor="#0B1B34"
+            pillTextColor="var(--primary)"
           />
         </div>
       </header>
 
       <div className="container mx-auto px-4 pt-48 pb-20">
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-[#0B1B34]">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-primary">
             Properties for <span className="text-secondary">Rent</span>
           </h1>
-          <p className="text-xl text-[#0B1B34]/70 max-w-2xl mx-auto">
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Find your perfect rental in Jordan's most desirable neighborhoods
           </p>
         </div>

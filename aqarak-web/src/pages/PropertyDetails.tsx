@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useChat } from '../contexts/ChatContext';
 import { useAuth } from '../contexts/AuthContext';
-import { MapPin, Bed, Bath, Maximize, Check, ArrowLeft, Heart } from 'lucide-react';
+import { MapPin, Bed, Bath, Maximize, Check, ArrowLeft, Heart, Home, Calendar, Layers, Share2 } from 'lucide-react';
 import PillNav from '../components/PillNav';
+import PriceAnalysisGauge from '../components/PriceAnalysisGauge';
+import { GridPattern } from '../components/ui/grid-pattern';
 import logo from '../assets/logo.svg';
 import api from '../lib/api';
 
@@ -85,19 +87,19 @@ export default function PropertyDetails() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F4F1E8] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0B1B34]"></div>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
       </div>
     );
   }
 
   if (error || !property) {
     return (
-      <div className="min-h-screen bg-[#F4F1E8] flex flex-col items-center justify-center gap-4">
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4">
         <p className="text-red-600 text-xl">{error || 'Property not found'}</p>
         <button 
           onClick={() => navigate(-1)}
-          className="text-[#0B1B34] underline hover:text-secondary"
+          className="text-primary underline hover:text-secondary"
         >
           Go Back
         </button>
@@ -115,7 +117,12 @@ export default function PropertyDetails() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F4F1E8]">
+    <div className="min-h-screen bg-background relative overflow-hidden">
+      {/* Background Pattern */}
+      <div className="pointer-events-none absolute inset-0 z-0">
+        <GridPattern className="opacity-50 text-primary/5" gap={64} lineWidth={1} color="currentColor" opacity={0.5} />
+      </div>
+
       <header className="fixed z-[1000] inset-x-0 top-0 pt-6 flex justify-center pointer-events-none">
         <div className="pointer-events-auto">
           <PillNav
@@ -130,157 +137,235 @@ export default function PropertyDetails() {
           />
         </div>
       </header>
-      <div className="container mx-auto px-4 pt-32 pb-20">
+
+      <div className="container mx-auto px-4 pt-32 pb-20 relative z-10">
+        {/* Back Button */}
         <button 
           onClick={() => navigate(-1)}
-          className="flex items-center gap-2 text-[#0B1B34]/60 hover:text-[#0B1B34] mb-6 transition-colors"
+          className="flex items-center gap-2 text-muted-foreground hover:text-primary mb-6 transition-colors font-medium"
         >
           <ArrowLeft className="w-5 h-5" />
           Back to listings
         </button>
 
-        <div className="grid lg:grid-cols-2 gap-8">
-          <div className="space-y-4">
-            <div className="aspect-[4/3] bg-gray-200 rounded-2xl overflow-hidden relative group">
-              {allImages.length > 0 ? (
-                <img 
-                  src={getImageUrl(allImages[activeImage])} 
-                  alt={property.title}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-gray-400">
-                  <Maximize className="w-16 h-16" />
-                </div>
-              )}
-            </div>
-            
-            {allImages.length > 1 && (
-              <div className="flex gap-4 overflow-x-auto pb-2">
-                {allImages.map((img, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setActiveImage(idx)}
-                    className={`relative flex-shrink-0 w-24 h-24 rounded-lg overflow-hidden border-2 transition-all ${
-                      activeImage === idx ? 'border-secondary' : 'border-transparent opacity-70 hover:opacity-100'
-                    }`}
-                  >
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-3 gap-8">
+            {/* Left Column - Images & Main Info */}
+            <div className="lg:col-span-2 space-y-6">
+              {/* Image Gallery */}
+              <div className="space-y-4">
+                <div className="aspect-[16/10] bg-muted rounded-3xl overflow-hidden relative group shadow-xl">
+                  {allImages.length > 0 ? (
                     <img 
-                      src={getImageUrl(img)} 
-                      alt={`View ${idx + 1}`}
+                      src={getImageUrl(allImages[activeImage])} 
+                      alt={property.title}
                       className="w-full h-full object-cover"
                     />
-                  </button>
-                ))}
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <Home className="w-24 h-24 text-muted-foreground opacity-20" />
+                    </div>
+                  )}
+                  
+                  {/* Image Counter */}
+                  {allImages.length > 0 && (
+                    <div className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-sm text-white px-3 py-1.5 rounded-lg text-sm font-medium">
+                      {activeImage + 1} / {allImages.length}
+                    </div>
+                  )}
+                </div>
+                
+                {/* Thumbnails */}
+                {allImages.length > 1 && (
+                  <div className="grid grid-cols-6 gap-3">
+                    {allImages.map((img, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setActiveImage(idx)}
+                        className={`aspect-square rounded-xl overflow-hidden border-2 transition-all ${
+                          activeImage === idx 
+                            ? 'border-secondary ring-2 ring-secondary/20 scale-105' 
+                            : 'border-border opacity-60 hover:opacity-100 hover:border-secondary/50'
+                        }`}
+                      >
+                        <img 
+                          src={getImageUrl(img)} 
+                          alt={`View ${idx + 1}`}
+                          className="w-full h-full object-cover"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-          <div className="space-y-8">
-            <div>
-              <div className="flex items-start justify-between gap-4 mb-4">
-                <div>
-                  <h1 className="text-3xl md:text-4xl font-bold text-[#0B1B34] mb-2">
-                    {property.title}
-                  </h1>
-                  <div className="flex items-center gap-2 text-[#0B1B34]/60">
-                    <MapPin className="w-5 h-5 text-secondary" />
-                    <span className="text-lg">{property.neighborhood}, {property.city}</span>
+
+              {/* Property Header */}
+              <div className="bg-card rounded-3xl p-8 shadow-xl border border-border">
+                <div className="flex items-start justify-between gap-4 mb-6">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-3">
+                      <span className={`px-4 py-1.5 rounded-full text-sm font-semibold ${
+                        property.is_for_sale 
+                          ? 'bg-secondary/10 text-secondary' 
+                          : 'bg-primary/10 text-primary'
+                      }`}>
+                        {property.is_for_sale ? 'For Sale' : 'For Rent'}
+                      </span>
+                      {property.furnished && (
+                        <span className="px-4 py-1.5 rounded-full text-sm font-semibold bg-accent/10 text-accent">
+                          Furnished
+                        </span>
+                      )}
+                    </div>
+                    <h1 className="text-3xl md:text-4xl font-bold text-primary mb-3">
+                      {property.title}
+                    </h1>
+                    <div className="flex items-center gap-2 text-muted-foreground mb-4">
+                      <MapPin className="w-5 h-5 text-secondary" />
+                      <span className="text-lg font-medium">{property.neighborhood}, {property.city}</span>
+                    </div>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-5xl font-bold text-secondary">
+                        {displayPrice?.toLocaleString()}
+                      </span>
+                      <span className="text-2xl text-muted-foreground font-medium">
+                        {priceLabel}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <button 
+                      onClick={toggleFavorite}
+                      className={`p-3 rounded-full shadow-lg hover:shadow-xl transition-all ${
+                        property.is_favorited 
+                          ? 'bg-red-500 text-white' 
+                          : 'bg-card text-primary hover:bg-red-50 hover:text-red-500 border border-border'
+                      }`}
+                    >
+                      <Heart className={`w-6 h-6 ${property.is_favorited ? 'fill-current' : ''}`} />
+                    </button>
+                    <button className="p-3 rounded-full bg-card text-primary hover:bg-muted border border-border shadow-lg hover:shadow-xl transition-all">
+                      <Share2 className="w-6 h-6" />
+                    </button>
                   </div>
                 </div>
-                <div className="flex gap-2">
+
+                {/* Key Features */}
+                <div className="grid grid-cols-3 gap-6 pt-6 border-t border-border">
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 rounded-2xl bg-secondary/10 flex items-center justify-center flex-shrink-0">
+                      <Bed className="w-7 h-7 text-secondary" />
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-primary">{property.bedrooms}</div>
+                      <div className="text-sm text-muted-foreground">Bedrooms</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 rounded-2xl bg-secondary/10 flex items-center justify-center flex-shrink-0">
+                      <Bath className="w-7 h-7 text-secondary" />
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-primary">{property.bathrooms}</div>
+                      <div className="text-sm text-muted-foreground">Bathrooms</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 rounded-2xl bg-secondary/10 flex items-center justify-center flex-shrink-0">
+                      <Maximize className="w-7 h-7 text-secondary" />
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-primary">{property.area_sqm}</div>
+                      <div className="text-sm text-muted-foreground">Sqm</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Property Details */}
+              <div className="bg-card rounded-3xl p-8 shadow-xl border border-border">
+                <h2 className="text-2xl font-bold text-primary mb-6 flex items-center gap-2">
+                  <div className="w-1 h-8 bg-secondary rounded-full"></div>
+                  Property Features
+                </h2>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className="flex items-center gap-4 p-4 bg-background rounded-2xl">
+                    <div className="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center flex-shrink-0">
+                      <Home className="w-6 h-6 text-secondary" />
+                    </div>
+                    <div>
+                      <div className="text-sm text-muted-foreground">Property Type</div>
+                      <div className="font-semibold text-primary text-lg">{property.property_type || 'N/A'}</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4 p-4 bg-background rounded-2xl">
+                    <div className="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center flex-shrink-0">
+                      <Layers className="w-6 h-6 text-secondary" />
+                    </div>
+                    <div>
+                      <div className="text-sm text-muted-foreground">Floor</div>
+                      <div className="font-semibold text-primary text-lg">
+                        {property.floor !== null ? `Floor ${property.floor}` : 'N/A'}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4 p-4 bg-background rounded-2xl">
+                    <div className="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center flex-shrink-0">
+                      <Calendar className="w-6 h-6 text-secondary" />
+                    </div>
+                    <div>
+                      <div className="text-sm text-muted-foreground">Building Age</div>
+                      <div className="font-semibold text-primary text-lg">
+                        {property.building_age ? `${property.building_age} Years` : 'New'}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4 p-4 bg-background rounded-2xl">
+                    <div className="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center flex-shrink-0">
+                      <Check className="w-6 h-6 text-secondary" />
+                    </div>
+                    <div>
+                      <div className="text-sm text-muted-foreground">Furnished</div>
+                      <div className="font-semibold text-primary text-lg">
+                        {property.furnished ? 'Yes' : 'No'}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Description */}
+              <div className="bg-card rounded-3xl p-8 shadow-xl border border-border">
+                <h2 className="text-2xl font-bold text-primary mb-4 flex items-center gap-2">
+                  <div className="w-1 h-8 bg-secondary rounded-full"></div>
+                  About this property
+                </h2>
+                <p className="text-muted-foreground leading-relaxed text-lg whitespace-pre-line">
+                  {property.description || 'No description provided.'}
+                </p>
+              </div>
+            </div>
+
+            {/* Right Column - Sidebar */}
+            <div className="lg:col-span-1">
+              <div className="space-y-6">
+                {/* Contact Card */}
+                <div className="bg-gradient-to-br from-primary via-primary to-primary/90 rounded-3xl p-8 shadow-2xl text-primary-foreground">
+                  <h3 className="text-2xl font-bold mb-2">Interested?</h3>
+                  <p className="text-primary-foreground/90 mb-6 text-sm">
+                    Contact our agent to schedule a viewing or get more information about this property.
+                  </p>
                   <button 
-                    onClick={toggleFavorite}
-                    className={`p-3 rounded-full shadow-sm hover:shadow-md transition ${
-                      property.is_favorited 
-                        ? 'bg-red-50 text-red-500' 
-                        : 'bg-white text-[#0B1B34] hover:text-red-500'
-                    }`}
+                    onClick={() => openChat(`Hi, I'm interested in ${property.title} in ${property.neighborhood}. Is it still available?`)}
+                    className="w-full bg-white text-primary py-4 rounded-xl font-bold text-lg hover:bg-white/95 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                   >
-                    <Heart className={`w-5 h-5 ${property.is_favorited ? 'fill-current' : ''}`} />
+                    Contact Agent
                   </button>
                 </div>
+
+                {/* Price Analysis */}
+                <PriceAnalysisGauge property={property} />
               </div>
-
-              <div className="flex items-baseline gap-2 mb-6">
-                <span className="text-4xl font-bold text-secondary">
-                  {displayPrice?.toLocaleString()}
-                </span>
-                <span className="text-xl text-[#0B1B34]/60 font-medium">
-                  {priceLabel}
-                </span>
-              </div>
-
-              <div className="grid grid-cols-3 gap-4 py-6 border-y border-[#0B1B34]/10">
-                <div className="flex flex-col items-center gap-1 text-center p-3 bg-white rounded-xl">
-                  <Bed className="w-6 h-6 text-secondary mb-1" />
-                  <span className="font-bold text-[#0B1B34]">{property.bedrooms}</span>
-                  <span className="text-xs text-[#0B1B34]/60">Bedrooms</span>
-                </div>
-                <div className="flex flex-col items-center gap-1 text-center p-3 bg-white rounded-xl">
-                  <Bath className="w-6 h-6 text-secondary mb-1" />
-                  <span className="font-bold text-[#0B1B34]">{property.bathrooms}</span>
-                  <span className="text-xs text-[#0B1B34]/60">Bathrooms</span>
-                </div>
-                <div className="flex flex-col items-center gap-1 text-center p-3 bg-white rounded-xl">
-                  <Maximize className="w-6 h-6 text-secondary mb-1" />
-                  <span className="font-bold text-[#0B1B34]">{property.area_sqm}</span>
-                  <span className="text-xs text-[#0B1B34]/60">Sqm</span>
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <h3 className="text-xl font-bold text-[#0B1B34] mb-4">Details</h3>
-              <div className="grid grid-cols-2 gap-y-4 gap-x-8">
-                <div className="flex items-center justify-between border-b border-[#0B1B34]/5 pb-2">
-                  <span className="text-[#0B1B34]/60">Type</span>
-                  <span className="font-medium text-[#0B1B34]">{property.property_type || 'N/A'}</span>
-                </div>
-                <div className="flex items-center justify-between border-b border-[#0B1B34]/5 pb-2">
-                  <span className="text-[#0B1B34]/60">Status</span>
-                  <span className="font-medium text-[#0B1B34]">
-                    {property.is_for_sale ? 'For Sale' : 'For Rent'}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between border-b border-[#0B1B34]/5 pb-2">
-                  <span className="text-[#0B1B34]/60">Furnished</span>
-                  <div className="flex items-center gap-2 font-medium text-[#0B1B34]">
-                    {property.furnished ? (
-                      <><Check className="w-4 h-4 text-green-500" /> Yes</>
-                    ) : (
-                      'No'
-                    )}
-                  </div>
-                </div>
-                <div className="flex items-center justify-between border-b border-[#0B1B34]/5 pb-2">
-                  <span className="text-[#0B1B34]/60">Floor</span>
-                  <span className="font-medium text-[#0B1B34]">
-                    {property.floor !== null ? property.floor : 'N/A'}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between border-b border-[#0B1B34]/5 pb-2">
-                  <span className="text-[#0B1B34]/60">Building Age</span>
-                  <span className="font-medium text-[#0B1B34]">
-                    {property.building_age ? `${property.building_age} Years` : 'N/A'}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <h3 className="text-xl font-bold text-[#0B1B34] mb-4">Description</h3>
-              <p className="text-[#0B1B34]/70 leading-relaxed whitespace-pre-line">
-                {property.description || 'No description provided.'}
-              </p>
-            </div>
-
-            <div className="pt-6">
-              <button 
-                onClick={() => openChat(`Hi, I'm interested in ${property.title} in ${property.neighborhood}. Is it still available?`)}
-                className="w-full bg-[#0B1B34] text-white py-4 rounded-xl font-bold text-lg hover:bg-[#0B1B34]/90 transition shadow-lg shadow-[#0B1B34]/20"
-              >
-                Contact Agent
-              </button>
             </div>
           </div>
         </div>

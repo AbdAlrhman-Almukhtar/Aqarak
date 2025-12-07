@@ -50,7 +50,13 @@ export default function SavedProperties() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F4F1E8]">
+    <div className="min-h-screen bg-background relative overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+        <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-secondary/20 opacity-20 blur-[100px]"></div>
+      </div>
+
       <header className="fixed z-[1000] inset-x-0 top-0 pt-6 flex justify-center pointer-events-none">
         <div className="pointer-events-auto">
           <PillNav
@@ -66,12 +72,12 @@ export default function SavedProperties() {
         </div>
       </header>
 
-      <div className="container mx-auto px-4 pt-48 pb-20">
+      <div className="container mx-auto px-4 pt-48 pb-20 relative z-10">
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-[#0B1B34]">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-primary">
             Saved <span className="text-secondary">Properties</span>
           </h1>
-          <p className="text-xl text-[#0B1B34]/70 max-w-2xl mx-auto">
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Your personal collection of dream homes
           </p>
         </div>
@@ -91,16 +97,16 @@ export default function SavedProperties() {
 
         {!loading && !error && properties.length === 0 && (
           <div className="max-w-md mx-auto text-center py-20">
-            <div className="w-20 h-20 bg-[#0B1B34]/5 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Heart className="w-10 h-10 text-[#0B1B34]/20" />
+            <div className="w-20 h-20 bg-primary/5 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Heart className="w-10 h-10 text-primary/20" />
             </div>
-            <h3 className="text-xl font-bold text-[#0B1B34] mb-2">No saved properties yet</h3>
-            <p className="text-gray-500 mb-8">
+            <h3 className="text-xl font-bold text-primary mb-2">No saved properties yet</h3>
+            <p className="text-muted-foreground mb-8">
               Start exploring and save your favorite properties to see them here.
             </p>
             <button
               onClick={() => navigate('/buy')}
-              className="bg-[#0B1B34] text-white px-8 py-3 rounded-full font-bold hover:bg-[#0B1B34]/90 transition"
+              className="bg-primary text-primary-foreground px-8 py-3 rounded-full font-bold hover:bg-primary/90 transition shadow-lg"
             >
               Explore Properties
             </button>

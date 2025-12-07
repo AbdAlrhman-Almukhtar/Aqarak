@@ -33,7 +33,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F4F1E8] flex">
+    <div className="min-h-screen bg-background flex">
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -42,8 +42,8 @@ export default function Login() {
         >
           <div className="mb-8 text-center">
             <img src={logo} alt="Aqarak" className="h-12 mx-auto mb-4" />
-            <h1 className="text-3xl font-bold text-[#0B1B34] mb-2">Welcome Back</h1>
-            <p className="text-gray-600">Sign in to your account to continue</p>
+            <h1 className="text-3xl font-bold text-primary mb-2">Welcome Back</h1>
+            <p className="text-muted-foreground">Sign in to your account to continue</p>
           </div>
           {error && (
             <motion.div
@@ -57,35 +57,35 @@ export default function Login() {
           )}
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-[#0B1B34] mb-2">
+              <label htmlFor="email" className="block text-sm font-semibold text-primary mb-2">
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="w-full pl-12 pr-4 py-3 bg-white border border-[#0B1B34]/10 rounded-xl text-[#0B1B34] placeholder-gray-400 focus:outline-none focus:border-secondary transition-colors"
+                  className="w-full pl-12 pr-4 py-3 bg-card border border-border rounded-xl text-primary placeholder:text-muted-foreground focus:outline-none focus:border-secondary transition-colors"
                   placeholder="you@example.com"
                 />
               </div>
             </div>
             <div>
-              <label htmlFor="password" className="block text-sm font-semibold text-[#0B1B34] mb-2">
+              <label htmlFor="password" className="block text-sm font-semibold text-primary mb-2">
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <input
                   id="password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full pl-12 pr-4 py-3 bg-white border border-[#0B1B34]/10 rounded-xl text-[#0B1B34] placeholder-gray-400 focus:outline-none focus:border-secondary transition-colors"
+                  className="w-full pl-12 pr-4 py-3 bg-card border border-border rounded-xl text-primary placeholder:text-muted-foreground focus:outline-none focus:border-secondary transition-colors"
                   placeholder="••••••••"
                 />
               </div>
@@ -93,7 +93,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-secondary hover:bg-secondary/90 text-white font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-secondary hover:bg-secondary/90 text-secondary-foreground font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <>
@@ -106,7 +106,7 @@ export default function Login() {
             </button>
           </form>
           <div className="mt-6 text-center">
-            <p className="text-gray-600">
+            <p className="text-muted-foreground">
               Don't have an account?{' '}
               <Link to="/signup" className="text-secondary font-semibold hover:underline">
                 Sign up
@@ -115,12 +115,12 @@ export default function Login() {
           </div>
         </motion.div>
       </div>
-      <div className="hidden lg:flex lg:w-1/2 bg-[#0B1B34] items-center justify-center p-12">
+      <div className="hidden lg:flex lg:w-1/2 bg-primary items-center justify-center p-12">
         <div className="max-w-md text-center">
-          <h2 className="text-4xl font-bold text-white mb-6">
+          <h2 className="text-4xl font-bold text-primary-foreground mb-6">
             Find Your Perfect Property
           </h2>
-          <p className="text-xl text-gray-300">
+          <p className="text-xl text-primary-foreground/80">
             Access exclusive listings, save your favorites, and get personalized recommendations.
           </p>
         </div>

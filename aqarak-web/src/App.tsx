@@ -21,32 +21,21 @@ import MyListings from "./pages/MyListings";
 import Profile from "./pages/Profile";
 import ChatWidget from "./components/ChatWidget";
 import { AuthProvider } from "./contexts/AuthContext";
-import { ChatProvider, useChat } from "./contexts/ChatContext";
+import { ChatProvider} from "./contexts/ChatContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import logo from "./assets/logo.svg";
 
 function MainLayout() {
-  const { openChat } = useChat();
 
   const sideMenuItems: StaggeredMenuItem[] = [
-    { label: "Buy", ariaLabel: "Buy", link: "/buy"},
-    { label: "Rent", ariaLabel: "Rent", link: "/rent" },
-    { label: "List Property", ariaLabel: "List Property", link: "/list-property" },
-    { label: "My Listings", ariaLabel: "My Listings", link: "/my-listings" },
-    { label: "Saved", ariaLabel: "Saved Properties", link: "/saved" },
-    { label: "Profile", ariaLabel: "Profile", link: "/profile" },
-    { label: "Predict", ariaLabel: "Predict", link: "/predict" },
-    { 
-      label: "Assistant", 
-      ariaLabel: "Get Legal Info", 
-      link: "#", 
-      onClick: (e?: React.MouseEvent) => {
-        e?.preventDefault();
-        openChat();
-      }
-    },
+   { label: "Buy",ariaLabel:"Buy",link:"/buy" },
+  { label: "Rent",ariaLabel:"Rent",link:"/rent" },
+  { label: "Predict",ariaLabel: "Predict",link:"/predict" },
+  { label: "Saved",ariaLabel: "Saved Properties",link:"/saved" },
+  { label: "My Listings", ariaLabel: "My Listings",link:"/my-listings" },
+  { label: "List Property", ariaLabel: "List Property",link:"/list-property" },
+  { label: "Profile", ariaLabel: "Profile",link:"/profile" },
   ];
-
   return (
     <div className="relative min-h-screen bg-background text-foreground">
       <StaggeredMenu

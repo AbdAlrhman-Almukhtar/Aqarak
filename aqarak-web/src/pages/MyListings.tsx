@@ -59,7 +59,13 @@ export default function MyListings() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F4F1E8]">
+    <div className="min-h-screen bg-background relative overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+        <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-secondary/20 opacity-20 blur-[100px]"></div>
+      </div>
+
       <header className="fixed z-[1000] inset-x-0 top-0 pt-6 flex justify-center pointer-events-none">
         <div className="pointer-events-auto">
           <PillNav
@@ -75,19 +81,19 @@ export default function MyListings() {
         </div>
       </header>
 
-      <div className="container mx-auto px-4 pt-48 pb-20">
+      <div className="container mx-auto px-4 pt-48 pb-20 relative z-10">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-12">
           <div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-[#0B1B34]">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-primary">
               My <span className="text-secondary">Listings</span>
             </h1>
-            <p className="text-xl text-[#0B1B34]/70">
+            <p className="text-xl text-muted-foreground">
               Manage the properties you've listed for sale or rent
             </p>
           </div>
           <button
             onClick={() => navigate('/list-property')}
-            className="flex items-center gap-2 bg-[#0B1B34] text-white px-6 py-3 rounded-full font-bold hover:bg-[#0B1B34]/90 transition shadow-lg"
+            className="flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-full font-bold hover:bg-primary/90 transition shadow-lg"
           >
             <Plus className="w-5 h-5" />
             Add New Property
@@ -109,16 +115,16 @@ export default function MyListings() {
 
         {!loading && !error && properties.length === 0 && (
           <div className="max-w-md mx-auto text-center py-20">
-            <div className="w-20 h-20 bg-[#0B1B34]/5 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Plus className="w-10 h-10 text-[#0B1B34]/20" />
+            <div className="w-20 h-20 bg-primary/5 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Plus className="w-10 h-10 text-primary/20" />
             </div>
-            <h3 className="text-xl font-bold text-[#0B1B34] mb-2">No listings yet</h3>
-            <p className="text-gray-500 mb-8">
+            <h3 className="text-xl font-bold text-primary mb-2">No listings yet</h3>
+            <p className="text-muted-foreground mb-8">
               You haven't listed any properties yet. Start selling or renting today!
             </p>
             <button
               onClick={() => navigate('/list-property')}
-              className="bg-[#0B1B34] text-white px-8 py-3 rounded-full font-bold hover:bg-[#0B1B34]/90 transition"
+              className="bg-primary text-primary-foreground px-8 py-3 rounded-full font-bold hover:bg-primary/90 transition"
             >
               List a Property
             </button>
@@ -133,6 +139,8 @@ export default function MyListings() {
                   {...property}
                   onClick={(id) => navigate(`/property/${id}`)}
                 />
+                
+                {/* Delete Button Overlay */}
                 <button
                   onClick={(e) => handleDelete(property.id, e)}
                   disabled={deletingId === property.id}
@@ -145,12 +153,14 @@ export default function MyListings() {
                     <Trash2 className="w-5 h-5" />
                   )}
                 </button>
+
+                {/* Edit Button Overlay */}
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     navigate(`/edit-property/${property.id}`);
                   }}
-                  className="absolute top-4 right-16 z-10 bg-white text-[#0B1B34] p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-gray-100"
+                  className="absolute top-4 right-16 z-10 bg-card text-primary p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-muted"
                   title="Edit Listing"
                 >
                   <Edit className="w-5 h-5" />

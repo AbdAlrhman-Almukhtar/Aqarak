@@ -77,13 +77,13 @@ const PillNav: React.FC<PillNavProps> = ({
     const tl = tlRefs.current[i];
     if (!tl) return;
     activeTweenRefs.current[i]?.kill();
-    activeTweenRefs.current[i] = tl.tweenTo(tl.duration(), { duration: 0.8, ease, overwrite: "auto" });
+    activeTweenRefs.current[i] = tl.tweenTo(tl.duration(), { duration: 1.3, ease, overwrite: "auto" });
   };
   const handleLeave = (i: number) => {
     const tl = tlRefs.current[i];
     if (!tl) return;
     activeTweenRefs.current[i]?.kill();
-    activeTweenRefs.current[i] = tl.tweenTo(0, { duration: 0.6, ease, overwrite: "auto" });
+    activeTweenRefs.current[i] = tl.tweenTo(0, { duration: 0.9, ease, overwrite: "auto" });
   };
   const isExternal = (href: string) =>
     href.startsWith("http://") ||
@@ -99,12 +99,12 @@ const PillNav: React.FC<PillNavProps> = ({
     ["--hover-text"]: hoveredPillTextColor,
     ["--pill-text"]: resolvedPillTextColor,
     ["--nav-h"]: "60px",
-    ["--pill-pad-x"]: "24px",
-    ["--pill-gap"]: "20px",
+    ["--pill-pad-x"]: "40px",
+    ["--pill-gap"]: "8px",
   } as React.CSSProperties;
   return (
     <>
-      <div className="fixed top-6 left-6 z-[1000]" style={cssVars}>
+      <div className="fixed top-8 left-6 z-[1000]" style={cssVars}>
         <button
           aria-label="User"
           className="h-[var(--nav-h)] w-[var(--nav-h)] rounded-full flex items-center justify-center"
@@ -113,7 +113,7 @@ const PillNav: React.FC<PillNavProps> = ({
           <UserRound size={22} color={pillColor} />
         </button>
       </div>
-      <div className={`fixed top-6 left-1/2 -translate-x-1/2 z-[1000] ${className || ""}`} style={cssVars}>
+      <div className={`fixed top-8 left-1/2 -translate-x-1/2 z-[1000] ${className || ""}`} style={cssVars}>
         <nav aria-label="Primary" className="relative">
           <div className="flex items-center rounded-full" style={{ height: "var(--nav-h)", background: "var(--base)" }}>
             <span
@@ -137,7 +137,7 @@ const PillNav: React.FC<PillNavProps> = ({
                       className="hover-circle absolute left-1/2 bottom-0 rounded-full z-[1] block pointer-events-none"
                       style={{ background: "var(--base)", willChange: "transform" }}
                       aria-hidden="true"
-                      ref={(el) => (circleRefs.current[i] = el)}
+                      ref={(el) => { circleRefs.current[i] = el; }}
                     />
                     <span className="label-stack relative inline-block leading-[1] z-[2]">
                       <span className="pill-label relative z-[2] inline-block leading-[1]">{item.label}</span>
