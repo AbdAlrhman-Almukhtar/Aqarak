@@ -77,13 +77,13 @@ const PillNav: React.FC<PillNavProps> = ({
     const tl = tlRefs.current[i];
     if (!tl) return;
     activeTweenRefs.current[i]?.kill();
-    activeTweenRefs.current[i] = tl.tweenTo(tl.duration(), { duration: 1.3, ease, overwrite: "auto" });
+    activeTweenRefs.current[i] = tl.tweenTo(tl.duration(), { duration: 2.2, ease, overwrite: "auto" });
   };
   const handleLeave = (i: number) => {
     const tl = tlRefs.current[i];
     if (!tl) return;
     activeTweenRefs.current[i]?.kill();
-    activeTweenRefs.current[i] = tl.tweenTo(0, { duration: 0.9, ease, overwrite: "auto" });
+    activeTweenRefs.current[i] = tl.tweenTo(0, { duration: 0.8, ease, overwrite: "auto" });
   };
   const isExternal = (href: string) =>
     href.startsWith("http://") ||
