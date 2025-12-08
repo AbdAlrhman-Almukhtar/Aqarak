@@ -35,8 +35,6 @@ export default function PriceAnalysisGauge({ property }: PriceAnalysisProps) {
       try {
         setLoading(true);
         setError(null);
-
-        // Validate required fields
         if (!property.neighborhood || property.neighborhood === '') {
           setError('Property neighborhood is required for price analysis');
           setLoading(false);
@@ -106,7 +104,6 @@ export default function PriceAnalysisGauge({ property }: PriceAnalysisProps) {
   const predictedPrice = prediction.price_jod;
   const difference = ((actualPrice - predictedPrice) / predictedPrice) * 100;
   
-  // Determine pricing status
   let status: 'underpriced' | 'fair' | 'overpriced';
   let statusColor: string;
   let statusBg: string;
@@ -134,15 +131,11 @@ export default function PriceAnalysisGauge({ property }: PriceAnalysisProps) {
   }
 
   const StatusIcon = statusIcon;
-
-  // Calculate position on the bar (0-100%)
   const barPosition = Math.min(100, Math.max(0, ((difference + 30) / 60) * 100));
 
   return (
     <div className="bg-card rounded-3xl p-8 border border-border shadow-xl">
       <h3 className="text-2xl font-bold text-primary mb-6">AI Price Analysis</h3>
-      
-      {/* Status Badge */}
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -162,8 +155,6 @@ export default function PriceAnalysisGauge({ property }: PriceAnalysisProps) {
           </div>
         </div>
       </motion.div>
-
-      {/* Price Comparison */}
       <div className="space-y-4 mb-6">
         <div className="flex items-center justify-between p-4 bg-background rounded-2xl">
           <div>
@@ -182,8 +173,6 @@ export default function PriceAnalysisGauge({ property }: PriceAnalysisProps) {
           </div>
         </div>
       </div>
-
-      {/* Simple Bar Gauge */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-3">
           <span className="text-sm font-medium text-muted-foreground">Value Rating</span>
@@ -191,8 +180,6 @@ export default function PriceAnalysisGauge({ property }: PriceAnalysisProps) {
             {difference > 0 ? '+' : ''}{difference.toFixed(1)}%
           </span>
         </div>
-        
-        {/* Price Bar */}
         <div className="relative h-3 bg-gradient-to-r from-emerald-100 via-secondary/30 to-orange-100 rounded-full overflow-hidden shadow-inner">
           <motion.div
             initial={{ left: '50%' }}
@@ -208,8 +195,6 @@ export default function PriceAnalysisGauge({ property }: PriceAnalysisProps) {
           <span className="font-medium">High</span>
         </div>
       </div>
-
-      {/* Difference Display */}
       <div className="bg-background rounded-2xl p-5 text-center">
         <p className="text-sm text-muted-foreground mb-2">Price Difference</p>
         <div className="flex items-center justify-center gap-2">
@@ -221,8 +206,6 @@ export default function PriceAnalysisGauge({ property }: PriceAnalysisProps) {
           {difference < 0 ? 'Below' : difference > 0 ? 'Above' : 'At'} market estimate
         </p>
       </div>
-
-      {/* AI Badge */}
       <div className="mt-6 pt-6 border-t border-border">
         <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
           <Sparkles className="w-4 h-4 text-secondary" />

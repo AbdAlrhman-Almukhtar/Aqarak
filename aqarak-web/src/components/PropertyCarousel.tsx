@@ -55,8 +55,7 @@ export function PropertyCarousel() {
   return (
     <section ref={targetRef} className="relative h-[250vh] bg-background">
       <div className="sticky top-0 flex h-screen items-center overflow-hidden">
-        
-        {/* Static Text Content */}
+      
         <motion.div 
           style={{ opacity, scale }}
           className="absolute top-1/2 -translate-y-1/2 left-8 md:left-20 z-10 max-w-md pointer-events-none"
@@ -79,13 +78,10 @@ export function PropertyCarousel() {
           </div>
         </motion.div>
 
-        {/* Carousel */}
         <motion.div style={{ x }} className="flex gap-10 pl-[45vw] md:pl-[40vw] h-[65vh] items-center">
           {properties.map((property) => (
             <PropertyCard key={property.id} property={property} />
           ))}
-
-          {/* View All Card */}
           <div className="group relative h-full w-[380px] md:w-[480px] flex-shrink-0 overflow-hidden rounded-[2.5rem] bg-[#0B1B34] flex flex-col items-center justify-center cursor-pointer border border-white/5">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-secondary/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             
@@ -110,7 +106,6 @@ export function PropertyCarousel() {
 function PropertyCard({ property }: { property: (typeof properties)[0] }) {
   return (
     <div className="group relative h-full w-[380px] md:w-[480px] flex-shrink-0 overflow-hidden rounded-[2.5rem] bg-card border border-border/10 shadow-xl cursor-pointer">
-      {/* Background Image with Parallax-like scale */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <img
           src={property.image}
@@ -120,12 +115,9 @@ function PropertyCard({ property }: { property: (typeof properties)[0] }) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 transition-opacity duration-300 group-hover:opacity-60" />
       </div>
 
-      {/* Floating Glassmorphism Content Card */}
       <div className="absolute bottom-6 left-6 right-6 z-10 translate-y-2 transition-transform duration-300 ease-out group-hover:translate-y-0">
         <div className="overflow-hidden rounded-3xl border border-white/10 bg-white/10 p-6 backdrop-blur-md shadow-lg">
           <div className="flex flex-col gap-4">
-            
-            {/* Header */}
             <div>
               <h3 className="text-2xl font-semibold text-white mb-2 leading-tight">
                 {property.title}
@@ -135,8 +127,6 @@ function PropertyCard({ property }: { property: (typeof properties)[0] }) {
                 <span className="text-sm font-medium">{property.location}</span>
               </div>
             </div>
-
-            {/* Price & Action */}
             <div className="flex items-center justify-between pt-4 border-t border-white/10">
               <div>
                 <span className="block text-xs uppercase tracking-wider text-white/60 mb-1">Asking Price</span>
