@@ -82,6 +82,7 @@ export default function Rent() {
             logoAlt="Aqarak"
             items={navItems}
             activeHref="/rent"
+            ease="power2.easeOut"
             baseColor="var(--primary)"
             pillColor="var(--background)"
             hoveredPillTextColor="#ffffff"

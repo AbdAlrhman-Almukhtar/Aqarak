@@ -12,6 +12,8 @@ export interface PillNavProps {
   activeHref?: string;
   className?: string;
   ease?: string;
+  enterDuration?: number;
+  leaveDuration?: number;
   baseColor?: string;
   pillColor?: string;
   hoveredPillTextColor?: string;
@@ -25,6 +27,8 @@ const PillNav: React.FC<PillNavProps> = ({
   activeHref,
   className = "",
   ease = "power3.out",
+  enterDuration = 0.7,
+  leaveDuration = 0.6,
   baseColor = "#0B1B34",
   pillColor = "#F4F1E8",
   hoveredPillTextColor = "#ffffff",
@@ -58,11 +62,11 @@ const PillNav: React.FC<PillNavProps> = ({
         if (i === -1) return;
         tlRefs.current[i]?.kill();
         const tl = gsap.timeline({ paused: true });
-        tl.to(circle, { scale: 1.5, xPercent: -50, duration: 2, ease, overwrite: "auto" }, 0);
-        if (label) tl.to(label, { y: -(h + 8), duration: 2, ease, overwrite: "auto" }, 0);
+        tl.to(circle, { scale: 1.5, xPercent: -50, duration: 3, ease, overwrite: "auto" }, 0);
+        if (label) tl.to(label, { y: -(h + 8), duration: 3, ease, overwrite: "auto" }, 0);
         if (white) {
           gsap.set(white, { y: Math.ceil(h + 100), opacity: 0 });
-          tl.to(white, { y: 0, opacity: 1, duration: 2, ease, overwrite: "auto" }, 0);
+          tl.to(white, { y: 0, opacity: 1, duration: 3, ease, overwrite: "auto" }, 0);
         }
         tlRefs.current[i] = tl;
       });
@@ -77,13 +81,13 @@ const PillNav: React.FC<PillNavProps> = ({
     const tl = tlRefs.current[i];
     if (!tl) return;
     activeTweenRefs.current[i]?.kill();
-    activeTweenRefs.current[i] = tl.tweenTo(tl.duration(), { duration: .7, ease, overwrite: "auto" });
+    activeTweenRefs.current[i] = tl.tweenTo(tl.duration(), { duration: enterDuration, ease, overwrite: "auto" });
   };
   const handleLeave = (i: number) => {
     const tl = tlRefs.current[i];
     if (!tl) return;
     activeTweenRefs.current[i]?.kill();
-    activeTweenRefs.current[i] = tl.tweenTo(0, { duration: 0.6, ease, overwrite: "auto" });
+    activeTweenRefs.current[i] = tl.tweenTo(0, { duration: leaveDuration, ease, overwrite: "auto" });
   };
   const isExternal = (href: string) =>
     href.startsWith("http://") ||

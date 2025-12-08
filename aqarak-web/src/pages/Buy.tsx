@@ -85,6 +85,7 @@ export default function Buy() {
             logoAlt="Aqarak"
             items={navItems}
             activeHref="/buy"
+            ease="power2.easeOut"
             baseColor="var(--primary)"
             pillColor="var(--background)"
             hoveredPillTextColor="#ffffff"

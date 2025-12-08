@@ -33,6 +33,7 @@ export default function Predict() {
             logoAlt="Aqarak"
             items={navItems}
             activeHref="/predict"
+            ease="power2.easeOut"
             baseColor="var(--primary)"
             pillColor="var(--background)"
             hoveredPillTextColor="#ffffff"
