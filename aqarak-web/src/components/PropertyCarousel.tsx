@@ -84,6 +84,23 @@ export function PropertyCarousel() {
           {properties.map((property) => (
             <PropertyCard key={property.id} property={property} />
           ))}
+
+          {/* View All Card */}
+          <div className="group relative h-full w-[380px] md:w-[480px] flex-shrink-0 overflow-hidden rounded-[2.5rem] bg-[#0B1B34] flex flex-col items-center justify-center cursor-pointer border border-white/5">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-secondary/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            
+            <div className="relative z-10 text-center p-8">
+              <h3 className="text-4xl md:text-5xl font-bold text-white mb-8 leading-tight">
+                Discover<br/>More
+              </h3>
+              <div className="flex justify-center">
+                <div className="w-24 h-24 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:scale-110 transition-all duration-300">
+                  <ArrowRight className="w-8 h-8 text-white group-hover:text-[#0B1B34] transition-colors" />
+                </div>
+              </div>
+              <p className="mt-8 text-white/40 font-medium tracking-wide uppercase text-sm group-hover:text-white/60 transition-colors">View All Properties</p>
+            </div>
+          </div>
         </motion.div>
       </div>
     </section>
