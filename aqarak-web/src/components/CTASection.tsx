@@ -49,12 +49,12 @@ export function CTASection() {
           className="flex flex-col sm:flex-row gap-6 justify-center items-center"
         >
           <Link to="/buy">
-            <Button size="xl" variant="secondary" className="border-0 h-16 px-10 text-lg rounded-2xl shadow-xl shadow-secondary/10 transition-transform hover:scale-105">
+            <Button size="xl" variant="secondary" className="border-0 h-16 px-10 text-lg rounded-2xl shadow-xl shadow-secondary/10 hover:shadow-2xl">
               Start Browsing <ArrowRight className="ml-2 w-6 h-6" />
             </Button>
           </Link>
           <Link to="/list-property">
-            <Button size="xl" variant="outline" className="bg-transparent border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground hover:text-primary h-16 px-10 text-lg rounded-2xl backdrop-blur-sm transition-transform hover:scale-105">
+            <Button size="xl" variant="outline" className="bg-transparent border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground hover:text-primary h-16 px-10 text-lg rounded-2xl backdrop-blur-sm transition-all duration-200">
               List Your Property
             </Button>
           </Link>

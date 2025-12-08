@@ -218,6 +218,7 @@ export default function EditProperty() {
             logoAlt="Aqarak"
             items={navItems}
             activeHref="/my-listings"
+            ease="power2.easeOut"
             baseColor="var(--primary)"
             pillColor="var(--background)"
             hoveredPillTextColor="#ffffff"

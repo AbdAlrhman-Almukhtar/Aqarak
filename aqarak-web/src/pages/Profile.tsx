@@ -75,7 +75,6 @@ export default function Profile() {
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden flex flex-col">
-      {/* Background Pattern */}
       <div className="pointer-events-none absolute inset-0 z-0">
         <GridPattern className="opacity-50 text-primary/5" gap={64} lineWidth={1} color="currentColor" opacity={0.5} />
       </div>
@@ -87,6 +86,7 @@ export default function Profile() {
             logoAlt="Aqarak"
             items={navItems}
             activeHref="/profile"
+            ease="power2.easeOut"
             baseColor="var(--primary)"
             pillColor="var(--background)"
             hoveredPillTextColor="#ffffff"
@@ -108,9 +108,7 @@ export default function Profile() {
           </div>
 
           <div className="grid lg:grid-cols-3 gap-8">
-            {/* Left Column - Profile Card & Actions */}
             <div className="space-y-6">
-              {/* Profile Card */}
               <div className="bg-card rounded-3xl p-8 shadow-xl border border-border text-center relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-r from-primary/10 to-secondary/10"></div>
                 
@@ -131,8 +129,6 @@ export default function Profile() {
                   </div>
                 </div>
               </div>
-
-              {/* Quick Actions */}
               <div className="bg-card rounded-3xl p-6 shadow-xl border border-border">
                 <h3 className="text-lg font-bold text-primary mb-4 px-2">Quick Actions</h3>
                 <div className="space-y-3">
@@ -152,8 +148,6 @@ export default function Profile() {
                 </div>
               </div>
             </div>
-
-            {/* Right Column - Edit Form */}
             <div className="lg:col-span-2">
               <div className="bg-card rounded-3xl p-8 md:p-10 shadow-xl border border-border">
                 <div className="flex items-center gap-3 mb-8 pb-8 border-b border-border">
@@ -215,7 +209,6 @@ export default function Profile() {
                         />
                       </div>
                     </div>
-
                     <div className="space-y-2">
                       <label className="text-sm font-bold text-primary ml-1">Email Address</label>
                       <div className="relative">
@@ -229,7 +222,6 @@ export default function Profile() {
                       </div>
                     </div>
                   </div>
-
                   <div className="space-y-6 pt-6">
                     <div className="flex items-center gap-2 text-primary font-bold border-b border-border pb-2">
                       <Lock className="w-4 h-4" />

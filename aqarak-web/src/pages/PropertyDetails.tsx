@@ -118,7 +118,6 @@ export default function PropertyDetails() {
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
-      {/* Background Pattern */}
       <div className="pointer-events-none absolute inset-0 z-0">
         <GridPattern className="opacity-50 text-primary/5" gap={64} lineWidth={1} color="currentColor" opacity={0.5} />
       </div>
@@ -130,6 +129,7 @@ export default function PropertyDetails() {
             logoAlt="Aqarak"
             items={navItems}
             activeHref={property.is_for_sale ? '/buy' : '/rent'}
+            ease="power2.easeOut"
             baseColor="var(--primary)"
             pillColor="var(--background)"
             hoveredPillTextColor="#ffffff"
@@ -139,7 +139,6 @@ export default function PropertyDetails() {
       </header>
 
       <div className="container mx-auto px-4 pt-32 pb-20 relative z-10">
-        {/* Back Button */}
         <button 
           onClick={() => navigate(-1)}
           className="flex items-center gap-2 text-muted-foreground hover:text-primary mb-6 transition-colors font-medium"
@@ -150,9 +149,7 @@ export default function PropertyDetails() {
 
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-3 gap-8">
-            {/* Left Column - Images & Main Info */}
             <div className="lg:col-span-2 space-y-6">
-              {/* Image Gallery */}
               <div className="space-y-4">
                 <div className="aspect-[16/10] bg-muted rounded-3xl overflow-hidden relative group shadow-xl">
                   {allImages.length > 0 ? (
@@ -166,16 +163,12 @@ export default function PropertyDetails() {
                       <Home className="w-24 h-24 text-muted-foreground opacity-20" />
                     </div>
                   )}
-                  
-                  {/* Image Counter */}
                   {allImages.length > 0 && (
                     <div className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-sm text-white px-3 py-1.5 rounded-lg text-sm font-medium">
                       {activeImage + 1} / {allImages.length}
                     </div>
                   )}
                 </div>
-                
-                {/* Thumbnails */}
                 {allImages.length > 1 && (
                   <div className="grid grid-cols-6 gap-3">
                     {allImages.map((img, idx) => (
@@ -198,8 +191,6 @@ export default function PropertyDetails() {
                   </div>
                 )}
               </div>
-
-              {/* Property Header */}
               <div className="bg-card rounded-3xl p-8 shadow-xl border border-border">
                 <div className="flex items-start justify-between gap-4 mb-6">
                   <div className="flex-1">
@@ -249,8 +240,6 @@ export default function PropertyDetails() {
                     </button>
                   </div>
                 </div>
-
-                {/* Key Features */}
                 <div className="grid grid-cols-3 gap-6 pt-6 border-t border-border">
                   <div className="flex items-center gap-4">
                     <div className="w-14 h-14 rounded-2xl bg-secondary/10 flex items-center justify-center flex-shrink-0">
@@ -281,8 +270,6 @@ export default function PropertyDetails() {
                   </div>
                 </div>
               </div>
-
-              {/* Property Details */}
               <div className="bg-card rounded-3xl p-8 shadow-xl border border-border">
                 <h2 className="text-2xl font-bold text-primary mb-6 flex items-center gap-2">
                   <div className="w-1 h-8 bg-secondary rounded-full"></div>
@@ -333,8 +320,6 @@ export default function PropertyDetails() {
                   </div>
                 </div>
               </div>
-
-              {/* Description */}
               <div className="bg-card rounded-3xl p-8 shadow-xl border border-border">
                 <h2 className="text-2xl font-bold text-primary mb-4 flex items-center gap-2">
                   <div className="w-1 h-8 bg-secondary rounded-full"></div>
@@ -345,11 +330,8 @@ export default function PropertyDetails() {
                 </p>
               </div>
             </div>
-
-            {/* Right Column - Sidebar */}
             <div className="lg:col-span-1">
               <div className="space-y-6">
-                {/* Contact Card */}
                 <div className="bg-gradient-to-br from-primary via-primary to-primary/90 rounded-3xl p-8 shadow-2xl text-primary-foreground">
                   <h3 className="text-2xl font-bold mb-2">Interested?</h3>
                   <p className="text-primary-foreground/90 mb-6 text-sm">
@@ -362,8 +344,6 @@ export default function PropertyDetails() {
                     Contact Agent
                   </button>
                 </div>
-
-                {/* Price Analysis */}
                 <PriceAnalysisGauge property={property} />
               </div>
             </div>

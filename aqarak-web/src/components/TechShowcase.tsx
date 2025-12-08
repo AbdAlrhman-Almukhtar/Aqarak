@@ -1,8 +1,10 @@
 import { motion } from "framer-motion";
 import { Bot, TrendingUp, Search, BarChart3, Sparkles, ArrowRight, MapPin } from "lucide-react";
 import { Button } from "./ui/button";
+import { useNavigate } from "react-router-dom";
 
 export function TechShowcase() {
+  const navigate = useNavigate();
   return (
     <section id="tech-showcase" className="w-full bg-gradient-to-b from-background to-muted/30 py-32 px-4 text-foreground overflow-hidden relative">
       <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px border-l-2 border-dashed border-primary/10 -translate-x-1/2 z-0" />
@@ -32,7 +34,7 @@ export function TechShowcase() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-xl text-foreground/60 leading-relaxed"
           >
-            Aqarak combines advanced market data with Gemini AI to give you the smartest real estate experience.
+            Aqarak combines advanced market data with AI intelligence to give you the smartest real estate experience.
           </motion.p>
         </div>
         <div className="flex flex-col md:flex-row items-center gap-20">
@@ -47,7 +49,7 @@ export function TechShowcase() {
             </div>
             <h3 className="text-4xl md:text-5xl font-bold text-primary tracking-tight">Meet Your AI Real Estate Expert</h3>
             <p className="text-xl text-foreground/60 leading-relaxed">
-              Stop searching and start asking. Our Gemini-powered assistant understands natural language, helping you find properties, analyze trends, and answer legal questions instantly.
+              Stop searching and start asking. Our AI chat assistant understands natural language, helping you find properties, analyze trends, and answer legal questions instantly.
             </p>
             <ul className="space-y-4 pt-4">
               {["Natural language search", "Instant market analysis", "24/7 availability"].map((item, i) => (
@@ -121,7 +123,7 @@ export function TechShowcase() {
             <p className="text-xl text-foreground/60 leading-relaxed">
               Don't guess the price. Know it. Our proprietary AI model analyzes thousands of data points to predict property values with 98% accuracy.
             </p>
-             <Button size="xl" variant="secondary" className="mt-4">
+             <Button size="xl" variant="secondary" className="mt-4" onClick={() => navigate('/predict')}>
               Try Price Predictor
             </Button>
           </motion.div>

@@ -157,6 +157,7 @@ export default function ListProperty() {
             logoAlt="Aqarak"
             items={navItems}
             activeHref="/list-property"
+            ease="power2.easeOut"
             baseColor="var(--primary)"
             pillColor="var(--background)"
             hoveredPillTextColor="#ffffff"

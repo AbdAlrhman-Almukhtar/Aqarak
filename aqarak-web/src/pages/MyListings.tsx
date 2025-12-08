@@ -60,7 +60,6 @@ export default function MyListings() {
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
-      {/* Background Pattern */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
         <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-secondary/20 opacity-20 blur-[100px]"></div>
@@ -73,6 +72,7 @@ export default function MyListings() {
             logoAlt="Aqarak"
             items={navItems}
             activeHref="/my-listings"
+            ease="power2.easeOut"
             baseColor="var(--primary)"
             pillColor="var(--background)"
             hoveredPillTextColor="#ffffff"
@@ -139,8 +139,6 @@ export default function MyListings() {
                   {...property}
                   onClick={(id) => navigate(`/property/${id}`)}
                 />
-                
-                {/* Delete Button Overlay */}
                 <button
                   onClick={(e) => handleDelete(property.id, e)}
                   disabled={deletingId === property.id}
@@ -153,8 +151,6 @@ export default function MyListings() {
                     <Trash2 className="w-5 h-5" />
                   )}
                 </button>
-
-                {/* Edit Button Overlay */}
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
