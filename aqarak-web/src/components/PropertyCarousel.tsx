@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
-import { ArrowRight, MapPin } from "lucide-react";
+import { ArrowRight, MapPin, Bot } from "lucide-react";
 import { Button } from "./ui/button";
 import villa1 from "../assets/properties/villa1.png";
 import apartment1 from "../assets/properties/apartment1.png";
@@ -82,19 +82,33 @@ export function PropertyCarousel() {
           {properties.map((property) => (
             <PropertyCard key={property.id} property={property} />
           ))}
-          <div className="group relative h-full w-[380px] md:w-[480px] flex-shrink-0 overflow-hidden rounded-[2.5rem] bg-[#0B1B34] flex flex-col items-center justify-center cursor-pointer border border-white/5">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-secondary/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <div 
+            onClick={() => {
+              document.getElementById('tech-showcase')?.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className="group relative h-full w-[380px] md:w-[480px] flex-shrink-0 overflow-hidden rounded-[2.5rem] bg-[#0B1B34] flex flex-col items-center justify-center cursor-pointer border border-white/5"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-[#0B1B34] to-[#1a2b4a] transition-all duration-500 group-hover:scale-105" />
             
-            <div className="relative z-10 text-center p-8">
-              <h3 className="text-4xl md:text-5xl font-bold text-white mb-8 leading-tight">
-                Discover<br/>More
-              </h3>
-              <div className="flex justify-center">
-                <div className="w-24 h-24 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 flex items-center justify-center group-hover:bg-white group-hover:scale-110 transition-all duration-300">
-                  <ArrowRight className="w-8 h-8 text-white group-hover:text-[#0B1B34] transition-colors" />
-                </div>
+            <div className="relative z-10 flex flex-col items-center justify-center p-8 h-full text-center">
+              <div className="mb-6 relative">
+                 <div className="absolute inset-0 bg-secondary/20 blur-xl rounded-full scale-0 group-hover:scale-150 transition-transform duration-700" />
+                 <Bot className="w-16 h-16 text-secondary relative z-10 drop-shadow-lg" />
               </div>
-              <p className="mt-8 text-white/40 font-medium tracking-wide uppercase text-sm group-hover:text-white/60 transition-colors">View All Properties</p>
+
+              <h3 className="text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight leading-none">
+                AI Powered <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-secondary to-white">Real Estate</span>
+              </h3>
+
+              <p className="text-white/60 text-lg mb-8 max-w-[280px] leading-relaxed">
+                Experience the next generation of property finding.
+              </p>
+
+              <div className="inline-flex items-center gap-2 text-white font-semibold border-b border-secondary/50 pb-0.5 group-hover:border-secondary transition-colors">
+                <span>Discover the Magic</span>
+                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+              </div>
             </div>
           </div>
         </motion.div>

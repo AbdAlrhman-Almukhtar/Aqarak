@@ -4,7 +4,7 @@ import { Button } from "./ui/button";
 
 export function TechShowcase() {
   return (
-    <section className="w-full bg-gradient-to-b from-background to-muted/30 py-32 px-4 text-foreground overflow-hidden relative">
+    <section id="tech-showcase" className="w-full bg-gradient-to-b from-background to-muted/30 py-32 px-4 text-foreground overflow-hidden relative">
       <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px border-l-2 border-dashed border-primary/10 -translate-x-1/2 z-0" />
       <div className="max-w-7xl mx-auto space-y-32 relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-12">
