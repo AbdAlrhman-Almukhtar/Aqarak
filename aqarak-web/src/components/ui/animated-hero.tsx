@@ -19,7 +19,7 @@ export function Hero() {
   
   const navItems = useMemo(
     () => [
-      { label: "Home", href: "/", onClick: () => navigate("/") },
+      { label: "Home", href: "/home", onClick: () => navigate("/home") },
       { label: "Buy", href: "/buy", onClick: () => navigate("/buy") },
       { label: "Rent", href: "/rent", onClick: () => navigate("/rent") },
       { label: "Predict", href: "/predict", onClick: () => navigate("/predict") },
@@ -55,6 +55,7 @@ export function Hero() {
             pillColor="var(--background)"
             hoveredPillTextColor="#ffffff"
             pillTextColor="var(--primary)"
+            onProfileClick={() => navigate("/profile")}
           />
         </div>
       </header>

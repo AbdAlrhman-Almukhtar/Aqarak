@@ -134,6 +134,7 @@ export default function PropertyDetails() {
             pillColor="var(--background)"
             hoveredPillTextColor="#ffffff"
             pillTextColor="var(--primary)"
+            onProfileClick={() => navigate("/profile")}
           />
         </div>
       </header>

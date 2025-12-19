@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
   Loader2, User, Lock, Save, AlertCircle, CheckCircle2, Camera, 
-  Home, Heart, LayoutList, Clock, ArrowRight, Mail, Shield, Phone
+  Home, Heart, LayoutList, Clock, ArrowRight, Mail, Shield, Phone, LogOut
 } from 'lucide-react';
 import PillNav from '../components/PillNav';
 import { GridPattern } from '../components/ui/grid-pattern';
@@ -13,7 +13,7 @@ import { useAuth } from '../contexts/AuthContext';
 
 export default function Profile() {
   const navigate = useNavigate();
-  const { user, refreshUser } = useAuth();
+  const { user, refreshUser, logout } = useAuth();
   
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -35,6 +35,13 @@ export default function Profile() {
     { label: 'Rent', href: '/rent', onClick: () => navigate('/rent') },
     { label: 'Predict', href: '/predict', onClick: () => navigate('/predict') },
   ];
+
+  const handleLogout = () => {
+    if (window.confirm('Are you sure you want to log out?')) {
+      logout();
+      navigate('/login');
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -91,6 +98,7 @@ export default function Profile() {
             pillColor="var(--background)"
             hoveredPillTextColor="#ffffff"
             pillTextColor="var(--primary)"
+            onProfileClick={() => navigate("/profile")}
           />
         </div>
       </header>
@@ -147,6 +155,16 @@ export default function Profile() {
                   ))}
                 </div>
               </div>
+
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={handleLogout}
+                className="w-full bg-red-500/10 text-red-600 border border-red-200 p-4 rounded-3xl font-bold flex items-center justify-center gap-2 hover:bg-red-500 hover:text-white transition-all shadow-lg"
+              >
+                <LogOut className="w-5 h-5" />
+                Sign Out
+              </motion.button>
             </div>
             <div className="lg:col-span-2">
               <div className="bg-card rounded-3xl p-8 md:p-10 shadow-xl border border-border">

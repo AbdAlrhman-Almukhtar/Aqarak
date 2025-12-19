@@ -223,6 +223,7 @@ export default function EditProperty() {
             pillColor="var(--background)"
             hoveredPillTextColor="#ffffff"
             pillTextColor="var(--primary)"
+            onProfileClick={() => navigate("/profile")}
           />
         </div>
       </header>

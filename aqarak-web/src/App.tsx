@@ -8,8 +8,6 @@ import { Footer } from "./components/Footer";
 import Predict from "./pages/Predict";
 import Buy from "./pages/Buy";
 import Rent from "./pages/Rent";
-import BuyOld from "./pages/BuyOld";
-import RentOld from "./pages/RentOld";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import VerifyEmail from "./pages/VerifyEmail";
@@ -28,7 +26,8 @@ import logo from "./assets/logo.svg";
 function MainLayout() {
 
   const sideMenuItems: StaggeredMenuItem[] = [
-   { label: "Buy",ariaLabel:"Buy",link:"/buy" },
+    { label: "Home", ariaLabel: "Home", link: "/home" },
+    { label: "Buy", ariaLabel: "Buy", link: "/buy" },
   { label: "Rent",ariaLabel:"Rent",link:"/rent" },
   { label: "Predict",ariaLabel: "Predict",link:"/predict" },
   { label: "Saved",ariaLabel: "Saved Properties",link:"/saved" },
@@ -51,7 +50,7 @@ function MainLayout() {
       <main>
         <Routes>
           <Route
-            path="/"
+            path="/home"
             element={
               <>
                 <Hero />
@@ -61,6 +60,7 @@ function MainLayout() {
               </>
             }
           />
+          <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/verify-email" element={<VerifyEmail />} />

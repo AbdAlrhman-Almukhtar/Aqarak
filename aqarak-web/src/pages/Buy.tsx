@@ -23,7 +23,7 @@ export default function Buy() {
   
   const navItems = useMemo(
     () => [
-      { label: 'Home', href: '/', onClick: () => navigate('/') },
+      { label: 'Home', href: '/home', onClick: () => navigate('/home') },
       { label: 'Buy', href: '/buy', onClick: () => navigate('/buy') },
       { label: 'Rent', href: '/rent', onClick: () => navigate('/rent') },
       { label: 'Predict', href: '/predict', onClick: () => navigate('/predict') },
@@ -71,13 +71,10 @@ export default function Buy() {
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
-      {/* Background Pattern */}
       <div className="pointer-events-none absolute inset-0 z-0">
         <GridPattern className="opacity-100 text-primary/10" gap={64} lineWidth={1} color="currentColor" opacity={1} />
         <div className="absolute inset-0 bg-gradient-to-b from-secondary/5 via-transparent to-transparent" />
       </div>
-
-      {/* Navigation */}
       <header className="fixed z-[1000] inset-x-0 top-0 pt-6 flex justify-center pointer-events-none">
         <div className="pointer-events-auto">
           <PillNav
@@ -90,6 +87,7 @@ export default function Buy() {
             pillColor="var(--background)"
             hoveredPillTextColor="#ffffff"
             pillTextColor="var(--primary)"
+            onProfileClick={() => navigate("/profile")}
           />
         </div>
       </header>

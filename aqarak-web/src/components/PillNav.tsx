@@ -18,6 +18,7 @@ export interface PillNavProps {
   pillColor?: string;
   hoveredPillTextColor?: string;
   pillTextColor?: string;
+  onProfileClick?: () => void;
 }
 
 const PillNav: React.FC<PillNavProps> = ({
@@ -33,6 +34,7 @@ const PillNav: React.FC<PillNavProps> = ({
   pillColor = "#F4F1E8",
   hoveredPillTextColor = "#ffffff",
   pillTextColor,
+  onProfileClick,
 }) => {
   const resolvedPillTextColor = pillTextColor ?? baseColor;
   const circleRefs = useRef<Array<HTMLSpanElement | null>>([]);
@@ -111,7 +113,8 @@ const PillNav: React.FC<PillNavProps> = ({
       <div className="fixed top-8 left-6 z-[1000]" style={cssVars}>
         <button
           aria-label="User"
-          className="h-[var(--nav-h)] w-[var(--nav-h)] rounded-full flex items-center justify-center"
+          onClick={onProfileClick}
+          className="h-[var(--nav-h)] w-[var(--nav-h)] rounded-full flex items-center justify-center cursor-pointer hover:scale-105 transition-transform"
           style={{ background: "var(--base)" }}
         >
           <UserRound size={22} color={pillColor} />
