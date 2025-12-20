@@ -17,6 +17,7 @@ import EditProperty from "./pages/EditProperty";
 import SavedProperties from "./pages/SavedProperties";
 import MyListings from "./pages/MyListings";
 import Profile from "./pages/Profile";
+import Subscription from "./pages/Subscription";
 import ChatWidget from "./components/ChatWidget";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ChatProvider} from "./contexts/ChatContext";
@@ -33,6 +34,7 @@ function MainLayout() {
   { label: "Saved",ariaLabel: "Saved Properties",link:"/saved" },
   { label: "My Listings", ariaLabel: "My Listings",link:"/my-listings" },
   { label: "List Property", ariaLabel: "List Property",link:"/list-property" },
+  { label: "Subscription", ariaLabel: "Subscription", link: "/subscription" },
   { label: "Profile", ariaLabel: "Profile",link:"/profile" },
   ];
   return (
@@ -81,6 +83,7 @@ function MainLayout() {
           <Route path="/saved" element={<SavedProperties />} />
           <Route path="/my-listings" element={<MyListings />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/subscription" element={<Subscription />} />
         </Routes>
       </main>
       <Footer />

@@ -43,7 +43,9 @@ def top_k_context(db: Session, query: str, k: int = 5) -> str:
             {"q": emb_str, "k": k},
         ).fetchall()
         return "\n\n".join(r[0] for r in rows)
-    except Exception:
+    except Exception as e:
+        print(f"Vector search failed (top_k_context): {e}")
+        db.rollback()
         return ""
 
 def search_properties_context(db: Session, query: str, limit: int = 3) -> str:
@@ -96,12 +98,12 @@ def chat(payload: ChatIn, db: Session = Depends(get_db), _=Depends(get_current_u
         props_ctx = search_properties_context(db, payload.question, limit=3)
         
         system = (
-            "You are Aqarak AI, a helpful real estate assistant for Jordan (Amman). "
-            "You help users find properties and answer legal questions about real estate. "
-            "Use the provided Context to answer. "
-            "If the user asks about specific properties, refer to the 'Relevant Properties' section. "
-            "If the user asks legal questions, refer to the 'Legal Documents' section. "
-            "If you don't know, say so politely. "
+            "You are Aqarak AI, a premium real estate concierge for Jordan. "
+            "Your tone is professional, sophisticated, yet warm and helpful. "
+            "Format your responses beautifully using bullet points for lists and bold headers for sections. "
+            "Be concise but thorough. When answering about laws, use clear numbered steps. "
+            "Use the provided context to offer expert advice. "
+            "If referring to specific properties, highlight their key selling points. "
             "Always reply in the same language as the user (English or Arabic)."
         )
         
@@ -119,14 +121,16 @@ def chat(payload: ChatIn, db: Session = Depends(get_db), _=Depends(get_current_u
             user_prompt += f"\n\n---\nContext:{context_str}"
 
         completion = client.chat.completions.create(
-            model=os.getenv("CHAT_MODEL", "gpt-4o-mini"),
+            model=os.getenv("CHAT_MODEL", "gpt-3.5-turbo"),
             temperature=0.3,
             messages=[{"role":"system","content":system},{"role":"user","content":user_prompt}],
         )
         answer = completion.choices[0].message.content.strip()
         return ChatOut(answer=answer)
     except RateLimitError as e:
+        db.rollback()
         raise HTTPException(status_code=503, detail="LLM quota exceeded")
     except Exception as e:
+        db.rollback()
         print(f"Chat Error: {e}")
         raise HTTPException(status_code=500, detail=f"An error occurred while processing your request.")

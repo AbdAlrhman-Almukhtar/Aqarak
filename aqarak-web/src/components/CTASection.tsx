@@ -1,11 +1,11 @@
 import { motion } from "framer-motion";
 import { Button } from "./ui/button";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export function CTASection() {
   return (
-    <section className="py-32 px-4 bg-primary text-primary-foreground relative overflow-hidden">
+    <section className="py-20 px-4 bg-primary text-primary-foreground relative overflow-hidden">
       <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
         <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] rounded-full bg-accent/20 blur-[120px] mix-blend-screen" />
         <div className="absolute bottom-[-20%] left-[-10%] w-[600px] h-[600px] rounded-full bg-secondary/20 blur-[100px] mix-blend-screen" />
@@ -18,7 +18,6 @@ export function CTASection() {
           transition={{ duration: 0.5 }}
           className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-background/10 text-primary-foreground/90 text-sm font-medium mb-8 backdrop-blur-md border border-background/10"
         >
-          <Sparkles size={16} className="text-secondary" />
           <span>Join the Future of Real Estate</span>
         </motion.div>
         <motion.h2 
@@ -57,6 +56,31 @@ export function CTASection() {
             <Button size="xl" variant="outline" className="bg-transparent border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground hover:text-primary h-16 px-10 text-lg rounded-2xl backdrop-blur-sm transition-all duration-200">
               List Your Property
             </Button>
+          </Link>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="mt-16"
+        >
+          <Link 
+            to="/subscription"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="group inline-flex flex-col sm:flex-row items-center gap-4 px-8 py-6 rounded-2xl bg-secondary/20 hover:bg-secondary/30 border-2 border-secondary/40 hover:border-secondary/60 transition-all shadow-lg hover:shadow-xl"
+          >
+            <div className="text-left">
+              <div className="text-lg font-bold text-primary-foreground">Unlock Aqarak Plus</div>
+              <div className="text-sm text-primary-foreground/70">Get verified badge, listing boosts & unlimited AI</div>
+            </div>
+            <div className="flex items-center gap-3 sm:ml-auto">
+              <div className="text-right">
+                <div className="text-sm text-primary-foreground/60">Starting at</div>
+                <div className="text-2xl font-bold text-secondary">6.99 JOD<span className="text-sm font-normal text-primary-foreground/60">/mo</span></div>
+              </div>
+              <ArrowRight className="w-5 h-5 text-secondary group-hover:translate-x-1 transition-transform" />
+            </div>
           </Link>
         </motion.div>
       </div>
