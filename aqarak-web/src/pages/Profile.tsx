@@ -103,7 +103,7 @@ export default function Profile() {
         </div>
       </header>
 
-      <div className="container mx-auto px-4 pt-32 pb-20 relative z-10 flex-grow">
+      <div className="container mx-auto px-4 pt-52 pb-20 relative z-10 flex-grow">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center gap-4 mb-8">
             <div className="p-3 bg-secondary/10 rounded-2xl">

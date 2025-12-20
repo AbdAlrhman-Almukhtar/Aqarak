@@ -228,7 +228,7 @@ export default function EditProperty() {
         </div>
       </header>
 
-      <div className="container mx-auto px-4 pt-48 pb-20">
+      <div className="container mx-auto px-4 pt-52 pb-20 relative z-10">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold mb-4 text-[#0B1B34]">

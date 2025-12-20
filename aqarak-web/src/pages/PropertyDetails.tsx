@@ -138,7 +138,7 @@ export default function PropertyDetails() {
         </div>
       </header>
 
-      <div className="container mx-auto px-4 pt-32 pb-20 relative z-10">
+      <div className="container mx-auto px-4 pt-52 pb-20 relative z-10">
         <button 
           onClick={() => navigate(-1)}
           className="flex items-center gap-2 text-muted-foreground hover:text-primary mb-6 transition-colors font-medium"

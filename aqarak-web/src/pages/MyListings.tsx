@@ -82,7 +82,7 @@ export default function MyListings() {
         </div>
       </header>
 
-      <div className="container mx-auto px-4 pt-48 pb-20 relative z-10">
+      <div className="container mx-auto px-4 pt-52 pb-20 relative z-10 flex-grow">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-12">
           <div>
             <h1 className="text-4xl md:text-5xl font-bold mb-4 text-primary">

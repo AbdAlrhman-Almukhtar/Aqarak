@@ -61,7 +61,7 @@ export function Hero() {
       </header>
 
       <div className="relative z-10 max-w-5xl mx-auto px-4">
-        <div className="flex gap-8 pt-40 pb-20 lg:pt-56 lg:pb-24 items-center justify-center flex-col">
+        <div className="flex gap-8 pt-48 pb-20 lg:pt-56 lg:pb-24 items-center justify-center flex-col">
           <div className="flex gap-4 flex-col">
             <h1 className="text-7xl md:text-9xl max-w-4xl tracking-tighter text-center font-normal text-primary">
               <span className="text-primary">Welcome to</span>
