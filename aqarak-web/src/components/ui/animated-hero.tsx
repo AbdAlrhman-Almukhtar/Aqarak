@@ -36,7 +36,7 @@ export function Hero() {
   }, [titleNumber, titles]);
 
   return (
-    <section className="relative w-full overflow-hidden bg-background min-h-screen">
+    <section className="relative w-full overflow-hidden bg-background min-h-[97vh]">
       <div className="pointer-events-none absolute inset-0 z-0">
         <GridPattern className="opacity-100 text-primary/10" gap={64} lineWidth={1} color="currentColor" opacity={1} />
         <div className="absolute inset-0 bg-background/40" />
@@ -61,7 +61,7 @@ export function Hero() {
       </header>
 
       <div className="relative z-10 max-w-5xl mx-auto px-4">
-        <div className="flex gap-8 pt-32 pb-40 lg:pt-48 lg:pb-48 items-center justify-center flex-col">
+        <div className="flex gap-8 pt-40 pb-20 lg:pt-56 lg:pb-24 items-center justify-center flex-col">
           <div className="flex gap-4 flex-col">
             <h1 className="text-7xl md:text-9xl max-w-4xl tracking-tighter text-center font-normal text-primary">
               <span className="text-primary">Welcome to</span>
