@@ -100,7 +100,7 @@ export function Hero() {
                   </Button>
                 </Link>
                 <Link to="/login">
-                  <Button size="xl" className="gap-4 hover:bg-secondary hover:text-secondary-foreground hover:border-secondary" variant="outline">
+                  <Button size="xl" className="gap-4 hover:bg-primary hover:text-primary-foreground hover:border-primary" variant="outline">
                     Login
                   </Button>
                 </Link>
