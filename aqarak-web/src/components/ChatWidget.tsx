@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { MessageSquare, X, Send, Loader2, Minimize2, Bot, User } from 'lucide-react';
+import { MessageSquare, X, Send, Loader2, Minimize2, Bot, User, Maximize2 } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import api from '../lib/api';
 import { useChat } from '../contexts/ChatContext';
 
@@ -13,6 +15,7 @@ interface Message {
 export default function ChatWidget() {
   const { isOpen, closeChat, toggleChat, initialMessage } = useChat();
   const [isMinimized, setIsMinimized] = useState(false);
+  const [isMaximized, setIsMaximized] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 'welcome',
@@ -116,9 +119,16 @@ try {
         {isOpen && !isMinimized && (
           <motion.div
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
+            animate={{ 
+              opacity: 1, 
+              y: 0, 
+              scale: 1,
+              width: isMaximized ? 'min(90vw, 800px)' : 'min(90vw, 400px)',
+              height: isMaximized ? '80vh' : '500px',
+            }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="bg-white w-[350px] md:w-[400px] h-[500px] rounded-2xl shadow-2xl border border-[#0B1B34]/10 overflow-hidden flex flex-col mb-4 pointer-events-auto"
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            className={`bg-white rounded-2xl shadow-2xl border border-[#0B1B34]/10 overflow-hidden flex flex-col mb-4 pointer-events-auto transition-all duration-300`}
           >
             <div className="bg-[#0B1B34] p-4 flex items-center justify-between text-white">
               <div className="flex items-center gap-3">
@@ -132,8 +142,16 @@ try {
               </div>
               <div className="flex items-center gap-2">
                 <button
+                  onClick={() => setIsMaximized(!isMaximized)}
+                  className="p-1.5 hover:bg-white/10 rounded-lg transition-colors"
+                  title={isMaximized ? "Restore" : "Maximize"}
+                >
+                  {isMaximized ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+                </button>
+                <button
                   onClick={() => setIsMinimized(true)}
                   className="p-1.5 hover:bg-white/10 rounded-lg transition-colors"
+                  title="Minimize"
                 >
                   <Minimize2 className="w-4 h-4" />
                 </button>
@@ -173,7 +191,19 @@ try {
                         : 'bg-white border border-[#0B1B34]/10 text-[#0B1B34] rounded-tl-none shadow-sm'
                     }`}
                   >
-                    {msg.content}
+                    {msg.role === 'user' ? (
+                      msg.content
+                    ) : (
+                      <div className="prose prose-sm max-w-none 
+                        prose-p:leading-relaxed prose-pre:bg-[#0B1B34] prose-pre:text-white
+                        prose-strong:text-[#0B1B34] prose-strong:font-bold
+                        prose-ul:list-disc prose-ul:ml-4 prose-ol:list-decimal prose-ol:ml-4
+                        text-[#0B1B34]">
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                          {msg.content}
+                        </ReactMarkdown>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
