@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { TrendingDown, TrendingUp, Minus, AlertCircle, Sparkles } from 'lucide-react';
+import { TrendingDown, AlertCircle, BarChart3 } from 'lucide-react';
 import api from '../lib/api';
 
 interface PriceAnalysisProps {
@@ -104,112 +104,95 @@ export default function PriceAnalysisGauge({ property }: PriceAnalysisProps) {
   const predictedPrice = prediction.price_jod;
   const difference = ((actualPrice - predictedPrice) / predictedPrice) * 100;
   
-  let status: 'underpriced' | 'fair' | 'overpriced';
-  let statusColor: string;
-  let statusBg: string;
-  let statusIcon: any;
   let statusText: string;
   
   if (difference < -10) {
-    status = 'underpriced';
-    statusColor = 'text-emerald-600';
-    statusBg = 'bg-emerald-50 border border-emerald-200';
-    statusIcon = TrendingDown;
-    statusText = 'Great Deal';
-  } else if (difference > 10) {
-    status = 'overpriced';
-    statusColor = 'text-orange-600';
-    statusBg = 'bg-orange-50 border border-orange-200';
-    statusIcon = TrendingUp;
-    statusText = 'Above Market';
+    statusText = 'Exceptional Deal';
+  } else if (difference < -3) {
+    statusText = 'Great Value';
+  } else if (difference > 3) {
+    statusText = 'Above Market Average';
   } else {
-    status = 'fair';
-    statusColor = 'text-secondary';
-    statusBg = 'bg-secondary/10 border border-secondary/20';
-    statusIcon = Minus;
-    statusText = 'Fair Price';
+    statusText = 'Fair Market Price';
   }
 
-  const StatusIcon = statusIcon;
-  const barPosition = Math.min(100, Math.max(0, ((difference + 30) / 60) * 100));
+  const barPosition = Math.min(100, Math.max(0, ((difference + 25) / 50) * 100)); // Normalized to -25% to +25% range
 
   return (
-    <div className="bg-card rounded-3xl p-8 border border-border shadow-xl">
-      <h3 className="text-2xl font-bold text-primary mb-6">AI Price Analysis</h3>
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className={`${statusBg} rounded-2xl p-6 mb-6`}
-      >
-        <div className="flex items-center gap-4 mb-3">
-          <div className={`w-12 h-12 rounded-xl bg-white flex items-center justify-center ${statusColor}`}>
-            <StatusIcon className="w-7 h-7" />
+    <div className="bg-card rounded-[2rem] p-8 border border-border shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden group">
+      <div className="relative z-10">
+        <div className="flex items-center gap-2 mb-8">
+          <div className="w-8 h-8 rounded-lg bg-[#0B1B34] flex items-center justify-center text-white">
+            <BarChart3 className="w-4 h-4" />
           </div>
-          <div className="flex-1">
-            <p className={`font-bold text-2xl ${statusColor}`}>
-              {statusText}
-            </p>
-            <p className="text-sm text-muted-foreground mt-1">
-              Based on AI market analysis
-            </p>
-          </div>
+          <h3 className="text-sm font-black text-[#0B1B34] uppercase tracking-widest">Market Valuation</h3>
         </div>
-      </motion.div>
-      <div className="space-y-4 mb-6">
-        <div className="flex items-center justify-between p-4 bg-background rounded-2xl">
-          <div>
-            <p className="text-sm text-muted-foreground mb-1">Listed Price</p>
-            <p className="text-2xl font-bold text-primary">
-              {actualPrice.toLocaleString()} JOD
+
+        <div className="bg-[#0B1B34]/5 rounded-2xl p-6 mb-8 border border-[#0B1B34]/5">
+          <p className="text-[#0B1B34]/40 text-[10px] font-bold uppercase tracking-widest mb-1">Analysis Summary</p>
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center justify-between">
+              <span className="text-xl font-bold text-[#0B1B34] tracking-tight">{statusText}</span>
+              <div className="flex items-center gap-1.5 px-3 py-1 bg-white rounded-full border border-[#0B1B34]/10 shadow-sm">
+                <div className={`w-2 h-2 rounded-full ${Math.abs(difference) <= 10 ? 'bg-[#FFA04F]' : 'bg-[#0B1B34]'}`} />
+                <span className="text-[10px] font-black text-[#0B1B34] uppercase">{difference.toFixed(1)}%</span>
+              </div>
+            </div>
+            <p className="text-xs font-medium text-[#0B1B34]/60">
+              The property is {Math.abs(difference).toFixed(1)}% {difference > 0 ? 'more expensive' : 'cheaper'} than our AI estimate.
             </p>
           </div>
         </div>
-        <div className="flex items-center justify-between p-4 bg-gradient-to-br from-secondary/10 to-secondary/5 rounded-2xl border border-secondary/20">
-          <div>
-            <p className="text-sm text-muted-foreground mb-1">AI Market Estimate</p>
-            <p className="text-2xl font-bold text-secondary">
-              {Math.round(predictedPrice).toLocaleString()} JOD
-            </p>
+
+        <div className="space-y-6">
+          <div className="flex justify-between items-end">
+            <div>
+              <p className="text-[10px] font-bold text-[#0B1B34]/40 uppercase tracking-widest mb-1">Listed Price</p>
+              <div className="flex items-baseline gap-1">
+                <span className="text-2xl font-black text-[#0B1B34]">{actualPrice.toLocaleString()}</span>
+                <span className="text-xs font-bold text-[#0B1B34]/40">JOD</span>
+              </div>
+            </div>
+            <div className="text-right">
+              <p className="text-[10px] font-bold text-[#0B1B34]/40 uppercase tracking-widest mb-1">AI Estimate</p>
+              <div className="flex items-baseline justify-end gap-1">
+                <span className="text-2xl font-black text-[#FFA04F]">{Math.round(predictedPrice).toLocaleString()}</span>
+                <span className="text-xs font-bold text-[#FFA04F]/40">JOD</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="relative pt-4 pb-2">
+            <div className="flex justify-between mb-2">
+              <span className="text-[9px] font-bold text-[#0B1B34]/30 uppercase tracking-widest">Low Value</span>
+              <span className="text-[9px] font-bold text-[#0B1B34]/30 uppercase tracking-widest text-center">Market Average</span>
+              <span className="text-[9px] font-bold text-[#0B1B34]/30 uppercase tracking-widest">High Value</span>
+            </div>
+            <div className="h-1.5 w-full bg-[#0B1B34]/5 rounded-full relative">
+              {/* Reference Points */}
+              <div className="absolute left-[50%] top-0 bottom-0 w-px bg-[#0B1B34]/10" />
+              
+              <motion.div
+                initial={{ left: '50%' }}
+                animate={{ left: `${barPosition}%` }}
+                transition={{ type: "spring", damping: 20, stiffness: 100 }}
+                className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2"
+              >
+                <div className="h-4 w-4 bg-white border-4 border-[#FFA04F] rounded-full shadow-lg" />
+              </motion.div>
+            </div>
           </div>
         </div>
-      </div>
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-sm font-medium text-muted-foreground">Value Rating</span>
-          <span className={`text-lg font-bold ${statusColor}`}>
-            {difference > 0 ? '+' : ''}{difference.toFixed(1)}%
-          </span>
-        </div>
-        <div className="relative h-3 bg-gradient-to-r from-emerald-100 via-secondary/30 to-orange-100 rounded-full overflow-hidden shadow-inner">
-          <motion.div
-            initial={{ left: '50%' }}
-            animate={{ left: `${barPosition}%` }}
-            transition={{ duration: 1, ease: 'easeOut' }}
-            className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-1 h-6 bg-primary rounded-full shadow-lg"
-          />
-        </div>
-        
-        <div className="flex justify-between mt-2 text-xs text-muted-foreground">
-          <span className="font-medium">Great Deal</span>
-          <span className="font-medium">Fair</span>
-          <span className="font-medium">High</span>
-        </div>
-      </div>
-      <div className="bg-background rounded-2xl p-5 text-center">
-        <p className="text-sm text-muted-foreground mb-2">Price Difference</p>
-        <div className="flex items-center justify-center gap-2">
-          <p className={`text-4xl font-bold ${statusColor}`}>
-            {difference > 0 ? '+' : ''}{difference.toFixed(1)}%
-          </p>
-        </div>
-        <p className="text-xs text-muted-foreground mt-2">
-          {difference < 0 ? 'Below' : difference > 0 ? 'Above' : 'At'} market estimate
-        </p>
-      </div>
-      <div className="mt-6 pt-6 border-t border-border">
-        <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
-          <Sparkles className="w-4 h-4 text-secondary" />
-          <span>Powered by AI price prediction model</span>
+
+        <div className="mt-8 pt-6 border-t border-[#0B1B34]/5">
+          <div className="flex items-center gap-5 p-5 rounded-2xl bg-[#0B1B34] text-white shadow-xl shadow-[#0B1B34]/10">
+            <div className="w-12 h-12 rounded-xl bg-[#FFA04F] flex items-center justify-center text-[#0B1B34] flex-shrink-0">
+              <TrendingDown className="w-6 h-6" />
+            </div>
+            <p className="text-sm leading-relaxed text-white/80 font-medium">
+              This property is listed <span className="text-[#FFA04F] font-bold">{Math.abs(difference).toFixed(1)}% {difference > 0 ? 'higher' : 'lower'}</span> than the calculated neighborhood average.
+            </p>
+          </div>
         </div>
       </div>
     </div>

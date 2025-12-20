@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useChat } from '../contexts/ChatContext';
 import { useAuth } from '../contexts/AuthContext';
-import { MapPin, Bed, Bath, Maximize, Check, ArrowLeft, Heart, Home, Calendar, Layers, Share2 } from 'lucide-react';
+import { MapPin, Bed, Bath, Maximize, ArrowLeft, Heart, Home, Share2, Bot } from 'lucide-react';
 import PillNav from '../components/PillNav';
 import PriceAnalysisGauge from '../components/PriceAnalysisGauge';
 import { GridPattern } from '../components/ui/grid-pattern';
@@ -107,7 +107,7 @@ export default function PropertyDetails() {
     );
   }
 
-  const allImages = [property.cover_image, ...(property.images || [])].filter(Boolean);
+  const allImages = Array.from(new Set([property.cover_image, ...(property.images || [])])).filter(Boolean);
   const displayPrice = property.is_for_sale ? property.price : property.rent_price;
   const priceLabel = property.is_for_sale ? 'JOD' : 'JOD/mo';
 
@@ -164,9 +164,26 @@ export default function PropertyDetails() {
                     </div>
                   )}
                   {allImages.length > 0 && (
-                    <div className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-sm text-white px-3 py-1.5 rounded-lg text-sm font-medium">
-                      {activeImage + 1} / {allImages.length}
-                    </div>
+                    <>
+                      <div className="absolute top-6 right-6 flex gap-3 z-20">
+                        <button 
+                          onClick={toggleFavorite}
+                          className={`p-4 rounded-full shadow-2xl backdrop-blur-xl transition-all hover:scale-110 active:scale-95 ${
+                            property.is_favorited 
+                              ? 'bg-red-500 text-white' 
+                              : 'bg-white/95 text-[#0B1B34] hover:text-red-500 border border-[#0B1B34]/10'
+                          }`}
+                        >
+                          <Heart className={`w-6 h-6 ${property.is_favorited ? 'fill-current' : ''}`} />
+                        </button>
+                        <button className="p-4 rounded-full bg-white/95 text-[#0B1B34] hover:bg-white shadow-2xl backdrop-blur-xl transition-all hover:scale-110 active:scale-95 border border-[#0B1B34]/10">
+                          <Share2 className="w-6 h-6" />
+                        </button>
+                      </div>
+                      <div className="absolute bottom-6 right-6 bg-[#0B1B34]/80 backdrop-blur-md text-white px-5 py-2.5 rounded-2xl text-sm font-black uppercase tracking-[0.2em] z-20 border border-white/10 shadow-2xl">
+                        {activeImage + 1} / {allImages.length}
+                      </div>
+                    </>
                   )}
                 </div>
                 {allImages.length > 1 && (
@@ -191,158 +208,118 @@ export default function PropertyDetails() {
                   </div>
                 )}
               </div>
-              <div className="bg-card rounded-3xl p-8 shadow-xl border border-border">
-                <div className="flex items-start justify-between gap-4 mb-6">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-3">
-                      <span className={`px-4 py-1.5 rounded-full text-sm font-semibold ${
+              <div className="bg-card rounded-[2.5rem] p-8 md:p-10 shadow-[0_8px_40px_rgb(0,0,0,0.06)] border border-border/50 relative overflow-hidden">
+                <div className="relative z-10 space-y-12">
+                  <div className="space-y-6">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className={`px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] ${
                         property.is_for_sale 
-                          ? 'bg-secondary/10 text-secondary' 
-                          : 'bg-primary/10 text-primary'
+                          ? 'bg-[#FFA04F] text-[#0B1B34]' 
+                          : 'bg-[#0B1B34] text-white'
                       }`}>
                         {property.is_for_sale ? 'For Sale' : 'For Rent'}
                       </span>
                       {property.furnished && (
-                        <span className="px-4 py-1.5 rounded-full text-sm font-semibold bg-accent/10 text-accent">
+                        <span className="px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] bg-[#0B1B34]/5 text-[#0B1B34] border border-[#0B1B34]/10">
                           Furnished
                         </span>
                       )}
-                    </div>
-                    <h1 className="text-3xl md:text-4xl font-bold text-primary mb-3">
-                      {property.title}
-                    </h1>
-                    <div className="flex items-center gap-2 text-muted-foreground mb-4">
-                      <MapPin className="w-5 h-5 text-secondary" />
-                      <span className="text-lg font-medium">{property.neighborhood}, {property.city}</span>
-                    </div>
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-5xl font-bold text-secondary">
-                        {displayPrice?.toLocaleString()}
-                      </span>
-                      <span className="text-2xl text-muted-foreground font-medium">
-                        {priceLabel}
+                      <span className="px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] bg-[#0B1B34]/5 text-[#0B1B34]/40 border border-[#0B1B34]/10">
+                        Verified Listing
                       </span>
                     </div>
-                  </div>
-                  <div className="flex gap-2">
-                    <button 
-                      onClick={toggleFavorite}
-                      className={`p-3 rounded-full shadow-lg hover:shadow-xl transition-all ${
-                        property.is_favorited 
-                          ? 'bg-red-500 text-white' 
-                          : 'bg-card text-primary hover:bg-red-50 hover:text-red-500 border border-border'
-                      }`}
-                    >
-                      <Heart className={`w-6 h-6 ${property.is_favorited ? 'fill-current' : ''}`} />
-                    </button>
-                    <button className="p-3 rounded-full bg-card text-primary hover:bg-muted border border-border shadow-lg hover:shadow-xl transition-all">
-                      <Share2 className="w-6 h-6" />
-                    </button>
-                  </div>
-                </div>
-                <div className="grid grid-cols-3 gap-6 pt-6 border-t border-border">
-                  <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 rounded-2xl bg-secondary/10 flex items-center justify-center flex-shrink-0">
-                      <Bed className="w-7 h-7 text-secondary" />
-                    </div>
-                    <div>
-                      <div className="text-2xl font-bold text-primary">{property.bedrooms}</div>
-                      <div className="text-sm text-muted-foreground">Bedrooms</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 rounded-2xl bg-secondary/10 flex items-center justify-center flex-shrink-0">
-                      <Bath className="w-7 h-7 text-secondary" />
-                    </div>
-                    <div>
-                      <div className="text-2xl font-bold text-primary">{property.bathrooms}</div>
-                      <div className="text-sm text-muted-foreground">Bathrooms</div>
+
+                    <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-8">
+                      <div className="space-y-3">
+                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#0B1B34] tracking-tight leading-[1.1]">
+                          {property.title}
+                        </h1>
+                        <div className="flex items-center gap-2 text-[#0B1B34]/40">
+                          <MapPin className="w-5 h-5 text-[#FFA04F]" />
+                          <span className="text-xl font-medium tracking-tight">
+                            {property.neighborhood}, {property.city}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-start lg:items-end flex-shrink-0 bg-[#0B1B34]/5 p-6 rounded-3xl border border-[#0B1B34]/5">
+                        <span className="text-[10px] font-black text-[#0B1B34]/30 uppercase tracking-[0.2em] mb-1">Market Listing</span>
+                        <div className="flex items-baseline gap-1.5">
+                          <span className="text-5xl lg:text-6xl font-bold text-[#FFA04F] tracking-tighter">
+                            {displayPrice?.toLocaleString()}
+                          </span>
+                          <span className="text-xl text-[#0B1B34] font-bold">
+                            {priceLabel}
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 rounded-2xl bg-secondary/10 flex items-center justify-center flex-shrink-0">
-                      <Maximize className="w-7 h-7 text-secondary" />
-                    </div>
-                    <div>
-                      <div className="text-2xl font-bold text-primary">{property.area_sqm}</div>
-                      <div className="text-sm text-muted-foreground">Sqm</div>
-                    </div>
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 py-10 border-y border-border/50">
+                    {[
+                      { icon: <Bed className="w-6 h-6" />, value: property.bedrooms, label: "Bedrooms" },
+                      { icon: <Bath className="w-6 h-6" />, label: "Bathrooms", value: property.bathrooms },
+                      { icon: <Maximize className="w-6 h-6" />, value: property.area_sqm, label: "Area", unit: "m²" },
+                      { icon: <Home className="w-6 h-6" />, value: property.property_type, label: "Property Type" }
+                    ].map((stat, i) => (
+                      <div key={i} className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-2xl bg-[#FFA04F]/10 flex items-center justify-center text-[#FFA04F] border border-[#FFA04F]/10">
+                          {stat.icon}
+                        </div>
+                        <div>
+                          <div className="flex items-baseline gap-0.5">
+                            <span className="text-2xl font-bold text-[#0B1B34]">{stat.value}</span>
+                            {stat.unit && <span className="text-xs font-bold text-[#0B1B34]/30 uppercase ml-0.5">{stat.unit}</span>}
+                          </div>
+                          <div className="text-[10px] font-black text-[#0B1B34]/30 uppercase tracking-[0.1em]">{stat.label}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="grid grid-cols-2 lg:grid-cols-3 gap-12">
+                    {[
+                      { label: "FLOOR LEVEL", value: property.floor !== null ? `${property.floor}` : 'Ground' },
+                      { label: "PROPERTY AGE", value: property.building_age ? `${property.building_age} Years` : 'Brand New' },
+                      { label: "FURNISHING STATUS", value: property.furnished ? 'Fully Furnished' : 'Unfurnished' }
+                    ].map((feature, i) => (
+                      <div key={i} className="space-y-3">
+                        <span className="text-[11px] font-black text-[#0B1B34]/20 uppercase tracking-[0.1em]">{feature.label}</span>
+                        <p className="text-2xl font-bold text-[#0B1B34]">{feature.value}</p>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
-              <div className="bg-card rounded-3xl p-8 shadow-xl border border-border">
-                <h2 className="text-2xl font-bold text-primary mb-6 flex items-center gap-2">
-                  <div className="w-1 h-8 bg-secondary rounded-full"></div>
-                  Property Features
-                </h2>
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="flex items-center gap-4 p-4 bg-background rounded-2xl">
-                    <div className="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center flex-shrink-0">
-                      <Home className="w-6 h-6 text-secondary" />
-                    </div>
-                    <div>
-                      <div className="text-sm text-muted-foreground">Property Type</div>
-                      <div className="font-semibold text-primary text-lg">{property.property_type || 'N/A'}</div>
-                    </div>
+              <div className="bg-card rounded-[2.5rem] p-10 md:p-12 shadow-[0_8px_40px_rgb(0,0,0,0.06)] border border-border/50">
+                <div className="space-y-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-1.5 h-8 bg-[#FFA04F] rounded-full"></div>
+                    <h2 className="text-3xl font-bold text-[#0B1B34] tracking-tight">Property Description</h2>
                   </div>
-                  <div className="flex items-center gap-4 p-4 bg-background rounded-2xl">
-                    <div className="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center flex-shrink-0">
-                      <Layers className="w-6 h-6 text-secondary" />
-                    </div>
-                    <div>
-                      <div className="text-sm text-muted-foreground">Floor</div>
-                      <div className="font-semibold text-primary text-lg">
-                        {property.floor !== null ? `Floor ${property.floor}` : 'N/A'}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4 p-4 bg-background rounded-2xl">
-                    <div className="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center flex-shrink-0">
-                      <Calendar className="w-6 h-6 text-secondary" />
-                    </div>
-                    <div>
-                      <div className="text-sm text-muted-foreground">Building Age</div>
-                      <div className="font-semibold text-primary text-lg">
-                        {property.building_age ? `${property.building_age} Years` : 'New'}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4 p-4 bg-background rounded-2xl">
-                    <div className="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center flex-shrink-0">
-                      <Check className="w-6 h-6 text-secondary" />
-                    </div>
-                    <div>
-                      <div className="text-sm text-muted-foreground">Furnished</div>
-                      <div className="font-semibold text-primary text-lg">
-                        {property.furnished ? 'Yes' : 'No'}
-                      </div>
-                    </div>
+                  <div className="prose prose-xl max-w-none text-[#0B1B34]/70 leading-relaxed font-normal whitespace-pre-line">
+                    {property.description || 'No detailed description provided for this premium listing.'}
                   </div>
                 </div>
-              </div>
-              <div className="bg-card rounded-3xl p-8 shadow-xl border border-border">
-                <h2 className="text-2xl font-bold text-primary mb-4 flex items-center gap-2">
-                  <div className="w-1 h-8 bg-secondary rounded-full"></div>
-                  About this property
-                </h2>
-                <p className="text-muted-foreground leading-relaxed text-lg whitespace-pre-line">
-                  {property.description || 'No description provided.'}
-                </p>
               </div>
             </div>
             <div className="lg:col-span-1">
               <div className="space-y-6">
-                <div className="bg-gradient-to-br from-primary via-primary to-primary/90 rounded-3xl p-8 shadow-2xl text-primary-foreground">
-                  <h3 className="text-2xl font-bold mb-2">Interested?</h3>
-                  <p className="text-primary-foreground/90 mb-6 text-sm">
-                    Contact our agent to schedule a viewing or get more information about this property.
-                  </p>
-                  <button 
-                    onClick={() => openChat(`Hi, I'm interested in ${property.title} in ${property.neighborhood}. Is it still available?`)}
-                    className="w-full bg-white text-primary py-4 rounded-xl font-bold text-lg hover:bg-white/95 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-                  >
-                    Contact Agent
-                  </button>
+                <div className="bg-[#0B1B34] rounded-[2rem] p-10 shadow-2xl text-white relative overflow-hidden group border border-[#FFA04F]/20">
+                  <div className="absolute -top-12 -right-12 w-48 h-48 bg-[#FFA04F] opacity-5 rounded-full blur-3xl group-hover:opacity-10 transition-opacity"></div>
+                  <div className="relative z-10">
+                    <div className="w-16 h-16 bg-[#FFA04F] rounded-2xl flex items-center justify-center text-[#0B1B34] mb-6 shadow-lg shadow-[#FFA04F]/20">
+                      <Bot className="w-8 h-8" />
+                    </div>
+                    <h3 className="text-3xl font-bold mb-4 tracking-tight">AI Concierge</h3>
+                    <p className="text-white/60 mb-10 text-base leading-relaxed">
+                      Instant answers about legal structure, neighborhood data, and property history.
+                    </p>
+                    <button 
+                      onClick={() => openChat(`I'm interested in viewing "${property.title}" in ${property.neighborhood}. Can you tell me more about its features?`)}
+                      className="w-full bg-[#FFA04F] text-[#0B1B34] py-5 rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-[#FFA04F]/90 transition-all shadow-xl shadow-[#FFA04F]/20"
+                    >
+                      Start Consultation
+                    </button>
+                  </div>
                 </div>
                 <PriceAnalysisGauge property={property} />
               </div>
