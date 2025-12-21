@@ -149,13 +149,6 @@ try {
                   {isMaximized ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
                 </button>
                 <button
-                  onClick={() => setIsMinimized(true)}
-                  className="p-1.5 hover:bg-white/10 rounded-lg transition-colors"
-                  title="Minimize"
-                >
-                  <Minimize2 className="w-4 h-4" />
-                </button>
-                <button
                   onClick={() => closeChat()}
                   className="p-1.5 hover:bg-white/10 rounded-lg transition-colors"
                 >
