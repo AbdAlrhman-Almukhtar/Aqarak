@@ -18,7 +18,8 @@
   --brand-cream: oklch(0.96 0.01 85); /* #F4F1E8 approx */
   --brand-navy: oklch(0.20 0.04 260); /* #0B1B34 approx */
   --brand-orange: oklch(0.75 0.18 55); /* #ffa04f approx */
-  --brand-purple: oklch(0.45 0.25 280); /* #5227FF approx */
+  --brand-purple: oklch(0.45 0.31 280); /* #5227FF exactly */
+  --brand-purple-rgb: 82, 39, 255;
   --background: var(--brand-cream);
   --foreground: var(--brand-navy);
   
