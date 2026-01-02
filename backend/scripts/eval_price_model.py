@@ -43,7 +43,7 @@ def _metrics(y_true: np.ndarray, y_pred: np.ndarray):
 def _print_overall(tag: str, took_s: float, m: dict):
     print("\n=== Overall ===")
     print(f"n={m['n']}  time={took_s:.2f}s  mode={tag}")
-    print(f"MAE={m['MAE']:,.2f}  RMSE={m['RMSE']:,.2f}  R2={m['R2']:.4f}  MAPE={m['MAPE%']:.2f}%  wMAPE={m['wMAPE%']:.2f}%  ACC≈{max(0.0, 100.0 - m['wMAPE%']):.2f}%")
+    print(f"R2={m['R2']:.4f}  MAPE={m['MAPE%']:.2f}%  wMAPE={m['wMAPE%']:.2f}%  ACC≈{max(0.0, 100.0 - m['wMAPE%']):.2f}%")
 
 def _print_groupby(df: pd.DataFrame, y_true: np.ndarray, y_pred: np.ndarray, keys: Iterable[str]):
     if not keys:

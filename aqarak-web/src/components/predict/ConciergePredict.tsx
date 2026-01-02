@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { MapPin, Home, Building2, Check, Loader2, ArrowRight } from 'lucide-react';
+import { MapPin, Home, Building2, Check, Loader2, Bed, Maximize2, Tag, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import api from '../../lib/api';
 import Stepper, { Step } from '../ui/Stepper';
 
@@ -21,6 +22,7 @@ export default function ConciergePredict() {
   const [price, setPrice] = useState<number | null>(null);
   const [stepperKey, setStepperKey] = useState(0);
   const [currentStep, setCurrentStep] = useState(1);
+  const navigate = useNavigate();
   
   const [form, setForm] = useState({
     bedrooms: 3,
@@ -34,8 +36,6 @@ export default function ConciergePredict() {
     property_type: 'Apartment',
     furnished: true,
   });
-
-  // Automatically call API when reaching step 3
   useEffect(() => {
     if (currentStep === 3 && price === null && !loading) {
       const fetchPrice = async () => {
@@ -86,14 +86,15 @@ export default function ConciergePredict() {
       key={stepperKey}
       initialStep={currentStep}
       onStepChange={(step) => setCurrentStep(step)}
+      onFinalStepCompleted={handleReset}
       backButtonText="Back"
-      nextButtonText="Next"
+      nextButtonText={currentStep === 2 ? "Estimate" : "Next"}
+      finalButtonText="New Estimate"
       stepCircleContainerClassName="bg-card/80 backdrop-blur-xl"
       disableStepIndicators={false}
     >
-      {/* Step 1: Location */}
       <Step>
-        <div className="text-center space-y-8 py-4">
+        <div className="text-center space-y-4 py-2">
           <div className="w-20 h-20 bg-secondary/10 rounded-full flex items-center justify-center mx-auto">
             <MapPin className="w-10 h-10 text-secondary" />
           </div>
@@ -118,10 +119,8 @@ export default function ConciergePredict() {
           </div>
         </div>
       </Step>
-
-      {/* Step 2: Property Details */}
       <Step>
-        <div className="text-center space-y-8 py-4">
+        <div className="text-center space-y-4 py-2">
           <div className="w-20 h-20 bg-secondary/10 rounded-full flex items-center justify-center mx-auto">
             <Home className="w-10 h-10 text-secondary" />
           </div>
@@ -225,28 +224,52 @@ export default function ConciergePredict() {
           </div>
         </div>
       </Step>
-
-      {/* Step 3: Results (auto-loads) */}
       <Step>
         {price ? (
-          <div className="text-center space-y-6 py-8">
+          <div className="text-center space-y-4 py-4">
             <div className="w-24 h-24 bg-green-500/10 rounded-full flex items-center justify-center mx-auto border-2 border-green-500/20">
               <Check className="w-12 h-12 text-green-500" />
             </div>
-            <div>
-              <p className="text-muted-foreground text-lg mb-2">The estimated value is</p>
-              <h1 className="text-6xl font-bold text-primary mb-2 tracking-tight">
-                {price.toLocaleString()} <span className="text-3xl text-secondary">JOD</span>
-              </h1>
-              <p className="text-sm text-muted-foreground">for a {form.bedrooms}bd {form.property_type} in {form.neighborhood}</p>
-            </div>
             
-            <button
-              onClick={handleReset}
-              className="mt-8 text-muted-foreground hover:text-primary transition-colors underline decoration-dotted flex items-center gap-2 mx-auto"
-            >
-              Start New Estimate <ArrowRight className="w-4 h-4" />
-            </button>
+            <p className="text-muted-foreground text-lg mb-2">The estimated value is</p>
+            
+            <div className="relative inline-block mb-2">
+              <div className="absolute -inset-4 bg-secondary/20 blur-2xl rounded-full opacity-50 pulse" />
+              <h1 className="relative text-6xl md:text-7xl font-bold text-primary tracking-tight">
+                {Math.round(price).toLocaleString()} <span className="text-3xl text-secondary">JOD</span>
+              </h1>
+            </div>
+
+            <div className="flex flex-wrap justify-center gap-3 mt-4">
+              <div className="px-4 py-2 bg-muted rounded-2xl flex items-center gap-2 border border-border">
+                <Bed className="w-4 h-4 text-secondary" />
+                <span className="text-sm font-medium text-primary">{form.bedrooms} Beds</span>
+              </div>
+              <div className="px-4 py-2 bg-muted rounded-2xl flex items-center gap-2 border border-border">
+                <Maximize2 className="w-4 h-4 text-secondary" />
+                <span className="text-sm font-medium text-primary">{form.area_sqm} sqm</span>
+              </div>
+              <div className="px-4 py-2 bg-muted rounded-2xl flex items-center gap-2 border border-border">
+                <Tag className="w-4 h-4 text-secondary" />
+                <span className="text-sm font-medium text-primary">{Math.round(price / form.area_sqm)} JOD/m²</span>
+              </div>
+            </div>
+
+            <p className="text-sm text-muted-foreground mt-4">
+              for a {form.bedrooms}bd {form.property_type} in {form.neighborhood}
+            </p>
+
+            <div className="pt-4 flex flex-col items-center gap-2">
+              <button 
+                onClick={() => navigate('/list-property')}
+                className="text-primary font-bold hover:text-secondary transition-colors flex items-center gap-2 group"
+              >
+                Want to sell? List this property
+                <div className="w-6 h-6 rounded-full bg-secondary/10 flex items-center justify-center group-hover:bg-secondary/20 transition-colors">
+                  <ArrowRight className="w-3 h-3 text-secondary" />
+                </div>
+              </button>
+            </div>
           </div>
         ) : (
           <div className="text-center py-12">

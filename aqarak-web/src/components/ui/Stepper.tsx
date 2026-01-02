@@ -14,6 +14,7 @@ interface StepperProps extends HTMLAttributes<HTMLDivElement> {
   nextButtonProps?: React.ButtonHTMLAttributes<HTMLButtonElement>;
   backButtonText?: string;
   nextButtonText?: string;
+  finalButtonText?: string;
   disableStepIndicators?: boolean;
   renderStepIndicator?: (props: {
     step: number;
@@ -35,6 +36,7 @@ export default function Stepper({
   nextButtonProps = {},
   backButtonText = 'Back',
   nextButtonText = 'Continue',
+  finalButtonText = 'Estimate',
   disableStepIndicators = false,
   renderStepIndicator,
   ...rest
@@ -78,7 +80,8 @@ export default function Stepper({
   };
 
   const handleComplete = () => {
-    onFinalStepCompleted();
+    setDirection(1);
+    updateStep(currentStep + 1);
   };
 
   return (
@@ -89,7 +92,7 @@ export default function Stepper({
       <div
         className={`mx-auto w-full max-w-4xl rounded-3xl shadow-2xl bg-card border border-border ${stepCircleContainerClassName}`}
       >
-        <div className={`${stepContainerClassName} flex w-full items-center p-8`}>
+        <div className={`${stepContainerClassName} flex w-full items-center px-8 py-6`}>
           {stepsArray.map((_, index) => {
             const stepNumber = index + 1;
             const isNotLastStep = index < totalSteps - 1;
@@ -131,8 +134,8 @@ export default function Stepper({
         </StepContentWrapper>
 
         {!isCompleted && (
-          <div className={`px-8 pb-8 ${footerClassName}`}>
-            <div className={`mt-10 flex ${currentStep !== 1 ? 'justify-between' : 'justify-end'}`}>
+          <div className={`px-8 pb-6 ${footerClassName}`}>
+            <div className={`mt-6 flex ${currentStep !== 1 ? 'justify-between' : 'justify-end'}`}>
               {currentStep !== 1 && (
                 <button
                   onClick={handleBack}
@@ -147,7 +150,7 @@ export default function Stepper({
                 className="duration-350 flex items-center justify-center rounded-full bg-primary hover:bg-primary/90 py-3 px-6 font-bold tracking-tight text-primary-foreground transition shadow-lg"
                 {...nextButtonProps}
               >
-                {isLastStep ? 'Complete' : nextButtonText}
+                {isLastStep ? finalButtonText : nextButtonText}
               </button>
             </div>
           </div>
@@ -243,7 +246,7 @@ interface StepProps {
 }
 
 export function Step({ children }: StepProps) {
-  return <div className="py-8">{children}</div>;
+  return <div className="py-2">{children}</div>;
 }
 
 interface StepIndicatorProps {
