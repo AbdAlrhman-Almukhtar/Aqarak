@@ -11,6 +11,8 @@ import Rent from "./pages/Rent";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import VerifyEmail from "./pages/VerifyEmail";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import ListProperty from "./pages/ListProperty";
 import PropertyDetails from "./pages/PropertyDetails";
 import EditProperty from "./pages/EditProperty";
@@ -66,6 +68,8 @@ function MainLayout() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/verify-email" element={<VerifyEmail />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/predict" element={<Predict />} />
           <Route path="/buy" element={<Buy />} />
           <Route path="/rent" element={<Rent />} />

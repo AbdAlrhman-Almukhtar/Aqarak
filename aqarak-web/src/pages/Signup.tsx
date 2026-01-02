@@ -16,6 +16,7 @@ export default function Signup() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
 
   const passwordStrength = password.length >= 8 ? (password.match(/[a-z]/) && password.match(/[A-Z]/) && password.match(/[0-9]/) ? 'strong' : 'medium') : 'weak';
 
@@ -37,8 +38,7 @@ export default function Signup() {
 
     try {
       await register(email, password, phone, name);
-      alert("Registration successful! Please check your email to verify your account.");
-      navigate('/login');
+      setSuccess(true);
     } catch (err: any) {
       console.error('Registration error:', err);
       console.error('Response data:', err?.response?.data);
@@ -63,151 +63,175 @@ export default function Signup() {
             <p className="text-muted-foreground">Join Aqarak to find your dream property</p>
           </div>
 
-          {error && (
+          {!success ? (
+            <>
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 flex items-center gap-3"
+                >
+                  <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+                  <p className="text-red-800 text-sm">{error}</p>
+                </motion.div>
+              )}
+
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-semibold text-primary mb-2">
+                    Full Name
+                  </label>
+                  <div className="relative">
+                    <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                    <input
+                      id="name"
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      className="w-full pl-12 pr-4 py-3 bg-card border border-border rounded-xl text-primary placeholder:text-muted-foreground focus:outline-none focus:border-secondary transition-colors"
+                      placeholder="John Doe"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="phone" className="block text-sm font-semibold text-primary mb-2">
+                    Phone Number
+                  </label>
+                  <div className="relative">
+                    <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                    <input
+                      id="phone"
+                      type="tel"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      required
+                      className="w-full pl-12 pr-4 py-3 bg-card border border-border rounded-xl text-primary placeholder:text-muted-foreground focus:outline-none focus:border-secondary transition-colors"
+                      placeholder="079 123 4567"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="email" className="block text-sm font-semibold text-primary mb-2">
+                    Email Address
+                  </label>
+                  <div className="relative">
+                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                    <input
+                      id="email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      className="w-full pl-12 pr-4 py-3 bg-card border border-border rounded-xl text-primary placeholder:text-muted-foreground focus:outline-none focus:border-secondary transition-colors"
+                      placeholder="you@example.com"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="password" className="block text-sm font-semibold text-primary mb-2">
+                    Password
+                  </label>
+                  <div className="relative">
+                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                    <input
+                      id="password"
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                      className="w-full pl-12 pr-4 py-3 bg-card border border-border rounded-xl text-primary placeholder:text-muted-foreground focus:outline-none focus:border-secondary transition-colors"
+                      placeholder="••••••••"
+                    />
+                  </div>
+                  {password && (
+                    <div className="mt-2 flex items-center gap-2">
+                      <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
+                        <div
+                          className={`h-full transition-all ${
+                            passwordStrength === 'strong' ? 'bg-green-500 w-full' :
+                            passwordStrength === 'medium' ? 'bg-yellow-500 w-2/3' :
+                            'bg-red-500 w-1/3'
+                          }`}
+                        />
+                      </div>
+                      <span className={`text-xs font-semibold ${
+                        passwordStrength === 'strong' ? 'text-green-600' :
+                        passwordStrength === 'medium' ? 'text-yellow-600' :
+                        'text-red-600'
+                      }`}>
+                        {passwordStrength}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                <div>
+                  <label htmlFor="confirmPassword" className="block text-sm font-semibold text-primary mb-2">
+                    Confirm Password
+                  </label>
+                  <div className="relative">
+                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                    <input
+                      id="confirmPassword"
+                      type="password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      required
+                      className="w-full pl-12 pr-4 py-3 bg-card border border-border rounded-xl text-primary placeholder:text-muted-foreground focus:outline-none focus:border-secondary transition-colors"
+                      placeholder="••••••••"
+                    />
+                    {confirmPassword && (
+                      <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                        {password === confirmPassword ? (
+                          <CheckCircle2 className="w-5 h-5 text-green-500" />
+                        ) : (
+                          <AlertCircle className="w-5 h-5 text-red-500" />
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-secondary hover:bg-secondary/90 text-secondary-foreground font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      Creating account...
+                    </>
+                  ) : (
+                    'Create Account'
+                  )}
+                </button>
+              </form>
+            </>
+          ) : (
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 flex items-center gap-3"
+              className="text-center"
             >
-              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
-              <p className="text-red-800 text-sm">{error}</p>
+              <div className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                <CheckCircle2 className="w-12 h-12 text-green-600" />
+              </div>
+              <h2 className="text-2xl font-bold text-primary mb-4">Check your email</h2>
+              <p className="text-muted-foreground mb-8 text-lg">
+                We've sent a verification link to <span className="font-semibold text-primary">{email}</span>. Please verify your account to continue.
+              </p>
+              <button
+                onClick={() => navigate('/login')}
+                className="w-full bg-primary text-primary-foreground font-bold py-3 rounded-xl hover:bg-primary/90 transition-all shadow-lg"
+              >
+                Go to Login
+              </button>
             </motion.div>
           )}
-
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <div>
-              <label htmlFor="name" className="block text-sm font-semibold text-primary mb-2">
-                Full Name
-              </label>
-              <div className="relative">
-                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                <input
-                  id="name"
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-card border border-border rounded-xl text-primary placeholder:text-muted-foreground focus:outline-none focus:border-secondary transition-colors"
-                  placeholder="John Doe"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label htmlFor="phone" className="block text-sm font-semibold text-primary mb-2">
-                Phone Number
-              </label>
-              <div className="relative">
-                <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                <input
-                  id="phone"
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  required
-                  className="w-full pl-12 pr-4 py-3 bg-card border border-border rounded-xl text-primary placeholder:text-muted-foreground focus:outline-none focus:border-secondary transition-colors"
-                  placeholder="079 123 4567"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-primary mb-2">
-                Email Address
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                <input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="w-full pl-12 pr-4 py-3 bg-card border border-border rounded-xl text-primary placeholder:text-muted-foreground focus:outline-none focus:border-secondary transition-colors"
-                  placeholder="you@example.com"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label htmlFor="password" className="block text-sm font-semibold text-primary mb-2">
-                Password
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                <input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  className="w-full pl-12 pr-4 py-3 bg-card border border-border rounded-xl text-primary placeholder:text-muted-foreground focus:outline-none focus:border-secondary transition-colors"
-                  placeholder="••••••••"
-                />
-              </div>
-              {password && (
-                <div className="mt-2 flex items-center gap-2">
-                  <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
-                    <div
-                      className={`h-full transition-all ${
-                        passwordStrength === 'strong' ? 'bg-green-500 w-full' :
-                        passwordStrength === 'medium' ? 'bg-yellow-500 w-2/3' :
-                        'bg-red-500 w-1/3'
-                      }`}
-                    />
-                  </div>
-                  <span className={`text-xs font-semibold ${
-                    passwordStrength === 'strong' ? 'text-green-600' :
-                    passwordStrength === 'medium' ? 'text-yellow-600' :
-                    'text-red-600'
-                  }`}>
-                    {passwordStrength}
-                  </span>
-                </div>
-              )}
-            </div>
-
-            <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-semibold text-primary mb-2">
-                Confirm Password
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                <input
-                  id="confirmPassword"
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                  className="w-full pl-12 pr-4 py-3 bg-card border border-border rounded-xl text-primary placeholder:text-muted-foreground focus:outline-none focus:border-secondary transition-colors"
-                  placeholder="••••••••"
-                />
-                {confirmPassword && (
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                    {password === confirmPassword ? (
-                      <CheckCircle2 className="w-5 h-5 text-green-500" />
-                    ) : (
-                      <AlertCircle className="w-5 h-5 text-red-500" />
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-secondary hover:bg-secondary/90 text-secondary-foreground font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  Creating account...
-                </>
-              ) : (
-                'Create Account'
-              )}
-            </button>
-          </form>
 
           <div className="mt-6 text-center">
             <p className="text-muted-foreground">

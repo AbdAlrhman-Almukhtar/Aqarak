@@ -18,11 +18,14 @@ export default function VerifyEmail() {
     }
 
     const verify = async () => {
+      console.log('Starting verification with token:', token);
       try {
-        await api.get(`/auth/verify-email?token=${token}`);
+        const response = await api.get(`/auth/verify-email?token=${encodeURIComponent(token || '')}`);
+        console.log('Verification response:', response.data);
         setStatus('success');
         setTimeout(() => navigate('/login'), 3000);
       } catch (err: any) {
+        console.error('Verification error:', err);
         setStatus('error');
         setMessage(err.response?.data?.detail || 'Verification failed. The link may be invalid or expired.');
       }

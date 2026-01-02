@@ -15,6 +15,13 @@ class RegisterIn(BaseModel):
     name: Optional[str] = None
     phone: str
 
+class ForgotPasswordIn(BaseModel):
+    email: EmailStr
+
+class ResetPasswordIn(BaseModel):
+    token: str
+    new_password: str
+
 from app.services.email import email_service
 from app.core.security import create_access_token, verify_password, hash_password
 from jose import jwt, JWTError
@@ -77,3 +84,39 @@ def login(form: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get
         alg=settings.JWT_ALG,
     )
     return {"access_token": token, "token_type": "bearer"}
+
+@router.post("/forgot-password")
+async def forgot_password(inp: ForgotPasswordIn, db: Session = Depends(get_db)):
+    email = inp.email.lower().strip()
+    user = db.query(User).filter(User.email == email).first()
+    
+    # We always return 200 to avoid email harvesting
+    if user:
+        reset_token = create_access_token(
+            subject=str(user.id),
+            secret=settings.AUTH_SECRET,
+            minutes=60, # Reset token expires in 1 hour
+            alg=settings.JWT_ALG
+        )
+        await email_service.send_password_reset_email(user.email, reset_token)
+        
+    return {"message": "If an account exists with this email, a reset link has been sent."}
+
+@router.post("/reset-password")
+async def reset_password(inp: ResetPasswordIn, db: Session = Depends(get_db)):
+    try:
+        payload = jwt.decode(inp.token, settings.AUTH_SECRET, algorithms=[settings.JWT_ALG])
+        user_id = payload.get("sub")
+        if user_id is None:
+            raise HTTPException(status_code=400, detail="Invalid or expired token")
+    except JWTError:
+        raise HTTPException(status_code=400, detail="Invalid or expired token")
+        
+    user = db.query(User).filter(User.id == int(user_id)).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+        
+    user.password_hash = hash_password(inp.new_password)
+    db.commit()
+    
+    return {"message": "Password updated successfully"}
