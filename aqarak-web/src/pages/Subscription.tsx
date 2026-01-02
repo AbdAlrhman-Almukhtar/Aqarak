@@ -46,16 +46,6 @@ export default function Subscription() {
 
       <div className="relative z-10 container mx-auto px-4 pt-52 pb-20">
         <div className="text-center mb-20 max-w-2xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="inline-block"
-          >
-             <span className="px-4 py-1.5 rounded-full bg-secondary/10 text-secondary text-sm font-bold tracking-wide uppercase mb-6 inline-block">
-               Simple Pricing
-             </span>
-          </motion.div>
-          
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -78,7 +68,6 @@ export default function Subscription() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto items-stretch">
-          {/* Free Tier */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -119,15 +108,12 @@ export default function Subscription() {
               Continue with Free
             </button>
           </motion.div>
-
-          {/* Plus Tier */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
             className="group bg-gray-900 text-white rounded-[2rem] p-8 shadow-xl hover:shadow-2xl transition-all relative overflow-hidden flex flex-col"
           >
-            {/* Glow Effect */}
             <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-primary/20 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2" />
             
             <div className="relative z-10 flex flex-col h-full">

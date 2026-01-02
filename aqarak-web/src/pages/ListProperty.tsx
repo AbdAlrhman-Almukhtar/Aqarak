@@ -174,7 +174,7 @@ export default function ListProperty() {
               List Your <span className="text-secondary">Property</span>
             </h1>
             <p className="text-xl text-muted-foreground">
-              Create a new property listing and test S3 image upload
+              Reach thousands of potential buyers and tenants by listing your property details and high-quality photos.
             </p>
           </div>
 
