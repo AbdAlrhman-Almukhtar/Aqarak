@@ -15,9 +15,12 @@ def _parse_building_age(v):
     s=str(v).strip().lower()
     if s in {"0–11 months", "0-11 months"}: 
         return 0.5
-    per={"10–19 years":15,"10-19 years": 15,"20–29 years": 25,"20-29 years": 25,"30–39 years": 35,"30-39 years": 35,"40–49 years": 45,"40-49 years": 45}
-    for k, val in per.items():
-        if k in s: return float(val)
+    bands = {
+        "1-5 years": 3, "5-10 years": 7.5, "10-19 years": 15,
+        "20-29 years": 25, "30-39 years": 35, "40-49 years": 45
+    }
+    for k, v in bands.items():
+        if k in s: return float(v)
     if "year" in s:
         digits = "".join(ch for ch in s if ch.isdigit() or ch==".")
         try: 
@@ -54,8 +57,10 @@ def _build_frame(rows: List[Dict[str, Any]]) -> pd.DataFrame:
     df["area_log"] = np.log1p(area)
     df["area_sq"] = np.square(area)
     bd=df["bedrooms"]
+    ba=df["bathrooms"].replace(0,1)
     denom=np.clip(bd.replace(0,1),1,None)
     df["area_per_bed"] = (area/denom).astype(float)
+    df["bed_per_bath"] = (bd/ba).astype(float)
     bins = [0,60,90,120,160,220,10000]
     df["area_bin"]=pd.cut(area, bins=bins,labels=False,include_lowest=True).astype("float")
     is_apartment=df["property_type"].eq("Apartment").astype(int)

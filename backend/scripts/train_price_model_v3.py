@@ -17,9 +17,11 @@ def _parse_building_age(x):
     if pd.isna(x): return np.nan
     s = str(x).strip().lower()
     if s in {"0–11 months","0-11 months","0 to 11 months","0–11 month"}: return 0.5
-    bands = {"10–19 years":15,"20–29 years":25,"30–39 years":35,"40–49 years":45,
-             "10-19 years":15,"20-29 years":25,"30-39 years":35,"40-49 years":45}
-    for k,v in bands.items():
+    bands = {
+        "1-5 years": 3, "5-10 years": 7.5, "10-19 years": 15,
+        "20-29 years": 25, "30-39 years": 35, "40-49 years": 45
+    }
+    for k, v in bands.items():
         if k in s: return float(v)
     if "year" in s:
         try: return float("".join(ch for ch in s if ch.isdigit() or ch==".")) 
@@ -95,8 +97,10 @@ def main():
     })
 
     bd = X["bedrooms"].fillna(0)
+    ba = X["bathrooms"].replace(0, 1).fillna(1)
     denom = np.clip(bd.replace(0, 1), 1, None)
     X["area_per_bed"] = (X["area_sqm"] / denom).astype(float)
+    X["bed_per_bath"] = (bd / ba).astype(float)
     
     bins = [0, 60, 90, 120, 160, 220, 10000]
     X["area_bin"] = pd.cut(X["area_sqm"], bins=bins, labels=False, include_lowest=True).astype("float")
@@ -129,7 +133,8 @@ def main():
     apt_mask = Xtr["property_type"].eq("Apartment").to_numpy()
     drop = rng.random(len(Xtr)) < 0.40
     Xtr.loc[apt_mask & drop, "furn_apt"] = 0.0
-    num = ["bedrooms","bathrooms","area_sqm","area_log","area_sq","area_per_bed","floor","building_age","furn_apt","area_bin"]
+    
+    num = ["bedrooms","bathrooms","area_sqm","area_log","area_sq","area_per_bed","bed_per_bath","floor","building_age","furn_apt","area_bin"]
     te_feats = ["city","neighborhood"]
     oh_feats = ["property_type"]
 
@@ -151,13 +156,13 @@ def main():
     pipeline = Pipeline([("prep", pre), ("xgb", xgb_model)])
     logger.info("Starting hyperparameter tuning...")
     param_dist = {
-        'xgb__n_estimators': [300, 500, 800, 1000, 1500],
-        'xgb__learning_rate': [0.005, 0.01, 0.03, 0.05, 0.1],
-        'xgb__max_depth': [4, 5, 6, 7, 8, 9],
+        'xgb__n_estimators': [500, 800, 1000, 1500, 2000, 2500, 3000],
+        'xgb__learning_rate': [0.005, 0.01, 0.02, 0.03, 0.05, 0.1],
+        'xgb__max_depth': [4, 5, 6, 7, 8, 9, 10, 12],
         'xgb__min_child_weight': [1, 3, 5, 7],
         'xgb__subsample': [0.6, 0.7, 0.8, 0.9],
         'xgb__colsample_bytree': [0.5, 0.6, 0.7, 0.8],
-        'xgb__gamma': [0, 0.1, 0.2]
+        'xgb__gamma': [0, 0.1, 0.2, 0.3]
     }
     W_train = _weights(
         Xtr[["area_sqm","property_type","furnished"]]
@@ -168,7 +173,7 @@ def main():
     search = RandomizedSearchCV(
         pipeline,
         param_distributions=param_dist,
-        n_iter=args.trials,
+        n_iter=50,
         scoring='neg_mean_absolute_error',
         cv=3,
         verbose=1,
@@ -186,7 +191,23 @@ def main():
     mae  = mean_absolute_error(yte, pred_te)
     r2   = r2_score(yte, pred_te)
     mape = float(np.mean(np.abs((yte - pred_te) / np.clip(np.abs(yte), 1.0, None))) * 100)
-    logger.info(f"Test Metrics: MAE={mae:.2f}, RMSE={rmse:.2f}, R2={r2:.4f}, MAPE={mape:.2f}%")
+    logger.info(f"Test Metrics (ALL): MAE={mae:.2f}, RMSE={rmse:.2f}, R2={r2:.4f}, MAPE={mape:.2f}%")
+    
+    # Calculate Apartment-specific metrics
+    is_apt_test = Xte['property_type'].str.title() == 'Apartment'
+    if is_apt_test.any():
+        y_apt_true = yte[is_apt_test]
+        y_apt_pred = pred_te[is_apt_test]
+        
+        apt_mae = mean_absolute_error(y_apt_true, y_apt_pred)
+        apt_rmse = math.sqrt(mean_squared_error(y_apt_true, y_apt_pred))
+        apt_r2 = r2_score(y_apt_true, y_apt_pred)
+        apt_mape = float(np.mean(np.abs((y_apt_true - y_apt_pred) / np.clip(np.abs(y_apt_true), 1.0, None))) * 100)
+        
+        logger.info(f"Test Metrics (APARTMENTS ONLY): MAE={apt_mae:.2f}, RMSE={apt_rmse:.2f}, R2={apt_r2:.4f}, MAPE={apt_mape:.2f}%")
+    else:
+        apt_mae, apt_rmse, apt_r2, apt_mape = 0, 0, 0, 0
+
     mid = uuid.uuid4().hex[:10]
     mpath = os.path.join(args.outdir, f"aqarak_price_model_xgb_{mid}.joblib")
     dump(best_model, mpath)    
@@ -200,6 +221,12 @@ def main():
             "RMSE_JOD": round(float(rmse), 2),
             "MAPE_%": round(float(mape), 2),
             "R2": round(float(r2), 4),
+            "APARTMENT_METRICS": {
+                "MAE_JOD": round(float(apt_mae), 2),
+                "RMSE_JOD": round(float(apt_rmse), 2),
+                "R2": round(float(apt_r2), 4),
+                "MAPE_%": round(float(apt_mape), 2),
+            },
             "N_train": int(len(Xtr)),
             "N_test": int(len(Xte)),
         },

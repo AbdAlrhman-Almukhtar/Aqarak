@@ -1,11 +1,24 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Upload, X, Loader2 } from 'lucide-react';
+import { Upload, X, Loader2, Check } from 'lucide-react';
 import PillNav from '../components/PillNav';
 import logo from '../assets/logo.svg';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../lib/api';
+
+const AMMAN_NEIGHBORHOODS = [
+  "Abdoun", "Dabouq", "Khalda", "Sweifieh", "Jubaiha", "Tla Ali", 
+  "Mecca St", "Medina St", "Gardens", "Al Rabiah", "Um Uthaiena", 
+  "Deir Ghbar", "Sweileh", "Abu Nseir", "Shafa Badran", "Marj El Hamam",
+  "Shmaisani", "Jabal Amman", "Jabal Al Hussain", "Jabal Al-Lweibdeh",
+  "Jabal Al-Taj", "Jabal Al Nuzha", "Jabal Al Zohor", "Al Bayader",
+  "Al Bnayyat", "Al Jandaweel", "Al Kursi", "Al Rawnaq", "Al Ridwan",
+  "Al Urdon Street", "Al Yadudah", "Al Ashrafyeh", "Al Muqabalain",
+  "Al Qwaismeh", "Dahiet Al-Nakheel", "Dahiet Al-Rawda", "Daheit Al Yasmeen",
+  "Daheit Al Rasheed", "Hai Nazzal", "Tabarboor", "Al Kamaliya",
+  "University District", "7th Circle"
+].sort();
 
 interface PropertyImage {
   id: number;
@@ -40,6 +53,8 @@ export default function EditProperty() {
   const [existingImages, setExistingImages] = useState<PropertyImage[]>([]);
   const [newImages, setNewImages] = useState<File[]>([]);
   const [newPreviews, setNewPreviews] = useState<string[]>([]);
+  const [newCoverIndex, setNewCoverIndex] = useState<number | null>(null);
+
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -102,8 +117,8 @@ export default function EditProperty() {
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    if (files.length + existingImages.length + newImages.length > 5) {
-      setError('Maximum 5 images allowed');
+    if (files.length + existingImages.length + newImages.length > 10) {
+      setError('Maximum 10 images allowed');
       return;
     }
 
@@ -121,6 +136,11 @@ export default function EditProperty() {
   const removeNewImage = (index: number) => {
     setNewImages(prev => prev.filter((_, i) => i !== index));
     setNewPreviews(prev => prev.filter((_, i) => i !== index));
+    if (newCoverIndex === index) {
+      setNewCoverIndex(null);
+    } else if (newCoverIndex !== null && newCoverIndex > index) {
+      setNewCoverIndex(prev => (prev !== null ? prev - 1 : null));
+    }
   };
 
   const removeExistingImage = async (imgId: number) => {
@@ -140,6 +160,7 @@ export default function EditProperty() {
       await api.patch(`/properties/${id}/images/${imgId}`, { is_cover: true });
       const { data: images } = await api.get(`/properties/${id}/images`);
       setExistingImages(images);
+      setNewCoverIndex(null); // Clear new image cover selection if any
     } catch (err) {
       console.error('Failed to set cover image:', err);
       setError('Failed to set cover image');
@@ -181,6 +202,7 @@ export default function EditProperty() {
           await api.post(`/properties/${id}/images`, formData, {
             params: {
               sort_order: existingImages.length + i,
+              is_cover: i === newCoverIndex
             },
             headers: {
               'Content-Type': 'multipart/form-data',
@@ -365,13 +387,17 @@ export default function EditProperty() {
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-[#0B1B34] mb-2">Neighborhood</label>
-                  <input
-                    type="text"
+                  <select
                     name="neighborhood"
                     value={formData.neighborhood}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary"
-                  />
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary bg-white"
+                  >
+                    <option value="" disabled>Select Neighborhood</option>
+                    {AMMAN_NEIGHBORHOODS.map(n => (
+                      <option key={n} value={n}>{n}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
             </div>
@@ -465,7 +491,7 @@ export default function EditProperty() {
             </div>
 
             <div className="mb-8">
-              <h2 className="text-2xl font-bold text-[#0B1B34] mb-4">Photos (Max 5)</h2>
+              <h2 className="text-2xl font-bold text-[#0B1B34] mb-4">Photos (Max 10)</h2>
               
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
                 {existingImages.map((img) => (
@@ -473,31 +499,31 @@ export default function EditProperty() {
                     <img
                       src={img.url.startsWith('http') ? img.url : `${import.meta.env.VITE_API_BASE ?? 'http://127.0.0.1:8000'}${img.url}`}
                       alt="Property"
-                      className="w-full h-40 object-cover rounded-xl"
+                      className={`w-full h-40 object-cover rounded-xl border-2 ${img.is_cover && newCoverIndex === null ? 'border-secondary' : 'border-transparent'}`}
                     />
-                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition rounded-xl flex items-center justify-center gap-2">
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition rounded-xl flex items-center justify-center gap-2">
                       <button
                         type="button"
                         onClick={() => removeExistingImage(img.id)}
-                        className="bg-red-500 text-white p-2 rounded-full hover:bg-red-600"
+                        className="bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition"
                         title="Delete Image"
                       >
                         <X className="w-4 h-4" />
                       </button>
-                      {!img.is_cover && (
+                      {(!img.is_cover || newCoverIndex !== null) && (
                         <button
                           type="button"
                           onClick={() => setCoverImage(img.id)}
-                          className="bg-secondary text-white px-3 py-1 rounded-full text-xs hover:opacity-90"
+                          className="bg-secondary text-white px-3 py-1 rounded-full text-xs font-semibold hover:opacity-90"
                         >
                           Set Cover
                         </button>
                       )}
                     </div>
-                    {img.is_cover && (
-                      <span className="absolute bottom-2 left-2 bg-secondary text-white text-xs px-2 py-1 rounded">
-                        Cover
-                      </span>
+                    {img.is_cover && newCoverIndex === null && (
+                      <div className="absolute bottom-2 left-2 bg-secondary text-white text-xs px-2 py-1 rounded flex items-center gap-1 shadow-sm">
+                        <Check className="w-3 h-3" /> Cover
+                      </div>
                     )}
                   </div>
                 ))}
@@ -507,23 +533,39 @@ export default function EditProperty() {
                     <img
                       src={preview}
                       alt={`New Preview ${index + 1}`}
-                      className="w-full h-40 object-cover rounded-xl border-2 border-secondary"
+                      className={`w-full h-40 object-cover rounded-xl border-2 ${index === newCoverIndex ? 'border-secondary' : 'border-transparent'}`}
                     />
-                    <button
-                      type="button"
-                      onClick={() => removeNewImage(index)}
-                      className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                    <span className="absolute bottom-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded">
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition rounded-xl flex items-center justify-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => removeNewImage(index)}
+                        className="bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                      {index !== newCoverIndex && (
+                        <button
+                          type="button"
+                          onClick={() => setNewCoverIndex(index)}
+                          className="bg-secondary text-white px-3 py-1 rounded-full text-xs font-semibold hover:opacity-90"
+                        >
+                          Set Cover
+                        </button>
+                      )}
+                    </div>
+                    {index === newCoverIndex && (
+                      <div className="absolute bottom-2 left-2 bg-secondary text-white text-xs px-2 py-1 rounded flex items-center gap-1 shadow-sm">
+                         <Check className="w-3 h-3" /> Cover - New
+                      </div>
+                    )}
+                    <span className="absolute top-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded shadow-sm">
                       New
                     </span>
                   </div>
                 ))}
               </div>
 
-              {existingImages.length + newImages.length < 5 && (
+              {existingImages.length + newImages.length < 10 && (
                 <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center">
                   <input
                     type="file"

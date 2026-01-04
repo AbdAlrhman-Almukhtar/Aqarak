@@ -76,7 +76,7 @@ const PillNav: React.FC<PillNavProps> = ({
     layout();
     const onResize = () => layout();
     window.addEventListener("resize", onResize);
-    (document as any).fonts?.ready.then(layout).catch(() => {});
+    (document as any).fonts?.ready.then(layout).catch(() => { });
     return () => window.removeEventListener("resize", onResize);
   }, [items, ease]);
   const handleEnter = (i: number) => {

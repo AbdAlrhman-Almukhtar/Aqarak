@@ -1,11 +1,24 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Upload, X } from 'lucide-react';
+import { Upload, X, Check } from 'lucide-react';
 import PillNav from '../components/PillNav';
 import logo from '../assets/logo.svg';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../lib/api';
+
+const AMMAN_NEIGHBORHOODS = [
+  "Abdoun", "Dabouq", "Khalda", "Sweifieh", "Jubaiha", "Tla Ali", 
+  "Mecca St", "Medina St", "Gardens", "Al Rabiah", "Um Uthaiena", 
+  "Deir Ghbar", "Sweileh", "Abu Nseir", "Shafa Badran", "Marj El Hamam",
+  "Shmaisani", "Jabal Amman", "Jabal Al Hussain", "Jabal Al-Lweibdeh",
+  "Jabal Al-Taj", "Jabal Al Nuzha", "Jabal Al Zohor", "Al Bayader",
+  "Al Bnayyat", "Al Jandaweel", "Al Kursi", "Al Rawnaq", "Al Ridwan",
+  "Al Urdon Street", "Al Yadudah", "Al Ashrafyeh", "Al Muqabalain",
+  "Al Qwaismeh", "Dahiet Al-Nakheel", "Dahiet Al-Rawda", "Daheit Al Yasmeen",
+  "Daheit Al Rasheed", "Hai Nazzal", "Tabarboor", "Al Kamaliya",
+  "University District", "7th Circle"
+].sort();
 
 export default function ListProperty() {
   const navigate = useNavigate();
@@ -31,6 +44,7 @@ export default function ListProperty() {
   
   const [images, setImages] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
+  const [coverIndex, setCoverIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
@@ -54,8 +68,8 @@ export default function ListProperty() {
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    if (files.length + images.length > 5) {
-      setError('Maximum 5 images allowed');
+    if (files.length + images.length > 10) {
+      setError('Maximum 10 images allowed');
       return;
     }
 
@@ -74,6 +88,12 @@ export default function ListProperty() {
   const removeImage = (index: number) => {
     setImages(prev => prev.filter((_, i) => i !== index));
     setPreviews(prev => prev.filter((_, i) => i !== index));
+    // If we removed the cover, reset cover to 0/adjust
+    if (coverIndex === index) {
+      setCoverIndex(0);
+    } else if (coverIndex > index) {
+      setCoverIndex(prev => prev - 1);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -119,7 +139,7 @@ export default function ListProperty() {
           
           await api.post(`/properties/${property.id}/images`, formData, {
             params: {
-              is_cover: i === 0, // First image is cover
+              is_cover: i === coverIndex,
               sort_order: i,
             },
             headers: {
@@ -309,14 +329,18 @@ export default function ListProperty() {
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-primary mb-2">Neighborhood</label>
-                  <input
-                    type="text"
+                  <select
                     name="neighborhood"
                     value={formData.neighborhood}
                     onChange={handleInputChange}
                     className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary text-primary placeholder:text-muted-foreground"
-                    placeholder="Abdoun"
-                  />
+                    required
+                  >
+                    <option value="" disabled>Select Neighborhood</option>
+                    {AMMAN_NEIGHBORHOODS.map(n => (
+                      <option key={n} value={n}>{n}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
             </div>
@@ -419,7 +443,7 @@ export default function ListProperty() {
             </div>
 
             <div className="mb-8">
-              <h2 className="text-2xl font-bold text-primary mb-4">Photos (Max 5)</h2>
+              <h2 className="text-2xl font-bold text-primary mb-4">Photos (Max 10)</h2>
               
               <div className="border-2 border-dashed border-border rounded-xl p-8 text-center bg-background/50">
                 <input
@@ -451,19 +475,32 @@ export default function ListProperty() {
                       <img
                         src={preview}
                         alt={`Preview ${index + 1}`}
-                        className="w-full h-40 object-cover rounded-xl"
+                        className={`w-full h-40 object-cover rounded-xl border-2 ${index === coverIndex ? 'border-secondary' : 'border-transparent'}`}
                       />
-                      <button
-                        type="button"
-                        onClick={() => removeImage(index)}
-                        className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                      {index === 0 && (
-                        <span className="absolute bottom-2 left-2 bg-secondary text-white text-xs px-2 py-1 rounded">
-                          Cover
-                        </span>
+                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition rounded-xl flex items-center justify-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => removeImage(index)}
+                          className="bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition"
+                          title="Remove Image"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                        {index !== coverIndex && (
+                          <button
+                            type="button"
+                            onClick={() => setCoverIndex(index)}
+                            className="bg-secondary text-white px-3 py-1 rounded-full text-xs font-semibold hover:opacity-90"
+                          >
+                            Set Cover
+                          </button>
+                        )}
+                      </div>
+                      
+                      {index === coverIndex && (
+                        <div className="absolute bottom-2 left-2 bg-secondary text-white text-xs px-2 py-1 rounded flex items-center gap-1 shadow-sm">
+                          <Check className="w-3 h-3" /> Cover
+                        </div>
                       )}
                     </div>
                   ))}

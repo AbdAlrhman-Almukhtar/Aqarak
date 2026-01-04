@@ -84,13 +84,11 @@ export function Hero() {
                 ))}
               </span>
             </h1>
-
             <p className="text-2xl md:text-3xl leading-relaxed tracking-tight text-foreground/70 max-w-4xl text-center">
               Your intelligent platform for discovering, listing, and valuing properties in Jordan. 
               Powered by AI-driven insights and real-time market data.
             </p>
           </div>
-
           <div className="flex flex-row gap-3">
             {!isAuthenticated ? (
               <>
