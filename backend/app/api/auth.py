@@ -50,7 +50,6 @@ async def register(inp: RegisterIn, db: Session = Depends(get_db)):
     )
     
     await email_service.send_verification_email(u.email, verification_token)
-    
     return {"id": u.id, "email": u.email, "message": "Verification email sent"}
 
 @router.get("/verify-email")

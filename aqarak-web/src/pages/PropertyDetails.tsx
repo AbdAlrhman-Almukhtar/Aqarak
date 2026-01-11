@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useChat } from '../contexts/ChatContext';
 import { useAuth } from '../contexts/AuthContext';
-import { MapPin, Bed, Bath, Maximize, ArrowLeft, Heart, Home, Share2, Bot } from 'lucide-react';
+import { MapPin, Bed, Bath, Maximize, ArrowLeft, Heart, Home, Bot, User, Phone } from 'lucide-react';
 import PillNav from '../components/PillNav';
 import PriceAnalysisGauge from '../components/PriceAnalysisGauge';
 import { GridPattern } from '../components/ui/grid-pattern';
@@ -29,6 +29,8 @@ interface Property {
   cover_image: string;
   images: string[];
   owner_id: number;
+  lister_name?: string;
+  lister_contact?: string;
   is_favorited?: boolean;
 }
 
@@ -97,7 +99,7 @@ export default function PropertyDetails() {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4">
         <p className="text-red-600 text-xl">{error || 'Property not found'}</p>
-        <button 
+        <button
           onClick={() => navigate(-1)}
           className="text-primary underline hover:text-secondary"
         >
@@ -139,7 +141,7 @@ export default function PropertyDetails() {
       </header>
 
       <div className="container mx-auto px-4 pt-52 pb-20 relative z-10">
-        <button 
+        <button
           onClick={() => navigate(-1)}
           className="flex items-center gap-2 text-muted-foreground hover:text-primary mb-6 transition-colors font-medium"
         >
@@ -153,8 +155,8 @@ export default function PropertyDetails() {
               <div className="space-y-4">
                 <div className="aspect-[16/10] bg-muted rounded-3xl overflow-hidden relative group shadow-xl">
                   {allImages.length > 0 ? (
-                    <img 
-                      src={getImageUrl(allImages[activeImage])} 
+                    <img
+                      src={getImageUrl(allImages[activeImage])}
                       alt={property.title}
                       className="w-full h-full object-cover"
                     />
@@ -166,18 +168,14 @@ export default function PropertyDetails() {
                   {allImages.length > 0 && (
                     <>
                       <div className="absolute top-6 right-6 flex gap-3 z-20">
-                        <button 
+                        <button
                           onClick={toggleFavorite}
-                          className={`p-4 rounded-full shadow-2xl backdrop-blur-xl transition-all hover:scale-110 active:scale-95 ${
-                            property.is_favorited 
-                              ? 'bg-red-500 text-white' 
-                              : 'bg-white/95 text-[#0B1B34] hover:text-red-500 border border-[#0B1B34]/10'
-                          }`}
+                          className={`p-4 rounded-full shadow-2xl backdrop-blur-xl transition-all hover:scale-110 active:scale-95 ${property.is_favorited
+                            ? 'bg-red-500 text-white'
+                            : 'bg-white/95 text-[#0B1B34] hover:text-red-500 border border-[#0B1B34]/10'
+                            }`}
                         >
                           <Heart className={`w-6 h-6 ${property.is_favorited ? 'fill-current' : ''}`} />
-                        </button>
-                        <button className="p-4 rounded-full bg-white/95 text-[#0B1B34] hover:bg-white shadow-2xl backdrop-blur-xl transition-all hover:scale-110 active:scale-95 border border-[#0B1B34]/10">
-                          <Share2 className="w-6 h-6" />
                         </button>
                       </div>
                       <div className="absolute bottom-6 right-6 bg-[#0B1B34]/80 backdrop-blur-md text-white px-5 py-2.5 rounded-2xl text-sm font-black uppercase tracking-[0.2em] z-20 border border-white/10 shadow-2xl">
@@ -192,14 +190,13 @@ export default function PropertyDetails() {
                       <button
                         key={idx}
                         onClick={() => setActiveImage(idx)}
-                        className={`aspect-square rounded-xl overflow-hidden border-2 transition-all ${
-                          activeImage === idx 
-                            ? 'border-secondary ring-2 ring-secondary/20 scale-105' 
-                            : 'border-border opacity-60 hover:opacity-100 hover:border-secondary/50'
-                        }`}
+                        className={`aspect-square rounded-xl overflow-hidden border-2 transition-all ${activeImage === idx
+                          ? 'border-secondary ring-2 ring-secondary/20 scale-105'
+                          : 'border-border opacity-60 hover:opacity-100 hover:border-secondary/50'
+                          }`}
                       >
-                        <img 
-                          src={getImageUrl(img)} 
+                        <img
+                          src={getImageUrl(img)}
                           alt={`View ${idx + 1}`}
                           className="w-full h-full object-cover"
                         />
@@ -208,15 +205,14 @@ export default function PropertyDetails() {
                   </div>
                 )}
               </div>
-              <div className="bg-card rounded-[2.5rem] p-8 md:p-10 shadow-[0_8px_40px_rgb(0,0,0,0.06)] border border-border/50 relative overflow-hidden">
-                <div className="relative z-10 space-y-12">
+              <div className="bg-card rounded-[2.5rem] p-6 md:p-8 shadow-[0_8px_40px_rgb(0,0,0,0.06)] border border-border/50 relative overflow-hidden">
+                <div className="relative z-10 space-y-8">
                   <div className="space-y-6">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className={`px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] ${
-                        property.is_for_sale 
-                          ? 'bg-[#FFA04F] text-[#0B1B34]' 
-                          : 'bg-[#0B1B34] text-white'
-                      }`}>
+                      <span className={`px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] ${property.is_for_sale
+                        ? 'bg-[#FFA04F] text-[#0B1B34]'
+                        : 'bg-[#0B1B34] text-white'
+                        }`}>
                         {property.is_for_sale ? 'For Sale' : 'For Rent'}
                       </span>
                       {property.furnished && (
@@ -231,7 +227,7 @@ export default function PropertyDetails() {
 
                     <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-8">
                       <div className="space-y-3">
-                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#0B1B34] tracking-tight leading-[1.1]">
+                        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#0B1B34] tracking-tight leading-[1.1]">
                           {property.title}
                         </h1>
                         <div className="flex items-center gap-2 text-[#0B1B34]/40">
@@ -244,7 +240,7 @@ export default function PropertyDetails() {
                       <div className="flex flex-col items-start lg:items-end flex-shrink-0 bg-[#0B1B34]/5 p-6 rounded-3xl border border-[#0B1B34]/5">
                         <span className="text-[10px] font-black text-[#0B1B34]/30 uppercase tracking-[0.2em] mb-1">Market Listing</span>
                         <div className="flex items-baseline gap-1.5">
-                          <span className="text-5xl lg:text-6xl font-bold text-[#FFA04F] tracking-tighter">
+                          <span className="text-4xl lg:text-5xl font-bold text-[#FFA04F] tracking-tighter">
                             {displayPrice?.toLocaleString()}
                           </span>
                           <span className="text-xl text-[#0B1B34] font-bold">
@@ -254,7 +250,7 @@ export default function PropertyDetails() {
                       </div>
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 py-10 border-y border-border/50">
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 py-8 border-y border-border/50">
                     {[
                       { icon: <Bed className="w-6 h-6" />, value: property.bedrooms, label: "Bedrooms" },
                       { icon: <Bath className="w-6 h-6" />, label: "Bathrooms", value: property.bathrooms },
@@ -277,7 +273,7 @@ export default function PropertyDetails() {
                   </div>
                   <div className="grid grid-cols-2 lg:grid-cols-3 gap-12">
                     {[
-                      { label: "FLOOR LEVEL", value: property.floor !== null ? `${property.floor}` : 'Ground' },
+                      { label: "FLOOR LEVEL", value: property.floor === 0 ? 'GF' : property.floor !== null ? `${property.floor}` : 'Ground' },
                       { label: "PROPERTY AGE", value: property.building_age ? `${property.building_age} Years` : 'Brand New' },
                       { label: "FURNISHING STATUS", value: property.furnished ? 'Fully Furnished' : 'Unfurnished' }
                     ].map((feature, i) => (
@@ -303,6 +299,42 @@ export default function PropertyDetails() {
             </div>
             <div className="lg:col-span-1">
               <div className="space-y-6">
+                <div className="bg-card rounded-[2rem] p-8 shadow-[0_8px_40px_rgb(0,0,0,0.06)] border border-border/50 relative overflow-hidden group">
+                  <div className="relative z-10 space-y-6">
+                    <div className="flex items-center gap-3">
+                      <div className="w-1.5 h-6 bg-[#FFA04F] rounded-full"></div>
+                      <h3 className="text-xl font-bold text-[#0B1B34] tracking-tight">Lister Information</h3>
+                    </div>
+
+                    <div className="flex items-center gap-4 p-4 rounded-2xl bg-[#0B1B34]/5 border border-[#0B1B34]/5">
+                      <div className="w-12 h-12 rounded-xl bg-[#0B1B34] flex items-center justify-center text-white shrink-0">
+                        <User className="w-6 h-6" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-[10px] font-black text-[#0B1B34]/30 uppercase tracking-[0.1em] mb-0.5">Listed By</p>
+                        <p className="text-lg font-bold text-[#0B1B34] truncate">{property.lister_name || 'Verified Lister'}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-4 p-4 rounded-2xl bg-[#FFA04F]/5 border border-[#FFA04F]/10">
+                      <div className="w-12 h-12 rounded-xl bg-[#FFA04F] flex items-center justify-center text-[#0B1B34] shrink-0">
+                        <Phone className="w-6 h-6" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-[10px] font-black text-[#FFA04F]/60 uppercase tracking-[0.1em] mb-0.5">Contact Method</p>
+                        <p className="text-lg font-bold text-[#0B1B34] truncate">{property.lister_contact || 'No Contact Info'}</p>
+                      </div>
+                    </div>
+
+                    <a
+                      href={property.lister_contact?.includes('@') ? `mailto:${property.lister_contact}` : `tel:${property.lister_contact}`}
+                      className="block w-full text-center bg-[#0B1B34] text-white py-4 rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-[#0B1B34]/90 transition-all shadow-xl"
+                    >
+                      Contact Directly
+                    </a>
+                  </div>
+                </div>
+
                 <div className="bg-[#0B1B34] rounded-[2rem] p-10 shadow-2xl text-white relative overflow-hidden group border border-[#FFA04F]/20">
                   <div className="absolute -top-12 -right-12 w-48 h-48 bg-[#FFA04F] opacity-5 rounded-full blur-3xl group-hover:opacity-10 transition-opacity"></div>
                   <div className="relative z-10">
@@ -313,7 +345,7 @@ export default function PropertyDetails() {
                     <p className="text-white/60 mb-10 text-base leading-relaxed">
                       Instant answers about legal structure, neighborhood data, and property history.
                     </p>
-                    <button 
+                    <button
                       onClick={() => openChat(`I'm interested in viewing "${property.title}" in ${property.neighborhood}. Can you tell me more about its features?`)}
                       className="w-full bg-[#FFA04F] text-[#0B1B34] py-5 rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-[#FFA04F]/90 transition-all shadow-xl shadow-[#FFA04F]/20"
                     >
@@ -321,7 +353,7 @@ export default function PropertyDetails() {
                     </button>
                   </div>
                 </div>
-                <PriceAnalysisGauge property={property} />
+                {!property.is_for_rent && <PriceAnalysisGauge property={property} />}
               </div>
             </div>
           </div>

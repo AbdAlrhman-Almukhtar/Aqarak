@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { SlidersHorizontal, Building2, Home, Warehouse, Banknote, LayoutGrid } from 'lucide-react';
+import { SlidersHorizontal, Building2, Warehouse, Banknote, LayoutGrid } from 'lucide-react';
 import PillNav from '../components/PillNav';
 import PropertyListings from '../components/PropertyListings';
 import PropertyStats from '../components/PropertyStats';
@@ -20,7 +20,7 @@ export default function Buy() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState<FilterState>({});
   const [sort, setSort] = useState('-id');
-  
+
   const navItems = useMemo(
     () => [
       { label: 'Home', href: '/home', onClick: () => navigate('/home') },
@@ -35,7 +35,6 @@ export default function Buy() {
     { label: 'All Properties', value: 'all', icon: LayoutGrid },
     { label: 'Apartments', value: 'apartment', icon: Building2 },
     { label: 'Villas', value: 'villa', icon: Warehouse },
-    { label: 'Houses', value: 'house', icon: Home },
     { label: 'Under 100K', value: 'under100k', icon: Banknote },
   ];
 
@@ -45,9 +44,9 @@ export default function Buy() {
 
   const handleQuickFilterClick = (value: string) => {
     setActiveQuickFilter(value);
-    
+
     let newFilters: FilterState = {};
-    
+
     switch (value) {
       case 'all':
         newFilters = {};
@@ -65,7 +64,7 @@ export default function Buy() {
         newFilters = { max_price: 100000 };
         break;
     }
-    
+
     setFilters(newFilters);
   };
 
@@ -111,7 +110,7 @@ export default function Buy() {
               Properties for <span className="text-secondary">Sale</span>
             </h1>
           </motion.div>
-          
+
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -138,7 +137,7 @@ export default function Buy() {
           </button>
 
           <div className="flex items-center gap-4">
-            <select 
+            <select
               value={sort}
               onChange={(e) => setSort(e.target.value)}
               className="px-5 py-3 bg-card/80 backdrop-blur-sm rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-secondary border border-border appearance-none cursor-pointer font-medium text-primary"
@@ -151,8 +150,8 @@ export default function Buy() {
             <ViewToggle view={view} onViewChange={setView} />
           </div>
         </div>
-        <PropertyListings 
-          filterType="sale" 
+        <PropertyListings
+          filterType="sale"
           onPropertyClick={(id) => navigate(`/property/${id}`)}
           filters={{ ...filters, q: searchQuery }}
           sort={sort}

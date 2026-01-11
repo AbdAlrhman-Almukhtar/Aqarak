@@ -5,8 +5,8 @@ import api from '../../lib/api';
 import Stepper, { Step } from '../ui/Stepper';
 
 const AMMAN_NEIGHBORHOODS = [
-  "Abdoun", "Dabouq", "Khalda", "Sweifieh", "Jubaiha", "Tla Ali", 
-  "Mecca St", "Medina St", "Gardens", "Al Rabiah", "Um Uthaiena", 
+  "Abdoun", "Dabouq", "Khalda", "Sweifieh", "Jubaiha", "Tla Ali",
+  "Mecca St", "Medina St", "Gardens", "Al Rabiah", "Um Uthaiena",
   "Deir Ghbar", "Sweileh", "Abu Nseir", "Shafa Badran", "Marj El Hamam",
   "Shmaisani", "Jabal Amman", "Jabal Al Hussain", "Jabal Al-Lweibdeh",
   "Jabal Al-Taj", "Jabal Al Nuzha", "Jabal Al Zohor", "Al Bayader",
@@ -23,7 +23,7 @@ export default function ConciergePredict() {
   const [stepperKey, setStepperKey] = useState(0);
   const [currentStep, setCurrentStep] = useState(1);
   const navigate = useNavigate();
-  
+
   const [form, setForm] = useState({
     bedrooms: 3,
     bathrooms: 2,
@@ -99,7 +99,7 @@ export default function ConciergePredict() {
             <MapPin className="w-10 h-10 text-secondary" />
           </div>
           <h2 className="text-3xl font-bold text-primary">Where is the property located?</h2>
-          
+
           <div className="relative max-w-md mx-auto">
             <select
               value={form.neighborhood}
@@ -113,7 +113,7 @@ export default function ConciergePredict() {
             </select>
             <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M6 9l6 6 6-6"/>
+                <path d="M6 9l6 6 6-6" />
               </svg>
             </div>
           </div>
@@ -125,7 +125,7 @@ export default function ConciergePredict() {
             <Home className="w-10 h-10 text-secondary" />
           </div>
           <h2 className="text-3xl font-bold text-primary">Tell us about the property</h2>
-          
+
           <div className="grid grid-cols-2 gap-4 max-w-lg mx-auto">
             <div className="relative col-span-2 md:col-span-1">
               <select
@@ -133,17 +133,17 @@ export default function ConciergePredict() {
                 onChange={e => setForm({ ...form, property_type: e.target.value })}
                 className="w-full appearance-none bg-muted border border-border rounded-xl px-4 py-4 text-lg text-primary focus:outline-none focus:border-secondary transition-colors cursor-pointer"
               >
-                {['Apartment', 'House', 'Townhouse', 'Villa', 'Farm'].map(t => (
+                {['Apartment', 'Villa'].map(t => (
                   <option key={t} value={t} className="bg-card">{t}</option>
                 ))}
               </select>
               <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
                 <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </div>
             </div>
-            
+
             <div className="relative col-span-2 md:col-span-1">
               <input
                 type="number"
@@ -154,7 +154,7 @@ export default function ConciergePredict() {
               />
               <span className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground text-sm font-medium pointer-events-none">sqm</span>
             </div>
-            
+
             <div className="relative col-span-2 md:col-span-1">
               {form.property_type === 'Apartment' ? (
                 <>
@@ -180,7 +180,7 @@ export default function ConciergePredict() {
                 </>
               )}
             </div>
-            
+
             <div className="relative col-span-2 md:col-span-1">
               <input
                 type="number"
@@ -196,25 +196,25 @@ export default function ConciergePredict() {
               <div className="space-y-2">
                 <label className="text-sm text-muted-foreground">Bedrooms</label>
                 <div className="flex items-center gap-3 bg-muted rounded-full p-2 border border-border">
-                  <button onClick={() => setForm({...form, bedrooms: Math.max(0, form.bedrooms - 1)})} className="w-8 h-8 rounded-full bg-card shadow-sm hover:bg-muted text-primary">-</button>
+                  <button onClick={() => setForm({ ...form, bedrooms: Math.max(0, form.bedrooms - 1) })} className="w-8 h-8 rounded-full bg-card shadow-sm hover:bg-muted text-primary">-</button>
                   <span className="w-4 text-center text-primary font-medium">{form.bedrooms}</span>
-                  <button onClick={() => setForm({...form, bedrooms: form.bedrooms + 1})} className="w-8 h-8 rounded-full bg-card shadow-sm hover:bg-muted text-primary">+</button>
+                  <button onClick={() => setForm({ ...form, bedrooms: form.bedrooms + 1 })} className="w-8 h-8 rounded-full bg-card shadow-sm hover:bg-muted text-primary">+</button>
                 </div>
               </div>
-              
+
               <div className="space-y-2">
                 <label className="text-sm text-muted-foreground">Bathrooms</label>
                 <div className="flex items-center gap-3 bg-muted rounded-full p-2 border border-border">
-                  <button onClick={() => setForm({...form, bathrooms: Math.max(0, form.bathrooms - 1)})} className="w-8 h-8 rounded-full bg-card shadow-sm hover:bg-muted text-primary">-</button>
+                  <button onClick={() => setForm({ ...form, bathrooms: Math.max(0, form.bathrooms - 1) })} className="w-8 h-8 rounded-full bg-card shadow-sm hover:bg-muted text-primary">-</button>
                   <span className="w-4 text-center text-primary font-medium">{form.bathrooms}</span>
-                  <button onClick={() => setForm({...form, bathrooms: form.bathrooms + 1})} className="w-8 h-8 rounded-full bg-card shadow-sm hover:bg-muted text-primary">+</button>
+                  <button onClick={() => setForm({ ...form, bathrooms: form.bathrooms + 1 })} className="w-8 h-8 rounded-full bg-card shadow-sm hover:bg-muted text-primary">+</button>
                 </div>
               </div>
             </div>
 
             <div className="col-span-2 flex items-center justify-center gap-3 pt-2">
               <label className="text-sm text-muted-foreground font-medium uppercase tracking-wider">Furnished</label>
-              <div 
+              <div
                 onClick={() => setForm({ ...form, furnished: !form.furnished })}
                 className={`w-12 h-6 rounded-full p-1 cursor-pointer transition-colors ${form.furnished ? 'bg-secondary' : 'bg-muted'}`}
               >
@@ -230,9 +230,9 @@ export default function ConciergePredict() {
             <div className="w-24 h-24 bg-green-500/10 rounded-full flex items-center justify-center mx-auto border-2 border-green-500/20">
               <Check className="w-12 h-12 text-green-500" />
             </div>
-            
+
             <p className="text-muted-foreground text-lg mb-2">The estimated value is</p>
-            
+
             <div className="relative inline-block mb-2">
               <div className="absolute -inset-4 bg-secondary/20 blur-2xl rounded-full opacity-50 pulse" />
               <h1 className="relative text-6xl md:text-7xl font-bold text-primary tracking-tight">
@@ -260,7 +260,7 @@ export default function ConciergePredict() {
             </p>
 
             <div className="pt-4 flex flex-col items-center gap-2">
-              <button 
+              <button
                 onClick={() => navigate('/list-property')}
                 className="text-primary font-bold hover:text-secondary transition-colors flex items-center gap-2 group"
               >

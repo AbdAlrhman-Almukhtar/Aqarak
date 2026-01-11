@@ -41,14 +41,14 @@ export default function ChatWidget() {
   const handleInitialMessage = async (text: string) => {
     const userMessage: Message = {
       id: Date.now().toString(),
-      role:'user',
+      role: 'user',
       content: text,
       timestamp: new Date(),
     };
     setMessages((prev) => [...prev, userMessage]);
     setLoading(true);
-try {
-      
+    try {
+
       const { data } = await api.post('/chat', {
         question: userMessage.content,
       });
@@ -78,8 +78,8 @@ try {
     if (!input.trim() || loading) return;
 
     const userMessage: Message = {
-      id:Date.now().toString(),
-      role:'user',
+      id: Date.now().toString(),
+      role: 'user',
       content: input.trim(),
       timestamp: new Date(),
     };
@@ -119,9 +119,9 @@ try {
         {isOpen && !isMinimized && (
           <motion.div
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ 
-              opacity: 1, 
-              y: 0, 
+            animate={{
+              opacity: 1,
+              y: 0,
               scale: 1,
               width: isMaximized ? 'min(90vw, 800px)' : 'min(90vw, 400px)',
               height: isMaximized ? '80vh' : '500px',
@@ -160,16 +160,14 @@ try {
               {messages.map((msg) => (
                 <div
                   key={msg.id}
-                  className={`flex items-start gap-3 ${
-                    msg.role === 'user' ? 'flex-row-reverse' : ''
-                  }`}
+                  className={`flex items-start gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''
+                    }`}
                 >
                   <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                      msg.role === 'user'
+                    className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${msg.role === 'user'
                         ? 'bg-secondary text-white'
                         : 'bg-[#0B1B34] text-white'
-                    }`}
+                      }`}
                   >
                     {msg.role === 'user' ? (
                       <User className="w-4 h-4" />
@@ -178,11 +176,10 @@ try {
                     )}
                   </div>
                   <div
-                    className={`max-w-[80%] p-3 rounded-2xl text-sm ${
-                      msg.role === 'user'
+                    className={`max-w-[80%] p-3 rounded-2xl text-sm ${msg.role === 'user'
                         ? 'bg-secondary text-white rounded-tr-none'
                         : 'bg-white border border-[#0B1B34]/10 text-[#0B1B34] rounded-tl-none shadow-sm'
-                    }`}
+                      }`}
                   >
                     {msg.role === 'user' ? (
                       msg.content
@@ -192,7 +189,19 @@ try {
                         prose-strong:text-[#0B1B34] prose-strong:font-bold
                         prose-ul:list-disc prose-ul:ml-4 prose-ol:list-decimal prose-ol:ml-4
                         text-[#0B1B34]">
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                        <ReactMarkdown
+                          remarkPlugins={[remarkGfm]}
+                          components={{
+                            a: ({ node, ...props }) => (
+                              <a
+                                {...props}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-secondary font-bold underline hover:text-secondary/80 transition-colors"
+                              />
+                            )
+                          }}
+                        >
                           {msg.content}
                         </ReactMarkdown>
                       </div>
@@ -248,11 +257,10 @@ try {
         }}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        className={`pointer-events-auto shadow-xl flex items-center gap-3 px-4 py-3 rounded-full transition-colors ${
-          isOpen && !isMinimized
+        className={`pointer-events-auto shadow-xl flex items-center gap-3 px-4 py-3 rounded-full transition-colors ${isOpen && !isMinimized
             ? 'bg-secondary text-white'
             : 'bg-[#0B1B34] text-white'
-        }`}
+          }`}
       >
         {isOpen && !isMinimized ? (
           <X className="w-6 h-6" />

@@ -65,6 +65,8 @@ class PropertyOut(BaseModel):
     building_age: Optional[int] = None
     is_active: bool
     owner_id: int
+    lister_name: Optional[str] = None
+    lister_contact: Optional[str] = None
     is_favorited: Optional[bool] = None
     cover_image: Optional[str] = None
     images: Optional[list[str]] = None

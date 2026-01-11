@@ -187,6 +187,10 @@ def search_properties(
         d["images"] = [i.url for i in imgs]
         d["cover_image"] = next((i.url for i in imgs if i.is_cover), d["images"][0] if d["images"] else None)
         
+        if r.owner:
+            d["lister_name"] = r.owner.name or r.owner.email
+            d["lister_contact"] = r.owner.phone or r.owner.email
+        
         items.append(d)
 
     return {
@@ -272,6 +276,9 @@ def create_property(
     d["is_favorited"] = False
     d["images"] = []
     d["cover_image"] = None
+    if p.owner:
+        d["lister_name"] = p.owner.name or p.owner.email
+        d["lister_contact"] = p.owner.phone or p.owner.email
     return d
 
 
@@ -361,6 +368,10 @@ def get_property(
     d["images"] = [i.url for i in imgs]
     d["cover_image"] = next((i.url for i in imgs if i.is_cover), d["images"][0] if d["images"] else None)
     
+    if p.owner:
+        d["lister_name"] = p.owner.name or p.owner.email
+        d["lister_contact"] = p.owner.phone or p.owner.email
+        
     return d
 
 

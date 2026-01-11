@@ -79,7 +79,7 @@ def search_properties_context(db: Session, query: str, limit: int = 3) -> str:
             price_str = f"{p.rent_price:,.0f} JOD/mo"
         
         context_parts.append(
-            f"- ID {p.id}: {p.title} in {p.city}, {p.neighborhood}. "
+            f"- Link: /property/{p.id} | ID: {p.id} | Title: {p.title} | Location: {p.city}, {p.neighborhood}. "
             f"Price: {price_str}. "
             f"{p.bedrooms} beds, {p.bathrooms} baths, {p.area_sqm} sqm. "
             f"Type: {p.property_type}."
@@ -103,7 +103,7 @@ def chat(payload: ChatIn, db: Session = Depends(get_db), _=Depends(get_current_u
             "Format your responses beautifully using bullet points for lists and bold headers for sections. "
             "Be concise but thorough. When answering about laws, use clear numbered steps. "
             "Use the provided context to offer expert advice. "
-            "If referring to specific properties, highlight their key selling points. "
+            "If referring to specific properties from the context, YOU MUST format them as clickable links like this: `[Property Title](/property/ID)`. "
             "Always reply in the same language as the user (English or Arabic)."
         )
         
