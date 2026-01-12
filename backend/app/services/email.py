@@ -16,14 +16,11 @@ class EmailService:
         self.smtp_from = settings.stripped_mail_from
         self.smtp_port = settings.MAIL_PORT
         self.smtp_server = settings.MAIL_SERVER
-        
-        # Determine TLS settings based on port
         self.use_tls = self.smtp_port == 465
         self.start_tls = self.smtp_port == 587
         
     async def _send(self, message: EmailMessage):
         """Helper to send email with proper STARTTLS/TLS settings and timeout."""
-        # Refresh config
         self._set_config()
         
         if not self.smtp_username or not self.smtp_password:
@@ -51,18 +48,15 @@ class EmailService:
             print(f"[EMAIL SERVICE] Error during send: {e}")
             raise
 
-    async def send_verification_email(self, email: str, token: str):
-        verify_url = f"{settings.FRONTEND_URL}/verify-email?token={token}"
-        
+    async def send_otp_email(self, email: str, otp_code: str):
         html_content = f"""
         <html>
             <body style="font-family: sans-serif; line-height: 1.6; color: #333;">
                 <div style="max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
                     <h1 style="color: #2563eb;">Verify your email</h1>
-                    <p>Welcome to Aqarak! Please click the button below to verify your email address and get started:</p>
-                    <a href="{verify_url}" style="display: inline-block; background-color: #2563eb; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; margin-top: 10px;">Verify Email Address</a>
-                    <p style="margin-top: 20px; font-size: 14px; color: #666;">If the button doesn't work, copy and paste this link into your browser:</p>
-                    <p style="font-size: 12px; color: #2563eb; word-break: break-all;">{verify_url}</p>
+                    <p>Welcome to Aqarak! Use the following One-Time Password (OTP) to verify your email address. This code will expire in 10 minutes.</p>
+                    <div style="font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #2563eb; text-align: center; margin: 30px 0;">{otp_code}</div>
+                    <p style="font-size: 14px; color: #666;">If you did not request this code, please ignore this email.</p>
                 </div>
             </body>
         </html>
@@ -71,14 +65,14 @@ class EmailService:
         message = EmailMessage()
         message["From"] = self.smtp_from
         message["To"] = email
-        message["Subject"] = "Verify your Aqarak account"
-        message.set_content(f"Please verify your email: {verify_url}")
+        message["Subject"] = "Your Aqarak Verification Code"
+        message.set_content(f"Your verification code is: {otp_code}")
         message.add_alternative(html_content, subtype="html")
 
         try:
             await self._send(message)
         except Exception as e:
-            logger.error(f"Failed to send verification email: {e}")
+            logger.error(f"Failed to send OTP email: {e}")
 
     async def send_password_reset_email(self, email: str, token: str):
         reset_url = f"{settings.FRONTEND_URL}/reset-password?token={token}"

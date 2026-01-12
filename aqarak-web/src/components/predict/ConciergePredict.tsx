@@ -236,7 +236,7 @@ export default function ConciergePredict() {
             <div className="relative inline-block mb-2">
               <div className="absolute -inset-4 bg-secondary/20 blur-2xl rounded-full opacity-50 pulse" />
               <h1 className="relative text-6xl md:text-7xl font-bold text-primary tracking-tight">
-                {Math.round(price).toLocaleString()} <span className="text-3xl text-secondary">JOD</span>
+                {(Math.round(price / 100) * 100).toLocaleString()} <span className="text-3xl text-secondary">JOD</span>
               </h1>
             </div>
 

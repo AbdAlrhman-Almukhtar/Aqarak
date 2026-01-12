@@ -15,6 +15,8 @@ class User(Base):
     password_hash = Column(String, nullable=False)
     phone = Column(String, nullable=True)
     is_verified = Column(Boolean, default=False, nullable=False)
+    otp_code = Column(String, nullable=True)
+    otp_expires_at = Column(DateTime(timezone=True), nullable=True)
     favorites = relationship("Favorite", back_populates="user", cascade="all, delete-orphan")
     properties = relationship("Property", back_populates="owner")
 class Property(Base):

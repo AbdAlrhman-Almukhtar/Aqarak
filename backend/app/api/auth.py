@@ -22,53 +22,73 @@ class ResetPasswordIn(BaseModel):
     token: str
     new_password: str
 
+from datetime import datetime, timedelta, timezone
+import random
 from app.services.email import email_service
 from app.core.security import create_access_token, verify_password, hash_password
 from jose import jwt, JWTError
+
+class VerifyOTPIn(BaseModel):
+    email: EmailStr
+    otp: str
 
 @router.post("/register", status_code=201)
 async def register(inp: RegisterIn, db: Session = Depends(get_db)):
     email = inp.email.lower().strip()
     if db.query(User).filter(User.email == email).first():
-        raise HTTPException(400, "email already registered")
+        raise HTTPException(400, "Email already registered")
+    otp = "".join([str(random.randint(0, 9)) for _ in range(6)])
+    expires_at = datetime.now(timezone.utc) + timedelta(minutes=10)
+    
     u = User(
         email=email,
         name=(inp.name or "").strip() or None,
         phone=inp.phone.strip(),
         password_hash=hash_password(inp.password),
-        is_verified=False
+        is_verified=False,
+        otp_code=otp,
+        otp_expires_at=expires_at
     )
     db.add(u)
     db.commit()
     db.refresh(u)
     
-    verification_token = create_access_token(
-        subject=str(u.id),
-        secret=settings.AUTH_SECRET,
-        minutes=1440,
-        alg=settings.JWT_ALG
-    )
-    
-    await email_service.send_verification_email(u.email, verification_token)
-    return {"id": u.id, "email": u.email, "message": "Verification email sent"}
+    await email_service.send_otp_email(u.email, otp)
+    return {"id": u.id, "email": u.email, "message": "OTP sent to email"}
 
-@router.get("/verify-email")
-def verify_email(token: str, db: Session = Depends(get_db)):
-    try:
-        payload = jwt.decode(token, settings.AUTH_SECRET, algorithms=[settings.JWT_ALG])
-        user_id = payload.get("sub")
-        if user_id is None:
-            raise HTTPException(status_code=400, detail="Invalid token")
-    except JWTError:
-        raise HTTPException(status_code=400, detail="Invalid token")
-    user = db.query(User).filter(User.id == int(user_id)).first()
+@router.post("/verify-otp")
+def verify_otp(inp: VerifyOTPIn, db: Session = Depends(get_db)):
+    email = inp.email.lower().strip()
+    user = db.query(User).filter(User.email == email).first()
+    
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
+    
     if user.is_verified:
-        return {"message": "Email already verified"}
+        return {"message": "User already verified"}
+        
+    if not user.otp_code or not user.otp_expires_at:
+        raise HTTPException(status_code=400, detail="No OTP pending")
+    now = datetime.now(timezone.utc)
+    if user.otp_expires_at < now:
+        raise HTTPException(status_code=400, detail="OTP expired")
+        
+    if user.otp_code != inp.otp:
+        raise HTTPException(status_code=400, detail="Invalid OTP")
+        
     user.is_verified = True
+    user.otp_code = None
+    user.otp_expires_at = None
     db.commit()
-    return {"message": "Email verified successfully"}
+    
+    token = create_access_token(
+        subject=str(user.id),
+        secret=settings.AUTH_SECRET,
+        minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES,
+        alg=settings.JWT_ALG,
+    )
+    
+    return {"message": "Email verified successfully", "access_token": token, "token_type": "bearer"}
 
 @router.post("/token")
 def login(form: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):

@@ -7,16 +7,35 @@ import logo from '../assets/logo.svg';
 
 export default function Signup() {
   const navigate = useNavigate();
-  const { register } = useAuth();
-  
+  const { register, verifyOtp } = useAuth();
+
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [otp, setOtp] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+
+  const handleVerifyOtp = async (e: FormEvent) => {
+    e.preventDefault();
+    if (otp.length !== 6) return;
+
+    setLoading(true);
+    setError(null);
+    try {
+      await verifyOtp(email, otp);
+      navigate('/home');
+    } catch (err: any) {
+      console.error('OTP Verification Error:', err);
+      const errorMsg = err?.response?.data?.detail || 'Invalid code';
+      setError(errorMsg);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const passwordStrength = password.length >= 8 ? (password.match(/[a-z]/) && password.match(/[A-Z]/) && password.match(/[0-9]/) ? 'strong' : 'medium') : 'weak';
 
@@ -150,18 +169,16 @@ export default function Signup() {
                     <div className="mt-2 flex items-center gap-2">
                       <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
                         <div
-                          className={`h-full transition-all ${
-                            passwordStrength === 'strong' ? 'bg-green-500 w-full' :
+                          className={`h-full transition-all ${passwordStrength === 'strong' ? 'bg-green-500 w-full' :
                             passwordStrength === 'medium' ? 'bg-yellow-500 w-2/3' :
-                            'bg-red-500 w-1/3'
-                          }`}
+                              'bg-red-500 w-1/3'
+                            }`}
                         />
                       </div>
-                      <span className={`text-xs font-semibold ${
-                        passwordStrength === 'strong' ? 'text-green-600' :
+                      <span className={`text-xs font-semibold ${passwordStrength === 'strong' ? 'text-green-600' :
                         passwordStrength === 'medium' ? 'text-yellow-600' :
-                        'text-red-600'
-                      }`}>
+                          'text-red-600'
+                        }`}>
                         {passwordStrength}
                       </span>
                     </div>
@@ -218,18 +235,51 @@ export default function Signup() {
               className="text-center"
             >
               <div className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                <CheckCircle2 className="w-12 h-12 text-green-600" />
+                <Mail className="w-10 h-10 text-green-600" />
               </div>
-              <h2 className="text-2xl font-bold text-primary mb-4">Check your email</h2>
-              <p className="text-muted-foreground mb-8 text-lg">
-                We've sent a verification link to <span className="font-semibold text-primary">{email}</span>. Please verify your account to continue.
+              <h2 className="text-2xl font-bold text-primary mb-2">Verify your email</h2>
+              <p className="text-muted-foreground mb-8 text-sm">
+                We've sent a 6-digit code to <span className="font-semibold text-primary">{email}</span>.
               </p>
-              <button
-                onClick={() => navigate('/login')}
-                className="w-full bg-primary text-primary-foreground font-bold py-3 rounded-xl hover:bg-primary/90 transition-all shadow-lg"
-              >
-                Go to Login
-              </button>
+
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="bg-red-50 border border-red-200 rounded-xl p-3 mb-4 flex items-center gap-2 text-left"
+                >
+                  <AlertCircle className="w-4 h-4 text-red-600 flex-shrink-0" />
+                  <p className="text-red-800 text-xs">{error}</p>
+                </motion.div>
+              )}
+
+              <form onSubmit={handleVerifyOtp} className="space-y-4">
+                <div>
+                  <input
+                    type="text"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                    className="w-full text-center text-3xl tracking-[1em] font-bold py-4 bg-card border border-border rounded-xl text-primary focus:outline-none focus:border-secondary transition-colors"
+                    placeholder="000000"
+                    maxLength={6}
+                    autoFocus
+                  />
+                </div>
+                <button
+                  type="submit"
+                  disabled={otp.length !== 6 || loading}
+                  className="w-full bg-secondary hover:bg-secondary/90 text-secondary-foreground font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      Verifying...
+                    </>
+                  ) : (
+                    'Verify & Login'
+                  )}
+                </button>
+              </form>
             </motion.div>
           )}
 

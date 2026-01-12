@@ -29,10 +29,6 @@ import logo from "./assets/logo.svg";
 function MainLayout() {
 
   const sideMenuItems: StaggeredMenuItem[] = [
-    { label: "Home", ariaLabel: "Home", link: "/home" },
-    { label: "Buy", ariaLabel: "Buy", link: "/buy" },
-  { label: "Rent",ariaLabel:"Rent",link:"/rent" },
-  { label: "Predict",ariaLabel: "Predict",link:"/predict" },
   { label: "Saved",ariaLabel: "Saved Properties",link:"/saved" },
   { label: "My Listings", ariaLabel: "My Listings",link:"/my-listings" },
   { label: "List Property", ariaLabel: "List Property",link:"/list-property" },
