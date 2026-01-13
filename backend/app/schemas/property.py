@@ -76,8 +76,8 @@ class PropertyOut(BaseModel):
     def _extract_images(cls, v):
         if not v:
             return []
-            return []
         return [x.url if hasattr(x, "url") else x for x in v]
+
 class PropertyUpdate(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None

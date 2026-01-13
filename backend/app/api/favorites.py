@@ -67,5 +67,12 @@ def list_favorites(
     for r in rows:
         d = PropertyOut.model_validate(r, from_attributes=True).model_dump()
         d["is_favorited"] = True
+        
+        # Handle images properly
+        imgs = sorted(r.images, key=lambda x: x.sort_order)
+        d["images"] = [i.url for i in imgs]
+        # Set cover_image: either one with is_cover=True, or the first image, or None
+        d["cover_image"] = next((i.url for i in imgs if i.is_cover), d["images"][0] if d["images"] else None)
+        
         out.append(d)
     return out

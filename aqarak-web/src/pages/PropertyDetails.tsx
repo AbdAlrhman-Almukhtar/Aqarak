@@ -171,8 +171,8 @@ export default function PropertyDetails() {
                         <button
                           onClick={toggleFavorite}
                           className={`p-4 rounded-full shadow-2xl backdrop-blur-xl transition-all hover:scale-110 active:scale-95 ${property.is_favorited
-                            ? 'bg-red-500 text-white'
-                            : 'bg-white/95 text-[#0B1B34] hover:text-red-500 border border-[#0B1B34]/10'
+                            ? 'bg-secondary text-white'
+                            : 'bg-white/95 text-[#0B1B34] hover:text-secondary border border-[#0B1B34]/10'
                             }`}
                         >
                           <Heart className={`w-6 h-6 ${property.is_favorited ? 'fill-current' : ''}`} />
