@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Bot, TrendingUp, Search, BarChart3, ArrowRight, MapPin, Terminal, Cpu, Activity, ShieldCheck, User } from "lucide-react";
 import { Button } from "./ui/button";
 import { useNavigate } from "react-router-dom";
+import mapBackground from "../assets/map-background.png";
 
 export function TechShowcase() {
   const navigate = useNavigate();
@@ -281,21 +282,32 @@ export function TechShowcase() {
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
-            className="flex-1 space-y-8"
+            className="flex-1 space-y-6"
           >
-            <div className="w-20 h-20 rounded-3xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
-              <Search size={40} />
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 border border-primary/10">
+              <Search size={16} className="text-primary" />
+              <span className="text-sm font-bold text-primary">Smart Search</span>
             </div>
-            <h3 className="text-4xl md:text-5xl font-bold text-primary tracking-tight">Smart Discovery</h3>
-            <p className="text-xl text-foreground/60 leading-relaxed">
-              More than just a search bar. Filter by commute time, school ratings, and lifestyle preferences to find a home that truly fits your life.
+
+            <h3 className="text-4xl md:text-5xl font-bold text-primary tracking-tight leading-tight">
+              Find Homes That<br />Match Your Life
+            </h3>
+
+            <p className="text-lg text-foreground/60 leading-relaxed max-w-lg">
+              Go beyond basic filters. Our intelligent search considers your commute, lifestyle preferences, and future plans to find properties that truly fit.
             </p>
-            <div className="flex gap-3 flex-wrap">
-              {["Commute Time", "School Ratings", "Safety Score", "Future Growth"].map((tag, i) => (
-                <span key={i} className="px-6 py-3 rounded-full bg-card border border-border text-sm font-semibold text-foreground/70 shadow-sm hover:shadow-md transition-shadow cursor-default flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-primary/40" />
-                  {tag}
-                </span>
+
+            <div className="grid grid-cols-2 gap-4 pt-4">
+              {[
+                { icon: <Activity size={18} />, label: "Commute Analysis" },
+                { icon: <ShieldCheck size={18} />, label: "Safety Ratings" },
+                { icon: <TrendingUp size={18} />, label: "Growth Potential" },
+                { icon: <BarChart3 size={18} />, label: "Market Insights" }
+              ].map((item, i) => (
+                <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-card border border-border hover:border-primary/20 transition-colors">
+                  <div className="text-primary">{item.icon}</div>
+                  <span className="text-sm font-semibold text-foreground">{item.label}</span>
+                </div>
               ))}
             </div>
           </motion.div>
@@ -305,9 +317,13 @@ export function TechShowcase() {
             transition={{ duration: 0.6 }}
             className="flex-1 w-full"
           >
-            <div className="relative rounded-[2.5rem] bg-card border border-border p-6 shadow-2xl overflow-hidden h-[500px]">
-              <div className="absolute inset-0 bg-muted/30">
-                <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(currentColor 1px, transparent 1px)', backgroundSize: '30px 30px' }}></div>
+            <div className="relative rounded-[2.5rem] bg-card border border-border shadow-2xl overflow-hidden h-[500px]">
+              <div className="absolute inset-0">
+                <img
+                  src={mapBackground}
+                  alt="Map"
+                  className="w-full h-full object-cover opacity-40"
+                />
                 <motion.div
                   initial={{ scale: 0 }}
                   whileInView={{ scale: 1 }}
@@ -320,9 +336,9 @@ export function TechShowcase() {
                     </div>
                     <div className="absolute bottom-full mb-4 left-1/2 -translate-x-1/2 bg-card px-6 py-3 rounded-2xl shadow-xl whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0 border border-border">
                       <p className="font-bold text-primary text-lg">450K JOD</p>
-                      <p className="text-xs text-muted-foreground font-medium">98% Match</p>
+                      <p className="text-xs text-muted-foreground font-medium">Matching your lifestyle</p>
+                      <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-card" />
                     </div>
-                    <div className="absolute inset-0 bg-primary rounded-full animate-ping opacity-20"></div>
                   </div>
                 </motion.div>
                 <motion.div
@@ -346,20 +362,30 @@ export function TechShowcase() {
                   </div>
                 </motion.div>
               </div>
-              <div className="absolute bottom-8 left-8 right-8 bg-card/90 backdrop-blur-xl p-8 rounded-[2rem] shadow-2xl border border-border/50">
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-base font-extrabold text-primary">Lifestyle Compatibility Portfolio</span>
-                  <span className="text-base font-bold text-accent bg-accent/10 px-4 py-1.5 rounded-full border border-accent/20">98.2% Match</span>
+              <div className="absolute bottom-6 left-6 right-6 bg-white rounded-[2rem] shadow-2xl p-6 border border-gray-100">
+                <div className="flex items-start gap-3 mb-4">
+                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-1">
+                    <Bot size={18} className="text-primary" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-bold text-gray-900 mb-1">AI Assistant</p>
+                    <p className="text-base text-gray-700 leading-relaxed">
+                      I found a perfect match in <span className="font-bold text-gray-900">Abdoun</span>. This property has excellent commute efficiency to your workplace.
+                    </p>
+                  </div>
                 </div>
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-[10px] font-bold text-foreground/40 uppercase tracking-widest">
-                      <span>Commute Efficiency</span>
-                      <span className="text-primary">15 mins</span>
-                    </div>
-                    <div className="h-2 bg-muted rounded-full overflow-hidden">
-                      <motion.div initial={{ width: 0 }} whileInView={{ width: "95%" }} transition={{ duration: 1 }} className="h-full bg-accent rounded-full shadow-[0_0_10px_rgba(var(--brand-purple-rgb),0.3)]" />
-                    </div>
+                <div className="ml-11 space-y-3 bg-gray-50 rounded-xl p-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Commute Time</span>
+                    <span className="text-sm font-black text-gray-900">15 MINS</span>
+                  </div>
+                  <div className="h-2.5 bg-gray-200 rounded-full overflow-hidden">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      whileInView={{ width: "85%" }}
+                      transition={{ duration: 1 }}
+                      className="h-full bg-secondary rounded-full"
+                    />
                   </div>
                 </div>
               </div>
