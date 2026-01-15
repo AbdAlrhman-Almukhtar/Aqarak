@@ -23,7 +23,7 @@ interface Stats {
     count: number;
     avg_price: number;
   };
-  cities: number;
+  neighborhoods: number;
 }
 
 export default function Buy() {
@@ -38,7 +38,7 @@ export default function Buy() {
     total: 156,
     sale: { count: 156, avg_price: 125000 },
     rent: { count: 89, avg_price: 450 },
-    cities: 12
+    neighborhoods: 12
   });
 
   useEffect(() => {
@@ -155,7 +155,7 @@ export default function Buy() {
           <PropertyStats
             total={stats.sale.count}
             avgPrice={stats.sale.avg_price}
-            cities={stats.cities}
+            neighborhoods={stats.neighborhoods}
             priceLabel="JOD"
           />
           <SearchBar onSearch={setSearchQuery} placeholder="Search by location, property type..." />

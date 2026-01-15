@@ -4,11 +4,11 @@ import { Home, TrendingUp, MapPin } from 'lucide-react';
 interface PropertyStatsProps {
   total: number;
   avgPrice?: number;
-  cities?: number;
+  neighborhoods?: number;
   priceLabel?: string;
 }
 
-export default function PropertyStats({ total, avgPrice, cities = 12, priceLabel = 'JOD' }: PropertyStatsProps) {
+export default function PropertyStats({ total, avgPrice, neighborhoods = 12, priceLabel = 'JOD' }: PropertyStatsProps) {
   return (
     <div className="flex flex-wrap justify-center gap-6 mb-8">
       <motion.div
@@ -53,8 +53,8 @@ export default function PropertyStats({ total, avgPrice, cities = 12, priceLabel
           <MapPin className="w-5 h-5 text-primary" />
         </div>
         <div>
-          <p className="text-2xl font-bold text-[#0B1B34]">{cities}+</p>
-          <p className="text-xs text-[#0B1B34]/60">Cities</p>
+          <p className="text-2xl font-bold text-[#0B1B34]">{neighborhoods}+</p>
+          <p className="text-xs text-[#0B1B34]/60">Neighborhoods</p>
         </div>
       </motion.div>
     </div>

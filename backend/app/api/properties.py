@@ -44,8 +44,8 @@ def get_property_stats(db: Session = Depends(get_db)):
         Property.is_for_rent.is_(True)
     ).scalar() or 0
     
-    # Unique cities count
-    cities_count = db.query(func.count(func.distinct(Property.city))).filter(Property.is_active.is_(True)).scalar() or 0
+    # Unique neighborhoods count
+    neighbors_count = db.query(func.count(func.distinct(Property.neighborhood))).filter(Property.is_active.is_(True)).scalar() or 0
     
     return {
         "total": total_count,
@@ -57,7 +57,7 @@ def get_property_stats(db: Session = Depends(get_db)):
             "count": rent_count,
             "avg_price": round(float(avg_rent), 2) if avg_rent else 0
         },
-        "cities": cities_count
+        "neighborhoods": neighbors_count
     }
 
 ORDER_MAP = {
