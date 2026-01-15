@@ -87,74 +87,70 @@ export default function PropertyListings({
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-col lg:flex-row gap-8">
-          <main className="flex-1">
-            {loading && (
-              <div className="flex items-center justify-center py-20">
-                <Loader2 className="w-8 h-8 animate-spin text-secondary" />
+    <div className="w-full">
+      <main className="flex-1">
+        {loading && properties.length === 0 && (
+          <div className="flex items-center justify-center py-20">
+            <Loader2 className="w-8 h-8 animate-spin text-secondary" />
+          </div>
+        )}
+
+        {error && (
+          <div className="flex items-center justify-center py-20 text-red-500 gap-2">
+            <AlertCircle className="w-5 h-5" />
+            <span>{error}</span>
+          </div>
+        )}
+
+        {!loading && !error && properties.length === 0 && (
+          <div className="bg-card border border-border rounded-3xl p-12 text-center shadow-sm">
+            <p className="text-xl text-muted-foreground">No properties found matching your criteria.</p>
+          </div>
+        )}
+
+        {properties.length > 0 && (
+          <div className={loading ? "opacity-50 pointer-events-none transition-opacity" : "transition-opacity"}>
+            <div className={`grid gap-6 ${view === 'grid'
+              ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
+              : 'grid-cols-1'
+              } mb-8`}>
+              {properties.map((property) => (
+                <PropertyCard
+                  key={property.id}
+                  {...property}
+                  onClick={() => onPropertyClick?.(property.id)}
+                  onFavoriteToggle={() => handleFavoriteToggle(property.id)}
+                />
+              ))}
+            </div>
+
+            {totalPages > 1 && (
+              <div className="flex justify-center items-center gap-3">
+                <button
+                  onClick={() => setPage(p => Math.max(1, p - 1))}
+                  disabled={page === 1}
+                  className="px-6 py-3 bg-card border border-border rounded-full font-semibold text-primary hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm hover:shadow-md"
+                >
+                  Previous
+                </button>
+
+                <span className="px-6 py-3 text-primary font-medium">
+                  Page {page} of {totalPages}
+                </span>
+
+                <button
+                  onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                  disabled={page === totalPages}
+                  className="px-6 py-3 bg-card border border-border rounded-full font-semibold text-primary hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm hover:shadow-md"
+                >
+                  Next
+                </button>
               </div>
             )}
-
-            {error && (
-              <div className="flex items-center justify-center py-20 text-red-500 gap-2">
-                <AlertCircle className="w-5 h-5" />
-                <span>{error}</span>
-              </div>
-            )}
-
-            {!loading && !error && properties.length === 0 && (
-              <div className="bg-card border border-border rounded-3xl p-12 text-center shadow-sm">
-                <p className="text-xl text-muted-foreground">No properties found matching your criteria.</p>
-              </div>
-            )}
-
-            {!loading && !error && properties.length > 0 && (
-              <>
-                <div className={`grid gap-6 ${
-                  view === 'grid'
-                    ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
-                    : 'grid-cols-1'
-                } mb-8`}>
-                  {properties.map((property) => (
-                    <PropertyCard
-                      key={property.id}
-                      {...property}
-                      onClick={() => onPropertyClick?.(property.id)}
-                      onFavoriteToggle={() => handleFavoriteToggle(property.id)}
-                    />
-                  ))}
-                </div>
-
-                {totalPages > 1 && (
-                  <div className="flex justify-center items-center gap-3">
-                    <button
-                      onClick={() => setPage(p => Math.max(1, p - 1))}
-                      disabled={page === 1}
-                      className="px-6 py-3 bg-card border border-border rounded-full font-semibold text-primary hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm hover:shadow-md"
-                    >
-                      Previous
-                    </button>
-                    
-                    <span className="px-6 py-3 text-primary font-medium">
-                      Page {page} of {totalPages}
-                    </span>
-                    
-                    <button
-                      onClick={() => setPage(p => Math.min(totalPages, p + 1))}
-                      disabled={page === totalPages}
-                      className="px-6 py-3 bg-card border border-border rounded-full font-semibold text-primary hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm hover:shadow-md"
-                    >
-                      Next
-                    </button>
-                  </div>
-                )}
-              </>
-            )}
-          </main>
-        </div>
-      </div>
+          </div>
+        )}
+      </main>
     </div>
   );
 }
+

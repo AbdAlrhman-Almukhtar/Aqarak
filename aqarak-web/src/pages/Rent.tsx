@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { SlidersHorizontal, Key, Building2, Warehouse, Banknote, LayoutGrid } from 'lucide-react';
@@ -11,6 +11,20 @@ import ViewToggle from '../components/ViewToggle';
 import FilterSidebar, { type FilterState } from '../components/FilterSidebar';
 import { GridPattern } from '../components/ui/grid-pattern';
 import logo from '../assets/logo.svg';
+import api from '../lib/api';
+
+interface Stats {
+  total: number;
+  sale: {
+    count: number;
+    avg_price: number;
+  };
+  rent: {
+    count: number;
+    avg_price: number;
+  };
+  cities: number;
+}
 
 export default function Rent() {
   const navigate = useNavigate();
@@ -20,6 +34,24 @@ export default function Rent() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState<FilterState>({});
   const [sort, setSort] = useState('-id');
+  const [stats, setStats] = useState<Stats>({
+    total: 156,
+    sale: { count: 156, avg_price: 125000 },
+    rent: { count: 89, avg_price: 450 },
+    cities: 12
+  });
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const { data } = await api.get<Stats>('/properties/statistics');
+        setStats(data);
+      } catch (error) {
+        console.error('Failed to fetch statistics:', error);
+      }
+    };
+    fetchStats();
+  }, []);
 
   const navItems = useMemo(
     () => [
@@ -30,6 +62,8 @@ export default function Rent() {
     ],
     [navigate]
   );
+
+  const combinedFilters = useMemo(() => ({ ...filters, q: searchQuery }), [filters, searchQuery]);
 
   const quickFilters = [
     { label: 'All Properties', value: 'all', icon: LayoutGrid },
@@ -72,7 +106,6 @@ export default function Rent() {
     <div className="min-h-screen bg-background relative overflow-hidden">
       <div className="pointer-events-none absolute inset-0 z-0">
         <GridPattern className="opacity-100 text-primary/10" gap={64} lineWidth={1} color="currentColor" opacity={1} />
-        <div className="absolute inset-0 bg-gradient-to-b from-secondary/5 via-transparent to-transparent" />
       </div>
       <header className="fixed z-[1000] inset-x-0 top-0 pt-6 flex justify-center pointer-events-none">
         <div className="pointer-events-auto">
@@ -119,7 +152,12 @@ export default function Rent() {
           >
             Find your perfect rental in Jordan's most desirable neighborhoods
           </motion.p>
-          <PropertyStats total={89} avgPrice={450} priceLabel="JOD/mo" />
+          <PropertyStats
+            total={stats.rent.count}
+            avgPrice={stats.rent.avg_price}
+            cities={stats.cities}
+            priceLabel="JOD/mo"
+          />
           <SearchBar onSearch={setSearchQuery} placeholder="Search by location, property type..." />
           <QuickFilters
             filters={quickFilters}
@@ -153,7 +191,7 @@ export default function Rent() {
         <PropertyListings
           filterType="rent"
           onPropertyClick={(id) => navigate(`/property/${id}`)}
-          filters={{ ...filters, q: searchQuery }}
+          filters={combinedFilters}
           sort={sort}
           view={view}
         />

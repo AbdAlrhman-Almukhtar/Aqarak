@@ -16,7 +16,7 @@ export function Hero() {
     () => ["Aqarak", "Listing", "Buying", "Price Prediction", "AI Assistant"],
     []
   );
-  
+
   const navItems = useMemo(
     () => [
       { label: "Home", href: "/home", onClick: () => navigate("/home") },
@@ -41,7 +41,7 @@ export function Hero() {
         <GridPattern className="opacity-100 text-primary/10" gap={64} lineWidth={1} color="currentColor" opacity={1} />
         <div className="absolute inset-0 bg-background/40" />
       </div>
-      
+
       <header className="fixed z-[1000] inset-x-0 top-0 pt-6 flex justify-center pointer-events-none">
         <div className="pointer-events-auto">
           <PillNav
@@ -85,7 +85,7 @@ export function Hero() {
               </span>
             </h1>
             <p className="text-2xl md:text-3xl leading-relaxed tracking-tight text-foreground/70 max-w-4xl text-center">
-              Your intelligent platform for discovering, listing, and valuing properties in Jordan. 
+              Your intelligent platform for discovering, listing, and valuing properties in Jordan.
               Powered by AI-driven insights and real-time market data.
             </p>
           </div>

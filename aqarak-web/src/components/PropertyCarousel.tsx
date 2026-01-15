@@ -55,8 +55,8 @@ export function PropertyCarousel() {
   return (
     <section ref={targetRef} className="relative h-[250vh] bg-background">
       <div className="sticky top-0 flex h-screen items-center overflow-hidden">
-      
-        <motion.div 
+
+        <motion.div
           style={{ opacity, scale }}
           className="absolute top-1/2 -translate-y-1/2 left-8 md:left-20 z-10 max-w-md pointer-events-none"
         >
@@ -65,14 +65,14 @@ export function PropertyCarousel() {
             <span className="text-sm font-medium text-secondary">Premium Collection</span>
           </div>
           <h2 className="text-5xl md:text-7xl font-bold text-foreground mb-6 leading-[1.1] tracking-tight">
-            Exclusive <br/><span className="text-secondary">Listings</span>
+            Exclusive <br /><span className="text-secondary">Listings</span>
           </h2>
           <p className="text-lg text-foreground/70 mb-8 leading-relaxed">
             Curated selection of Jordan's most prestigious properties, available for immediate viewing.
           </p>
           <div className="pointer-events-auto">
             <Button size="xl" className="group gap-2 rounded-full">
-              View All Properties 
+              View All Properties
               <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
             </Button>
           </div>
@@ -82,18 +82,18 @@ export function PropertyCarousel() {
           {properties.map((property) => (
             <PropertyCard key={property.id} property={property} />
           ))}
-          <div 
+          <div
             onClick={() => {
               document.getElementById('tech-showcase')?.scrollIntoView({ behavior: 'smooth' });
             }}
             className="group relative h-full w-[380px] md:w-[480px] flex-shrink-0 overflow-hidden rounded-[2.5rem] bg-[#0B1B34] flex flex-col items-center justify-center cursor-pointer border border-white/5"
           >
             <div className="absolute inset-0 bg-gradient-to-br from-[#0B1B34] to-[#1a2b4a] transition-all duration-500 group-hover:scale-105" />
-            
+
             <div className="relative z-10 flex flex-col items-center justify-center p-8 h-full text-center">
               <div className="mb-6 relative">
-                 <div className="absolute inset-0 bg-secondary/20 blur-xl rounded-full scale-0 group-hover:scale-150 transition-transform duration-700" />
-                 <Bot className="w-16 h-16 text-secondary relative z-10 drop-shadow-lg" />
+                <div className="absolute inset-0 bg-secondary/20 blur-xl rounded-full scale-0 group-hover:scale-150 transition-transform duration-700" />
+                <Bot className="w-16 h-16 text-secondary relative z-10 drop-shadow-lg" />
               </div>
 
               <h3 className="text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight leading-none">
