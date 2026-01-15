@@ -124,10 +124,10 @@ const PillNav: React.FC<PillNavProps> = ({
         <nav aria-label="Primary" className="relative">
           <div className="flex items-center rounded-full" style={{ height: "var(--nav-h)", background: "var(--base)" }}>
             <span
-              className="mx-1 inline-flex items-center justify-center overflow-hidden rounded-full"
-              style={{ width: "calc(var(--nav-h) - 4px)", height: "calc(var(--nav-h) - 4px)", background: "#F4F1E8" }}
+              className="ml-2 mr-1 inline-flex items-center justify-center overflow-hidden rounded-full"
+              style={{ width: "calc(var(--nav-h) - 12px)", height: "calc(var(--nav-h) - 12px)", background: "#F4F1E8" }}
             >
-              <img src={logo} alt={logoAlt} className="h-full w-full object-contain p-1" />
+              <img src={logo} alt={logoAlt} className="h-full w-full object-contain p-2" />
             </span>
             <ul role="menubar" className="list-none flex items-stretch m-0 p-[4px] h-full" style={{ gap: "var(--pill-gap)" }}>
               {items.map((item, i) => {
