@@ -346,7 +346,7 @@ export default function PropertyDetails() {
                       Instant answers about legal structure, neighborhood data, and property history.
                     </p>
                     <button
-                      onClick={() => openChat(`I'm interested in viewing "${property.title}" in ${property.neighborhood}. Can you tell me more about its features?`)}
+                      onClick={() => openChat(`I'm interested in viewing "${property.title}" in ${property.neighborhood}. Can you tell me more about its features?`, property.id)}
                       className="w-full bg-[#FFA04F] text-[#0B1B34] py-5 rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-[#FFA04F]/90 transition-all shadow-xl shadow-[#FFA04F]/20"
                     >
                       Start Consultation

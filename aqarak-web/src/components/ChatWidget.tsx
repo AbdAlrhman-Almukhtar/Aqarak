@@ -13,7 +13,7 @@ interface Message {
   timestamp: Date;
 }
 export default function ChatWidget() {
-  const { isOpen, closeChat, toggleChat, initialMessage } = useChat();
+  const { isOpen, closeChat, toggleChat, initialMessage, propertyId } = useChat();
   const [isMinimized, setIsMinimized] = useState(false);
   const [isMaximized, setIsMaximized] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
@@ -51,6 +51,7 @@ export default function ChatWidget() {
 
       const { data } = await api.post('/chat', {
         question: userMessage.content,
+        property_id: propertyId,
       });
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -90,6 +91,7 @@ export default function ChatWidget() {
     try {
       const { data } = await api.post('/chat', {
         question: userMessage.content,
+        property_id: propertyId,
       });
 
       const botMessage: Message = {
@@ -165,8 +167,8 @@ export default function ChatWidget() {
                 >
                   <div
                     className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${msg.role === 'user'
-                        ? 'bg-secondary text-white'
-                        : 'bg-[#0B1B34] text-white'
+                      ? 'bg-secondary text-white'
+                      : 'bg-[#0B1B34] text-white'
                       }`}
                   >
                     {msg.role === 'user' ? (
@@ -177,8 +179,8 @@ export default function ChatWidget() {
                   </div>
                   <div
                     className={`max-w-[80%] p-3 rounded-2xl text-sm ${msg.role === 'user'
-                        ? 'bg-secondary text-white rounded-tr-none'
-                        : 'bg-white border border-[#0B1B34]/10 text-[#0B1B34] rounded-tl-none shadow-sm'
+                      ? 'bg-secondary text-white rounded-tr-none'
+                      : 'bg-white border border-[#0B1B34]/10 text-[#0B1B34] rounded-tl-none shadow-sm'
                       }`}
                   >
                     {msg.role === 'user' ? (
@@ -258,8 +260,8 @@ export default function ChatWidget() {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         className={`pointer-events-auto shadow-xl flex items-center gap-3 px-4 py-3 rounded-full transition-colors ${isOpen && !isMinimized
-            ? 'bg-secondary text-white'
-            : 'bg-[#0B1B34] text-white'
+          ? 'bg-secondary text-white'
+          : 'bg-[#0B1B34] text-white'
           }`}
       >
         {isOpen && !isMinimized ? (
