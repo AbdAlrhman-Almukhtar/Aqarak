@@ -69,9 +69,8 @@ export default function PropertyCard({
           className="absolute top-4 right-4 w-10 h-10 bg-background/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-background transition-all shadow-lg hover:scale-110 duration-300"
         >
           <Heart
-            className={`w-5 h-5 transition-colors ${
-              is_favorited ? 'fill-secondary text-secondary' : 'text-primary'
-            }`}
+            className={`w-5 h-5 transition-colors ${is_favorited ? 'fill-secondary text-secondary' : 'text-primary'
+              }`}
           />
         </button>
         <div className="absolute top-4 left-4 flex gap-2">

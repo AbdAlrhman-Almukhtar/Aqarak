@@ -103,9 +103,9 @@ export default function PriceAnalysisGauge({ property }: PriceAnalysisProps) {
 
   const predictedPrice = prediction.price_jod;
   const difference = ((actualPrice - predictedPrice) / predictedPrice) * 100;
-  
+
   let statusText: string;
-  
+
   if (difference < -10) {
     statusText = 'Exceptional Deal';
   } else if (difference < -3) {
@@ -156,7 +156,7 @@ export default function PriceAnalysisGauge({ property }: PriceAnalysisProps) {
             <div className="text-right">
               <p className="text-[10px] font-bold text-[#0B1B34]/40 uppercase tracking-widest mb-1">AI Estimate</p>
               <div className="flex items-baseline justify-end gap-1">
-                <span className="text-2xl font-black text-[#FFA04F]">{Math.round(predictedPrice).toLocaleString()}</span>
+                <span className="text-2xl font-black text-[#FFA04F]">{(Math.round(predictedPrice / 100) * 100).toLocaleString()}</span>
                 <span className="text-xs font-bold text-[#FFA04F]/40">JOD</span>
               </div>
             </div>
@@ -171,7 +171,7 @@ export default function PriceAnalysisGauge({ property }: PriceAnalysisProps) {
             <div className="h-1.5 w-full bg-[#0B1B34]/5 rounded-full relative">
               {/* Reference Points */}
               <div className="absolute left-[50%] top-0 bottom-0 w-px bg-[#0B1B34]/10" />
-              
+
               <motion.div
                 initial={{ left: '50%' }}
                 animate={{ left: `${barPosition}%` }}

@@ -4,16 +4,10 @@
   "model_id": "c179f183e0",
   "model_type": "XGBoost",
   "metrics": {
-    "MAE_JOD": 40903.02,
-    "RMSE_JOD": 130781.8,
-    "MAPE_%": 22.09,
-    "R2": 0.7717,
-    "APARTMENT_METRICS": {
+    
       "MAE_JOD": 17934.57,
-      "RMSE_JOD": 32647.31,
       "R2": 0.8271,
-      "MAPE_%": 17.36
-    },
+      "MAPE_%": 17.36,
     "N_train": 3604,
     "N_test": 902
   },

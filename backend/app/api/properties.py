@@ -16,6 +16,50 @@ from app.api.ml_price_router import (
 
 router = APIRouter(prefix="/properties", tags=["properties"])
 
+@router.get("/statistics")
+def get_property_stats(db: Session = Depends(get_db)):
+    # Total active properties
+    total_count = db.query(func.count(Property.id)).filter(Property.is_active.is_(True)).scalar() or 0
+    
+    # Average price of properties for sale
+    avg_sale = db.query(func.avg(Property.price)).filter(
+        Property.is_active.is_(True),
+        Property.is_for_sale.is_(True)
+    ).scalar() or 0
+
+    # Average price of properties for rent
+    avg_rent = db.query(func.avg(Property.rent_price)).filter(
+        Property.is_active.is_(True),
+        Property.is_for_rent.is_(True)
+    ).scalar() or 0
+
+    # Counts
+    sale_count = db.query(func.count(Property.id)).filter(
+        Property.is_active.is_(True),
+        Property.is_for_sale.is_(True)
+    ).scalar() or 0
+
+    rent_count = db.query(func.count(Property.id)).filter(
+        Property.is_active.is_(True),
+        Property.is_for_rent.is_(True)
+    ).scalar() or 0
+    
+    # Unique neighborhoods count
+    neighbors_count = db.query(func.count(func.distinct(Property.neighborhood))).filter(Property.is_active.is_(True)).scalar() or 0
+    
+    return {
+        "total": total_count,
+        "sale": {
+            "count": sale_count,
+            "avg_price": round(float(avg_sale), 2) if avg_sale else 0
+        },
+        "rent": {
+            "count": rent_count,
+            "avg_price": round(float(avg_rent), 2) if avg_rent else 0
+        },
+        "neighborhoods": neighbors_count
+    }
+
 ORDER_MAP = {
     "id": Property.id,
     "price": Property.price,
@@ -187,6 +231,10 @@ def search_properties(
         d["images"] = [i.url for i in imgs]
         d["cover_image"] = next((i.url for i in imgs if i.is_cover), d["images"][0] if d["images"] else None)
         
+        if r.owner:
+            d["lister_name"] = r.owner.name or r.owner.email
+            d["lister_contact"] = r.owner.phone or r.owner.email
+        
         items.append(d)
 
     return {
@@ -272,6 +320,9 @@ def create_property(
     d["is_favorited"] = False
     d["images"] = []
     d["cover_image"] = None
+    if p.owner:
+        d["lister_name"] = p.owner.name or p.owner.email
+        d["lister_contact"] = p.owner.phone or p.owner.email
     return d
 
 
@@ -361,6 +412,10 @@ def get_property(
     d["images"] = [i.url for i in imgs]
     d["cover_image"] = next((i.url for i in imgs if i.is_cover), d["images"][0] if d["images"] else None)
     
+    if p.owner:
+        d["lister_name"] = p.owner.name or p.owner.email
+        d["lister_contact"] = p.owner.phone or p.owner.email
+        
     return d
 
 

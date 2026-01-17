@@ -3,8 +3,6 @@ import { useEffect } from "react";
 import { Check, Crown, Shield } from "lucide-react";
 import { motion } from "framer-motion";
 import { GridPattern } from "../components/ui/grid-pattern";
-import PillNav from "../components/PillNav";
-import logo from "../assets/logo.svg";
 
 export default function Subscription() {
   const navigate = useNavigate();
@@ -13,12 +11,6 @@ export default function Subscription() {
     window.scrollTo(0, 0);
   }, []);
 
-  const navItems = [
-    { label: "Home", href: "/home", onClick: () => navigate("/home") },
-    { label: "Buy", href: "/buy", onClick: () => navigate("/buy") },
-    { label: "Rent", href: "/rent", onClick: () => navigate("/rent") },
-    { label: "Predict", href: "/predict", onClick: () => navigate("/predict") },
-  ];
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
@@ -27,26 +19,10 @@ export default function Subscription() {
         <div className="absolute inset-0 bg-gradient-to-b from-secondary/5 via-transparent to-transparent" />
       </div>
 
-      <header className="fixed z-[1000] inset-x-0 top-0 pt-6 flex justify-center pointer-events-none">
-        <div className="pointer-events-auto">
-          <PillNav
-            logo={logo}
-            logoAlt="Aqarak"
-            items={navItems}
-            activeHref="/subscription"
-            ease="power2.easeOut"
-            baseColor="var(--primary)"
-            pillColor="var(--background)"
-            hoveredPillTextColor="#ffffff"
-            pillTextColor="var(--primary)"
-            onProfileClick={() => navigate("/profile")}
-          />
-        </div>
-      </header>
 
       <div className="relative z-10 container mx-auto px-4 pt-52 pb-20">
         <div className="text-center mb-20 max-w-2xl mx-auto">
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
@@ -54,21 +30,21 @@ export default function Subscription() {
           >
             Upgrade to <span className="text-primary">Professional</span> Real Estate Tools
           </motion.h1>
-          
-          <motion.p 
+
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
             className="text-lg text-gray-500"
           >
-            Choose the package that fits your needs. 
+            Choose the package that fits your needs.
             <br className="hidden md:block" />
             Zero hidden fees. Cancel anytime.
           </motion.p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto items-stretch">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
@@ -81,11 +57,11 @@ export default function Subscription() {
               <h3 className="text-xl font-bold text-gray-900 mb-2">Standard</h3>
               <p className="text-gray-500 text-sm">Essential tools for browsing.</p>
             </div>
-            
+
             <div className="mb-8">
               <span className="text-4xl font-bold text-gray-900">Free</span>
             </div>
-            
+
             <ul className="space-y-4 mb-8 flex-1">
               <li className="flex items-start gap-3">
                 <Check className="w-5 h-5 text-gray-400 mt-0.5" />
@@ -101,29 +77,29 @@ export default function Subscription() {
               </li>
             </ul>
 
-            <button 
+            <button
               className="w-full py-3.5 rounded-xl bg-gray-50 text-gray-900 font-bold hover:bg-gray-100 transition-colors border border-gray-200"
               onClick={() => navigate('/home')}
             >
               Continue with Free
             </button>
           </motion.div>
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
             className="group bg-gray-900 text-white rounded-[2rem] p-8 shadow-xl hover:shadow-2xl transition-all relative overflow-hidden flex flex-col"
           >
             <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-primary/20 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2" />
-            
+
             <div className="relative z-10 flex flex-col h-full">
               <div className="flex justify-between items-start mb-8">
                 <div>
-                   <div className="w-12 h-12 bg-gray-800 rounded-2xl flex items-center justify-center mb-6 border border-gray-700">
-                     <Crown className="w-6 h-6 text-secondary" />
-                   </div>
-                   <h3 className="text-xl font-bold text-white mb-2">Aqarak Plus</h3>
-                   <p className="text-gray-400 text-sm">For serious sellers & investors.</p>
+                  <div className="w-12 h-12 bg-gray-800 rounded-2xl flex items-center justify-center mb-6 border border-gray-700">
+                    <Crown className="w-6 h-6 text-secondary" />
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-2">Aqarak Plus</h3>
+                  <p className="text-gray-400 text-sm">For serious sellers & investors.</p>
                 </div>
                 <span className="bg-secondary text-primary text-[10px] uppercase font-bold px-3 py-1 rounded-full tracking-wide">
                   Recommended
@@ -137,7 +113,7 @@ export default function Subscription() {
               </div>
 
               <ul className="space-y-4 mb-8 flex-1">
-                 <li className="flex items-start gap-3">
+                <li className="flex items-start gap-3">
                   <div className="mt-0.5 p-0.5 bg-secondary rounded-full">
                     <Check className="w-3 h-3 text-primary" />
                   </div>
@@ -155,7 +131,7 @@ export default function Subscription() {
                   </div>
                   <span className="text-gray-200 font-medium">Unlimited AI Predictions</span>
                 </li>
-                 <li className="flex items-start gap-3">
+                <li className="flex items-start gap-3">
                   <div className="mt-0.5 p-0.5 bg-secondary rounded-full">
                     <Check className="w-3 h-3 text-primary" />
                   </div>

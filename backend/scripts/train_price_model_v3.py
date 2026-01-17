@@ -193,7 +193,7 @@ def main():
     mape = float(np.mean(np.abs((yte - pred_te) / np.clip(np.abs(yte), 1.0, None))) * 100)
     logger.info(f"Test Metrics (ALL): MAE={mae:.2f}, RMSE={rmse:.2f}, R2={r2:.4f}, MAPE={mape:.2f}%")
     
-    # Calculate Apartment-specific metrics
+    # here where we calculate metrics
     is_apt_test = Xte['property_type'].str.title() == 'Apartment'
     if is_apt_test.any():
         y_apt_true = yte[is_apt_test]

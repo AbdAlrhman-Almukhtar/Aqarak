@@ -15,6 +15,7 @@ interface AuthContextType {
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string, phone: string, name?: string) => Promise<void>;
+  verifyOtp: (email: string, otp: string) => Promise<void>;
   logout: () => void;
   refreshUser: () => Promise<void>;
 }
@@ -30,12 +31,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const savedToken = localStorage.getItem('auth_token');
     const savedUser = localStorage.getItem('auth_user');
-    
+
     if (savedToken && savedUser) {
       setToken(savedToken);
       setUser(JSON.parse(savedUser));
     }
-    
+
     setLoading(false);
   }, []);
   useEffect(() => {
@@ -102,7 +103,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       phone,
       name,
     });
-    await login(email, password);
+    // Do not login automatically, wait for OTP
+  };
+
+  const verifyOtp = async (email: string, otp: string) => {
+    const { data } = await api.post('/auth/verify-otp', {
+      email,
+      otp,
+    });
+
+    // The verify endpoint now returns the token
+    const authToken = data.access_token;
+    setToken(authToken);
+    localStorage.setItem('auth_token', authToken);
+    try {
+      const { data: userData } = await api.get<User>('/users/me', {
+        headers: { Authorization: `Bearer ${authToken}` }
+      });
+      setUser(userData);
+      localStorage.setItem('auth_user', JSON.stringify(userData));
+    } catch (error) {
+      console.error('Failed to fetch user details:', error);
+      const userObj: User = { id: 0, email, name: undefined };
+      setUser(userObj);
+      localStorage.setItem('auth_user', JSON.stringify(userObj));
+    }
   };
 
   const logout = () => {
@@ -130,6 +155,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     loading,
     login,
     register,
+    verifyOtp,
     logout,
     refreshUser,
   };

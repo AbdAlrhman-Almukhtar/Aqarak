@@ -1,20 +1,18 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { 
-  Loader2, User, Lock, Save, AlertCircle, CheckCircle2, Camera, 
+import {
+  Loader2, User, Lock, Save, AlertCircle, CheckCircle2, Camera,
   Home, Heart, LayoutList, Clock, ArrowRight, Mail, Shield, Phone, LogOut
 } from 'lucide-react';
-import PillNav from '../components/PillNav';
 import { GridPattern } from '../components/ui/grid-pattern';
-import logo from '../assets/logo.svg';
 import api from '../lib/api';
 import { useAuth } from '../contexts/AuthContext';
 
 export default function Profile() {
   const navigate = useNavigate();
   const { user, refreshUser, logout } = useAuth();
-  
+
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
@@ -29,12 +27,6 @@ export default function Profile() {
     }
   }, [user]);
 
-  const navItems = [
-    { label: 'Home', href: '/', onClick: () => navigate('/') },
-    { label: 'Buy', href: '/buy', onClick: () => navigate('/buy') },
-    { label: 'Rent', href: '/rent', onClick: () => navigate('/rent') },
-    { label: 'Predict', href: '/predict', onClick: () => navigate('/predict') },
-  ];
 
   const handleLogout = () => {
     if (window.confirm('Are you sure you want to log out?')) {
@@ -46,7 +38,7 @@ export default function Profile() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage(null);
-    
+
     if (password && password !== confirmPassword) {
       setMessage({ type: 'error', text: 'Passwords do not match' });
       return;
@@ -59,15 +51,15 @@ export default function Profile() {
         phone: phone || undefined,
         password: password || undefined,
       });
-      
+
       await refreshUser();
       setMessage({ type: 'success', text: 'Profile updated successfully' });
       setPassword('');
       setConfirmPassword('');
     } catch (err: any) {
-      setMessage({ 
-        type: 'error', 
-        text: err?.response?.data?.detail || 'Failed to update profile' 
+      setMessage({
+        type: 'error',
+        text: err?.response?.data?.detail || 'Failed to update profile'
       });
     } finally {
       setLoading(false);
@@ -86,22 +78,6 @@ export default function Profile() {
         <GridPattern className="opacity-50 text-primary/5" gap={64} lineWidth={1} color="currentColor" opacity={0.5} />
       </div>
 
-      <header className="fixed z-[1000] inset-x-0 top-0 pt-6 flex justify-center pointer-events-none">
-        <div className="pointer-events-auto">
-          <PillNav
-            logo={logo}
-            logoAlt="Aqarak"
-            items={navItems}
-            activeHref="/profile"
-            ease="power2.easeOut"
-            baseColor="var(--primary)"
-            pillColor="var(--background)"
-            hoveredPillTextColor="#ffffff"
-            pillTextColor="var(--primary)"
-            onProfileClick={() => navigate("/profile")}
-          />
-        </div>
-      </header>
 
       <div className="container mx-auto px-4 pt-52 pb-20 relative z-10 flex-grow">
         <div className="max-w-7xl mx-auto">
@@ -119,7 +95,7 @@ export default function Profile() {
             <div className="space-y-6">
               <div className="bg-card rounded-3xl p-8 shadow-xl border border-border text-center relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-r from-primary/10 to-secondary/10"></div>
-                
+
                 <div className="relative z-10">
                   <div className="w-32 h-32 mx-auto rounded-full bg-background border-4 border-background shadow-xl flex items-center justify-center text-4xl font-bold text-primary mb-4 relative group cursor-pointer">
                     {user?.name?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase()}
@@ -127,10 +103,10 @@ export default function Profile() {
                       <Camera className="w-8 h-8" />
                     </div>
                   </div>
-                  
+
                   <h2 className="text-2xl font-bold text-primary mb-1">{user?.name || 'User'}</h2>
                   <p className="text-muted-foreground mb-6">{user?.email}</p>
-                  
+
                   <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground bg-muted/50 py-2 px-4 rounded-full mx-auto w-fit">
                     <Clock className="w-4 h-4" />
                     <span>Member since {new Date().getFullYear()}</span>
@@ -180,15 +156,14 @@ export default function Profile() {
 
                 <form onSubmit={handleSubmit} className="space-y-8">
                   {message && (
-                    <motion.div 
+                    <motion.div
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: 'auto' }}
                       exit={{ opacity: 0, height: 0 }}
-                      className={`p-4 rounded-2xl flex items-start gap-3 ${
-                        message.type === 'success' 
-                          ? 'bg-green-50 text-green-800 border border-green-200' 
-                          : 'bg-red-50 text-red-800 border border-red-200'
-                      }`}
+                      className={`p-4 rounded-2xl flex items-start gap-3 ${message.type === 'success'
+                        ? 'bg-green-50 text-green-800 border border-green-200'
+                        : 'bg-red-50 text-red-800 border border-red-200'
+                        }`}
                     >
                       {message.type === 'success' ? (
                         <CheckCircle2 className="w-5 h-5 flex-shrink-0 mt-0.5" />
@@ -214,8 +189,8 @@ export default function Profile() {
                       </div>
                     </div>
 
-                    <div>
-                      <label className="block text-sm font-bold text-primary mb-3">Phone Number</label>
+                    <div className="space-y-2">
+                      <label className="text-sm font-bold text-primary ml-1">Phone Number</label>
                       <div className="relative group">
                         <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5 group-focus-within:text-secondary transition-colors" />
                         <input
@@ -245,7 +220,7 @@ export default function Profile() {
                       <Lock className="w-4 h-4" />
                       <h3>Change Password</h3>
                     </div>
-                    
+
                     <div className="grid md:grid-cols-2 gap-6">
                       <div className="space-y-2">
                         <label className="text-sm font-medium text-muted-foreground ml-1">New Password</label>

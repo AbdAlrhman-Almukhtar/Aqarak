@@ -1,31 +1,19 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { MoveRight } from "lucide-react";
 import { Button } from "./button";
 import { GridPattern } from "./grid-pattern";
-import PillNav from "../PillNav";
-import logo from "../../assets/logo.svg";
 import { useAuth } from "../../contexts/AuthContext";
 
 export function Hero() {
-  const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const [titleNumber, setTitleNumber] = useState(0);
   const titles = useMemo(
     () => ["Aqarak", "Listing", "Buying", "Price Prediction", "AI Assistant"],
     []
   );
-  
-  const navItems = useMemo(
-    () => [
-      { label: "Home", href: "/home", onClick: () => navigate("/home") },
-      { label: "Buy", href: "/buy", onClick: () => navigate("/buy") },
-      { label: "Rent", href: "/rent", onClick: () => navigate("/rent") },
-      { label: "Predict", href: "/predict", onClick: () => navigate("/predict") },
-    ],
-    [navigate]
-  );
+
 
   useEffect(() => {
     const id = setTimeout(
@@ -41,24 +29,7 @@ export function Hero() {
         <GridPattern className="opacity-100 text-primary/10" gap={64} lineWidth={1} color="currentColor" opacity={1} />
         <div className="absolute inset-0 bg-background/40" />
       </div>
-      
-      <header className="fixed z-[1000] inset-x-0 top-0 pt-6 flex justify-center pointer-events-none">
-        <div className="pointer-events-auto">
-          <PillNav
-            logo={logo}
-            logoAlt="Aqarak"
-            items={navItems}
-            activeHref="#buy"
-            className="custom-nav"
-            ease="power2.easeOut"
-            baseColor="var(--primary)"
-            pillColor="var(--background)"
-            hoveredPillTextColor="#ffffff"
-            pillTextColor="var(--primary)"
-            onProfileClick={() => navigate("/profile")}
-          />
-        </div>
-      </header>
+
 
       <div className="relative z-10 max-w-5xl mx-auto px-4">
         <div className="flex gap-8 pt-48 pb-20 lg:pt-56 lg:pb-24 items-center justify-center flex-col">
@@ -85,7 +56,7 @@ export function Hero() {
               </span>
             </h1>
             <p className="text-2xl md:text-3xl leading-relaxed tracking-tight text-foreground/70 max-w-4xl text-center">
-              Your intelligent platform for discovering, listing, and valuing properties in Jordan. 
+              Your intelligent platform for discovering, listing, and valuing properties in Jordan.
               Powered by AI-driven insights and real-time market data.
             </p>
           </div>

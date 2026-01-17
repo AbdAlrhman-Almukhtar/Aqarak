@@ -26,9 +26,10 @@ interface FilterSidebarProps {
   onClose: () => void;
   onApplyFilters: (filters: FilterState) => void;
   initialFilters?: FilterState;
+  mode?: 'sale' | 'rent';
 }
 
-export default function FilterSidebar({ isOpen, onClose, onApplyFilters, initialFilters = {} }: FilterSidebarProps) {
+export default function FilterSidebar({ isOpen, onClose, onApplyFilters, initialFilters = {}, mode = 'sale' }: FilterSidebarProps) {
   const [filters, setFilters] = useState<FilterState>(initialFilters);
 
   useEffect(() => {
@@ -99,21 +100,21 @@ export default function FilterSidebar({ isOpen, onClose, onApplyFilters, initial
                 <div>
                   <label className="flex items-center gap-2 text-sm font-semibold text-[#0B1B34] mb-3">
                     <DollarSign className="w-4 h-4 text-secondary" />
-                    Price (JOD)
+                    {mode === 'rent' ? 'Monthly Rent (JOD)' : 'Sale Price (JOD)'}
                   </label>
                   <div className="grid grid-cols-2 gap-3">
                     <input
                       type="number"
                       placeholder="Min"
-                      value={filters.min_price || ''}
-                      onChange={(e) => updateFilter('min_price', e.target.value ? Number(e.target.value) : undefined)}
+                      value={(mode === 'rent' ? filters.min_rent : filters.min_price) || ''}
+                      onChange={(e) => updateFilter(mode === 'rent' ? 'min_rent' : 'min_price', e.target.value ? Number(e.target.value) : undefined)}
                       className="w-full px-4 py-2.5 bg-[#F4F1E8] border border-[#0B1B34]/10 rounded-lg text-[#0B1B34] placeholder-gray-400 focus:outline-none focus:border-secondary transition-colors"
                     />
                     <input
                       type="number"
                       placeholder="Max"
-                      value={filters.max_price || ''}
-                      onChange={(e) => updateFilter('max_price', e.target.value ? Number(e.target.value) : undefined)}
+                      value={(mode === 'rent' ? filters.max_rent : filters.max_price) || ''}
+                      onChange={(e) => updateFilter(mode === 'rent' ? 'max_rent' : 'max_price', e.target.value ? Number(e.target.value) : undefined)}
                       className="w-full px-4 py-2.5 bg-[#F4F1E8] border border-[#0B1B34]/10 rounded-lg text-[#0B1B34] placeholder-gray-400 focus:outline-none focus:border-secondary transition-colors"
                     />
                   </div>

@@ -81,8 +81,6 @@ class PriceInput(BaseModel):
             raise ValueError(f"property_type must be one of {sorted(PTYPES)}")
         return v2
 
-
-
 _NEIGH_MAP = {
     "shmesani": "Shmaisani",
     "um uthina": "Um Uthaiena",
