@@ -2,7 +2,6 @@ import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { SlidersHorizontal, Key, Building2, Warehouse, Banknote, LayoutGrid } from 'lucide-react';
-import PillNav from '../components/PillNav';
 import PropertyListings from '../components/PropertyListings';
 import PropertyStats from '../components/PropertyStats';
 import SearchBar from '../components/SearchBar';
@@ -10,7 +9,6 @@ import QuickFilters from '../components/QuickFilters';
 import ViewToggle from '../components/ViewToggle';
 import FilterSidebar, { type FilterState } from '../components/FilterSidebar';
 import { GridPattern } from '../components/ui/grid-pattern';
-import logo from '../assets/logo.svg';
 import api from '../lib/api';
 
 interface Stats {
@@ -53,15 +51,6 @@ export default function Rent() {
     fetchStats();
   }, []);
 
-  const navItems = useMemo(
-    () => [
-      { label: 'Home', href: '/home', onClick: () => navigate('/home') },
-      { label: 'Buy', href: '/buy', onClick: () => navigate('/buy') },
-      { label: 'Rent', href: '/rent', onClick: () => navigate('/rent') },
-      { label: 'Predict', href: '/predict', onClick: () => navigate('/predict') },
-    ],
-    [navigate]
-  );
 
   const combinedFilters = useMemo(() => ({ ...filters, q: searchQuery }), [filters, searchQuery]);
 
@@ -107,27 +96,12 @@ export default function Rent() {
       <div className="pointer-events-none absolute inset-0 z-0">
         <GridPattern className="opacity-100 text-primary/10" gap={64} lineWidth={1} color="currentColor" opacity={1} />
       </div>
-      <header className="fixed z-[1000] inset-x-0 top-0 pt-6 flex justify-center pointer-events-none">
-        <div className="pointer-events-auto">
-          <PillNav
-            logo={logo}
-            logoAlt="Aqarak"
-            items={navItems}
-            activeHref="/rent"
-            ease="power2.easeOut"
-            baseColor="var(--primary)"
-            pillColor="var(--background)"
-            hoveredPillTextColor="#ffffff"
-            pillTextColor="var(--primary)"
-            onProfileClick={() => navigate("/profile")}
-          />
-        </div>
-      </header>
       <FilterSidebar
         isOpen={filterSidebarOpen}
         onClose={() => setFilterSidebarOpen(false)}
         onApplyFilters={handleApplyFilters}
         initialFilters={filters}
+        mode="rent"
       />
       <div className="relative z-10 container mx-auto px-4 pt-52 pb-20">
         <div className="text-center mb-16">

@@ -5,9 +5,7 @@ import {
   Loader2, User, Lock, Save, AlertCircle, CheckCircle2, Camera,
   Home, Heart, LayoutList, Clock, ArrowRight, Mail, Shield, Phone, LogOut
 } from 'lucide-react';
-import PillNav from '../components/PillNav';
 import { GridPattern } from '../components/ui/grid-pattern';
-import logo from '../assets/logo.svg';
 import api from '../lib/api';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -29,12 +27,6 @@ export default function Profile() {
     }
   }, [user]);
 
-  const navItems = [
-    { label: 'Home', href: '/', onClick: () => navigate('/') },
-    { label: 'Buy', href: '/buy', onClick: () => navigate('/buy') },
-    { label: 'Rent', href: '/rent', onClick: () => navigate('/rent') },
-    { label: 'Predict', href: '/predict', onClick: () => navigate('/predict') },
-  ];
 
   const handleLogout = () => {
     if (window.confirm('Are you sure you want to log out?')) {
@@ -86,22 +78,6 @@ export default function Profile() {
         <GridPattern className="opacity-50 text-primary/5" gap={64} lineWidth={1} color="currentColor" opacity={0.5} />
       </div>
 
-      <header className="fixed z-[1000] inset-x-0 top-0 pt-6 flex justify-center pointer-events-none">
-        <div className="pointer-events-auto">
-          <PillNav
-            logo={logo}
-            logoAlt="Aqarak"
-            items={navItems}
-            activeHref="/profile"
-            ease="power2.easeOut"
-            baseColor="var(--primary)"
-            pillColor="var(--background)"
-            hoveredPillTextColor="#ffffff"
-            pillTextColor="var(--primary)"
-            onProfileClick={() => navigate("/profile")}
-          />
-        </div>
-      </header>
 
       <div className="container mx-auto px-4 pt-52 pb-20 relative z-10 flex-grow">
         <div className="max-w-7xl mx-auto">
@@ -185,8 +161,8 @@ export default function Profile() {
                       animate={{ opacity: 1, height: 'auto' }}
                       exit={{ opacity: 0, height: 0 }}
                       className={`p-4 rounded-2xl flex items-start gap-3 ${message.type === 'success'
-                          ? 'bg-green-50 text-green-800 border border-green-200'
-                          : 'bg-red-50 text-red-800 border border-red-200'
+                        ? 'bg-green-50 text-green-800 border border-green-200'
+                        : 'bg-red-50 text-red-800 border border-red-200'
                         }`}
                     >
                       {message.type === 'success' ? (

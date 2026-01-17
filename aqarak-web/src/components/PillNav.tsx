@@ -28,7 +28,7 @@ const PillNav: React.FC<PillNavProps> = ({
   activeHref,
   className = "",
   ease = "power3.out",
-  enterDuration = 0.7,
+  enterDuration = 0.6,
   leaveDuration = 0.6,
   baseColor = "#0B1B34",
   pillColor = "#F4F1E8",

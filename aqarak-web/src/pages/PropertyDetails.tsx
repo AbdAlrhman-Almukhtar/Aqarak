@@ -3,10 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useChat } from '../contexts/ChatContext';
 import { useAuth } from '../contexts/AuthContext';
 import { MapPin, Bed, Bath, Maximize, ArrowLeft, Heart, Home, Bot, User, Phone } from 'lucide-react';
-import PillNav from '../components/PillNav';
 import PriceAnalysisGauge from '../components/PriceAnalysisGauge';
 import { GridPattern } from '../components/ui/grid-pattern';
-import logo from '../assets/logo.svg';
 import api from '../lib/api';
 
 interface Property {
@@ -64,12 +62,6 @@ export default function PropertyDetails() {
     }
   };
 
-  const navItems = [
-    { label: 'Home', href: '/', onClick: () => navigate('/') },
-    { label: 'Buy', href: '/buy', onClick: () => navigate('/buy') },
-    { label: 'Rent', href: '/rent', onClick: () => navigate('/rent') },
-    { label: 'Predict', href: '/predict', onClick: () => navigate('/predict') },
-  ];
 
   useEffect(() => {
     const fetchProperty = async () => {
@@ -124,21 +116,6 @@ export default function PropertyDetails() {
         <GridPattern className="opacity-50 text-primary/5" gap={64} lineWidth={1} color="currentColor" opacity={0.5} />
       </div>
 
-      <header className="fixed z-[1000] inset-x-0 top-0 pt-6 flex justify-center pointer-events-none">
-        <div className="pointer-events-auto">
-          <PillNav
-            logo={logo}
-            logoAlt="Aqarak"
-            items={navItems}
-            activeHref={property.is_for_sale ? '/buy' : '/rent'}
-            ease="power2.easeOut"
-            baseColor="var(--primary)"
-            pillColor="var(--background)"
-            hoveredPillTextColor="#ffffff"
-            pillTextColor="var(--primary)"
-          />
-        </div>
-      </header>
 
       <div className="container mx-auto px-4 pt-52 pb-20 relative z-10">
         <button

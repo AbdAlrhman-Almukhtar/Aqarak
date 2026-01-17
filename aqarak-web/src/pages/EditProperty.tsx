@@ -2,8 +2,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Upload, X, Loader2, Check } from 'lucide-react';
-import PillNav from '../components/PillNav';
-import logo from '../assets/logo.svg';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../lib/api';
 
@@ -60,12 +58,6 @@ export default function EditProperty() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
-  const navItems = [
-    { label: 'Home', href: '/', onClick: () => navigate('/') },
-    { label: 'Buy', href: '/buy', onClick: () => navigate('/buy') },
-    { label: 'Rent', href: '/rent', onClick: () => navigate('/rent') },
-    { label: 'Predict', href: '/predict', onClick: () => navigate('/predict') },
-  ];
 
   useEffect(() => {
     fetchProperty();
@@ -240,22 +232,6 @@ export default function EditProperty() {
   }
   return (
     <div className="min-h-screen bg-[#F4F1E8]">
-      <header className="fixed z-[1000] inset-x-0 top-0 pt-6 flex justify-center pointer-events-none">
-        <div className="pointer-events-auto">
-          <PillNav
-            logo={logo}
-            logoAlt="Aqarak"
-            items={navItems}
-            activeHref="/my-listings"
-            ease="power2.easeOut"
-            baseColor="var(--primary)"
-            pillColor="var(--background)"
-            hoveredPillTextColor="#ffffff"
-            pillTextColor="var(--primary)"
-            onProfileClick={() => navigate("/profile")}
-          />
-        </div>
-      </header>
 
       <div className="container mx-auto px-4 pt-52 pb-20 relative z-10">
         <div className="max-w-3xl mx-auto">
