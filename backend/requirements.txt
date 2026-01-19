@@ -19,3 +19,4 @@ fastapi-limiter
 xgboost
 psycopg2-binary
 email-validator
+openai
