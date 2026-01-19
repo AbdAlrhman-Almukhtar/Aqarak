@@ -1,6 +1,6 @@
 import StaggeredMenu, { type StaggeredMenuItem } from "./components/StaggeredMenu";
-import { Routes, Route } from "react-router-dom";
-import { Hero } from "./components/ui/animated-hero"; 
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
+import { Hero } from "./components/ui/animated-hero";
 import { PropertyCarousel } from "./components/PropertyCarousel";
 import { TechShowcase } from "./components/TechShowcase";
 import { CTASection } from "./components/CTASection";
@@ -21,36 +21,70 @@ import MyListings from "./pages/MyListings";
 import Profile from "./pages/Profile";
 import Subscription from "./pages/Subscription";
 import ChatWidget from "./components/ChatWidget";
+import PillNav from "./components/PillNav";
 import { AuthProvider } from "./contexts/AuthContext";
-import { ChatProvider} from "./contexts/ChatContext";
+import { ChatProvider } from "./contexts/ChatContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import logo from "./assets/logo.svg";
 
 function MainLayout() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const noNavPaths = [
+    "/login",
+    "/signup",
+    "/verify-email",
+    "/forgot-password",
+    "/reset-password",
+    "/"
+  ];
+
+  const showNav = !noNavPaths.includes(location.pathname);
+
+  const navItems = [
+    { label: "Home", href: "/home", onClick: () => navigate("/home") },
+    { label: "Buy", href: "/buy", onClick: () => navigate("/buy") },
+    { label: "Rent", href: "/rent", onClick: () => navigate("/rent") },
+    { label: "Predict", href: "/predict", onClick: () => navigate("/predict") },
+  ];
 
   const sideMenuItems: StaggeredMenuItem[] = [
-    { label: "Home", ariaLabel: "Home", link: "/home" },
-    { label: "Buy", ariaLabel: "Buy", link: "/buy" },
-  { label: "Rent",ariaLabel:"Rent",link:"/rent" },
-  { label: "Predict",ariaLabel: "Predict",link:"/predict" },
-  { label: "Saved",ariaLabel: "Saved Properties",link:"/saved" },
-  { label: "My Listings", ariaLabel: "My Listings",link:"/my-listings" },
-  { label: "List Property", ariaLabel: "List Property",link:"/list-property" },
-  { label: "Subscription", ariaLabel: "Subscription", link: "/subscription" },
-  { label: "Profile", ariaLabel: "Profile",link:"/profile" },
+    { label: "Saved", ariaLabel: "Saved Properties", link: "/saved" },
+    { label: "My Listings", ariaLabel: "My Listings", link: "/my-listings" },
+    { label: "List Property", ariaLabel: "List Property", link: "/list-property" },
+    { label: "Subscription", ariaLabel: "Subscription", link: "/subscription" },
+    { label: "Profile", ariaLabel: "Profile", link: "/profile" },
   ];
+
   return (
     <div className="relative min-h-screen bg-background text-foreground">
+      {showNav && (
+        <header className="fixed z-[1000] inset-x-0 top-0 pt-6 flex justify-center pointer-events-none">
+          <div className="pointer-events-auto">
+            <PillNav
+              logo={logo}
+              logoAlt="Aqarak"
+              items={navItems}
+              activeHref={location.pathname.startsWith('/buy') || location.pathname.startsWith('/property') ? '/buy' : location.pathname.startsWith('/rent') ? '/rent' : location.pathname}
+              ease="power2.easeOut"
+              baseColor="var(--primary)"
+              pillColor="var(--background)"
+              hoveredPillTextColor="#ffffff"
+              pillTextColor="var(--primary)"
+              onProfileClick={() => navigate("/profile")}
+            />
+          </div>
+        </header>
+      )}
+
       <StaggeredMenu
         position="right"
         items={sideMenuItems}
-        displaySocials={false}
-        displayItemNumbering={false}
         logoUrl={logo}
         isFixed={true}
-        changeMenuColorOnOpen={false}
       />
-      
+
       <main>
         <Routes>
           <Route

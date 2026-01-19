@@ -2,14 +2,12 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Upload, X, Loader2, Check } from 'lucide-react';
-import PillNav from '../components/PillNav';
-import logo from '../assets/logo.svg';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../lib/api';
 
 const AMMAN_NEIGHBORHOODS = [
-  "Abdoun", "Dabouq", "Khalda", "Sweifieh", "Jubaiha", "Tla Ali", 
-  "Mecca St", "Medina St", "Gardens", "Al Rabiah", "Um Uthaiena", 
+  "Abdoun", "Dabouq", "Khalda", "Sweifieh", "Jubaiha", "Tla Ali",
+  "Mecca St", "Medina St", "Gardens", "Al Rabiah", "Um Uthaiena",
   "Deir Ghbar", "Sweileh", "Abu Nseir", "Shafa Badran", "Marj El Hamam",
   "Shmaisani", "Jabal Amman", "Jabal Al Hussain", "Jabal Al-Lweibdeh",
   "Jabal Al-Taj", "Jabal Al Nuzha", "Jabal Al Zohor", "Al Bayader",
@@ -31,7 +29,7 @@ export default function EditProperty() {
   const navigate = useNavigate();
   const { id } = useParams();
   const { user } = useAuth();
-  
+
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -49,7 +47,7 @@ export default function EditProperty() {
     floor: '',
     building_age: '',
   });
-  
+
   const [existingImages, setExistingImages] = useState<PropertyImage[]>([]);
   const [newImages, setNewImages] = useState<File[]>([]);
   const [newPreviews, setNewPreviews] = useState<string[]>([]);
@@ -60,12 +58,6 @@ export default function EditProperty() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
-  const navItems = [
-    { label: 'Home', href: '/', onClick: () => navigate('/') },
-    { label: 'Buy', href: '/buy', onClick: () => navigate('/buy') },
-    { label: 'Rent', href: '/rent', onClick: () => navigate('/rent') },
-    { label: 'Predict', href: '/predict', onClick: () => navigate('/predict') },
-  ];
 
   useEffect(() => {
     fetchProperty();
@@ -109,7 +101,14 @@ export default function EditProperty() {
     const { name, value, type } = e.target;
     if (type === 'checkbox') {
       const checked = (e.target as HTMLInputElement).checked;
-      setFormData(prev => ({ ...prev, [name]: checked }));
+
+      if (name === 'is_for_sale' && checked) {
+        setFormData(prev => ({ ...prev, is_for_sale: true, is_for_rent: false }));
+      } else if (name === 'is_for_rent' && checked) {
+        setFormData(prev => ({ ...prev, is_for_rent: true, is_for_sale: false }));
+      } else {
+        setFormData(prev => ({ ...prev, [name]: checked }));
+      }
     } else {
       setFormData(prev => ({ ...prev, [name]: value }));
     }
@@ -123,7 +122,7 @@ export default function EditProperty() {
     }
 
     setNewImages(prev => [...prev, ...files]);
-    
+
     files.forEach(file => {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -145,7 +144,7 @@ export default function EditProperty() {
 
   const removeExistingImage = async (imgId: number) => {
     if (!confirm('Are you sure you want to delete this image?')) return;
-    
+
     try {
       await api.delete(`/properties/${id}/images/${imgId}`);
       setExistingImages(prev => prev.filter(img => img.id !== imgId));
@@ -198,7 +197,7 @@ export default function EditProperty() {
         for (let i = 0; i < newImages.length; i++) {
           const formData = new FormData();
           formData.append('file', newImages[i]);
-          
+
           await api.post(`/properties/${id}/images`, formData, {
             params: {
               sort_order: existingImages.length + i,
@@ -233,22 +232,6 @@ export default function EditProperty() {
   }
   return (
     <div className="min-h-screen bg-[#F4F1E8]">
-      <header className="fixed z-[1000] inset-x-0 top-0 pt-6 flex justify-center pointer-events-none">
-        <div className="pointer-events-auto">
-          <PillNav
-            logo={logo}
-            logoAlt="Aqarak"
-            items={navItems}
-            activeHref="/my-listings"
-            ease="power2.easeOut"
-            baseColor="var(--primary)"
-            pillColor="var(--background)"
-            hoveredPillTextColor="#ffffff"
-            pillTextColor="var(--primary)"
-            onProfileClick={() => navigate("/profile")}
-          />
-        </div>
-      </header>
 
       <div className="container mx-auto px-4 pt-52 pb-20 relative z-10">
         <div className="max-w-3xl mx-auto">
@@ -281,7 +264,7 @@ export default function EditProperty() {
           <form onSubmit={handleSubmit} className="bg-white rounded-2xl p-8 shadow-lg">
             <div className="mb-8">
               <h2 className="text-2xl font-bold text-[#0B1B34] mb-4">Basic Information</h2>
-              
+
               <div className="mb-4">
                 <label className="block text-sm font-semibold text-[#0B1B34] mb-2">
                   Property Title *
@@ -292,7 +275,7 @@ export default function EditProperty() {
                   value={formData.title}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary h-[52px]"
                 />
               </div>
 
@@ -350,7 +333,7 @@ export default function EditProperty() {
                       value={formData.price}
                       onChange={handleInputChange}
                       required={formData.is_for_sale}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary h-[52px]"
                     />
                   </div>
                 )}
@@ -365,7 +348,7 @@ export default function EditProperty() {
                       value={formData.rent_price}
                       onChange={handleInputChange}
                       required={formData.is_for_rent}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary h-[52px]"
                     />
                   </div>
                 )}
@@ -382,42 +365,56 @@ export default function EditProperty() {
                     name="city"
                     value={formData.city}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary h-[52px]"
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-[#0B1B34] mb-2">Neighborhood</label>
-                  <select
-                    name="neighborhood"
-                    value={formData.neighborhood}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary bg-white"
-                  >
-                    <option value="" disabled>Select Neighborhood</option>
-                    {AMMAN_NEIGHBORHOODS.map(n => (
-                      <option key={n} value={n}>{n}</option>
-                    ))}
-                  </select>
+                  <div className="relative">
+                    <select
+                      name="neighborhood"
+                      value={formData.neighborhood}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary bg-white appearance-none h-[52px]"
+                    >
+                      <option value="" disabled>Select Neighborhood</option>
+                      {AMMAN_NEIGHBORHOODS.map(n => (
+                        <option key={n} value={n}>{n}</option>
+                      ))}
+                    </select>
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+                      <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
             <div className="mb-8">
               <h2 className="text-2xl font-bold text-[#0B1B34] mb-4">Property Details</h2>
-              
+
               <div className="grid md:grid-cols-2 gap-4 mb-4">
                 <div>
                   <label className="block text-sm font-semibold text-[#0B1B34] mb-2">Property Type</label>
-                  <select
-                    name="property_type"
-                    value={formData.property_type}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary bg-white"
-                  >
-                    {['Apartment', 'House', 'Townhouse', 'Villa', 'Farm'].map(t => (
-                      <option key={t} value={t}>{t}</option>
-                    ))}
-                  </select>
+                  <div className="relative">
+                    <select
+                      name="property_type"
+                      value={formData.property_type}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary bg-white appearance-none h-[52px]"
+                    >
+                      {['Apartment', 'Villa'].map(t => (
+                        <option key={t} value={t}>{t}</option>
+                      ))}
+                    </select>
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+                      <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </div>
+                  </div>
                 </div>
                 <div className="flex items-center h-full pt-6">
                   <label className="flex items-center gap-2 cursor-pointer">
@@ -441,7 +438,7 @@ export default function EditProperty() {
                     name="bedrooms"
                     value={formData.bedrooms}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary h-[52px]"
                   />
                 </div>
                 <div>
@@ -451,7 +448,7 @@ export default function EditProperty() {
                     name="bathrooms"
                     value={formData.bathrooms}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary h-[52px]"
                   />
                 </div>
                 <div>
@@ -461,7 +458,7 @@ export default function EditProperty() {
                     name="area_sqm"
                     value={formData.area_sqm}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary h-[52px]"
                   />
                 </div>
               </div>
@@ -474,7 +471,7 @@ export default function EditProperty() {
                     name="floor"
                     value={formData.floor}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary h-[52px]"
                   />
                 </div>
                 <div>
@@ -484,7 +481,7 @@ export default function EditProperty() {
                     name="building_age"
                     value={formData.building_age}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-secondary h-[52px]"
                   />
                 </div>
               </div>
@@ -492,7 +489,7 @@ export default function EditProperty() {
 
             <div className="mb-8">
               <h2 className="text-2xl font-bold text-[#0B1B34] mb-4">Photos (Max 10)</h2>
-              
+
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
                 {existingImages.map((img) => (
                   <div key={img.id} className="relative group">
@@ -527,7 +524,7 @@ export default function EditProperty() {
                     )}
                   </div>
                 ))}
-                
+
                 {newPreviews.map((preview, index) => (
                   <div key={`new-${index}`} className="relative group">
                     <img
@@ -555,7 +552,7 @@ export default function EditProperty() {
                     </div>
                     {index === newCoverIndex && (
                       <div className="absolute bottom-2 left-2 bg-secondary text-white text-xs px-2 py-1 rounded flex items-center gap-1 shadow-sm">
-                         <Check className="w-3 h-3" /> Cover - New
+                        <Check className="w-3 h-3" /> Cover - New
                       </div>
                     )}
                     <span className="absolute top-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded shadow-sm">

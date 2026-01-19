@@ -1,8 +1,7 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { SlidersHorizontal, Building2, Home, Warehouse, Banknote, LayoutGrid } from 'lucide-react';
-import PillNav from '../components/PillNav';
+import { SlidersHorizontal, Building2, Warehouse, Banknote, LayoutGrid } from 'lucide-react';
 import PropertyListings from '../components/PropertyListings';
 import PropertyStats from '../components/PropertyStats';
 import SearchBar from '../components/SearchBar';
@@ -10,7 +9,20 @@ import QuickFilters from '../components/QuickFilters';
 import ViewToggle from '../components/ViewToggle';
 import FilterSidebar, { type FilterState } from '../components/FilterSidebar';
 import { GridPattern } from '../components/ui/grid-pattern';
-import logo from '../assets/logo.svg';
+import api from '../lib/api';
+
+interface Stats {
+  total: number;
+  sale: {
+    count: number;
+    avg_price: number;
+  };
+  rent: {
+    count: number;
+    avg_price: number;
+  };
+  neighborhoods: number;
+}
 
 export default function Buy() {
   const navigate = useNavigate();
@@ -20,22 +32,32 @@ export default function Buy() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState<FilterState>({});
   const [sort, setSort] = useState('-id');
-  
-  const navItems = useMemo(
-    () => [
-      { label: 'Home', href: '/home', onClick: () => navigate('/home') },
-      { label: 'Buy', href: '/buy', onClick: () => navigate('/buy') },
-      { label: 'Rent', href: '/rent', onClick: () => navigate('/rent') },
-      { label: 'Predict', href: '/predict', onClick: () => navigate('/predict') },
-    ],
-    [navigate]
-  );
+  const [stats, setStats] = useState<Stats>({
+    total: 156,
+    sale: { count: 156, avg_price: 125000 },
+    rent: { count: 89, avg_price: 450 },
+    neighborhoods: 12
+  });
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const { data } = await api.get<Stats>('/properties/statistics');
+        setStats(data);
+      } catch (error) {
+        console.error('Failed to fetch statistics:', error);
+      }
+    };
+    fetchStats();
+  }, []);
+
+
+  const combinedFilters = useMemo(() => ({ ...filters, q: searchQuery }), [filters, searchQuery]);
 
   const quickFilters = [
     { label: 'All Properties', value: 'all', icon: LayoutGrid },
     { label: 'Apartments', value: 'apartment', icon: Building2 },
     { label: 'Villas', value: 'villa', icon: Warehouse },
-    { label: 'Houses', value: 'house', icon: Home },
     { label: 'Under 100K', value: 'under100k', icon: Banknote },
   ];
 
@@ -45,9 +67,9 @@ export default function Buy() {
 
   const handleQuickFilterClick = (value: string) => {
     setActiveQuickFilter(value);
-    
+
     let newFilters: FilterState = {};
-    
+
     switch (value) {
       case 'all':
         newFilters = {};
@@ -65,7 +87,7 @@ export default function Buy() {
         newFilters = { max_price: 100000 };
         break;
     }
-    
+
     setFilters(newFilters);
   };
 
@@ -73,29 +95,13 @@ export default function Buy() {
     <div className="min-h-screen bg-background relative overflow-hidden">
       <div className="pointer-events-none absolute inset-0 z-0">
         <GridPattern className="opacity-100 text-primary/10" gap={64} lineWidth={1} color="currentColor" opacity={1} />
-        <div className="absolute inset-0 bg-gradient-to-b from-secondary/5 via-transparent to-transparent" />
       </div>
-      <header className="fixed z-[1000] inset-x-0 top-0 pt-6 flex justify-center pointer-events-none">
-        <div className="pointer-events-auto">
-          <PillNav
-            logo={logo}
-            logoAlt="Aqarak"
-            items={navItems}
-            activeHref="/buy"
-            ease="power2.easeOut"
-            baseColor="var(--primary)"
-            pillColor="var(--background)"
-            hoveredPillTextColor="#ffffff"
-            pillTextColor="var(--primary)"
-            onProfileClick={() => navigate("/profile")}
-          />
-        </div>
-      </header>
       <FilterSidebar
         isOpen={filterSidebarOpen}
         onClose={() => setFilterSidebarOpen(false)}
         onApplyFilters={handleApplyFilters}
         initialFilters={filters}
+        mode="sale"
       />
       <div className="relative z-10 container mx-auto px-4 pt-52 pb-20">
         <div className="text-center mb-16">
@@ -111,7 +117,7 @@ export default function Buy() {
               Properties for <span className="text-secondary">Sale</span>
             </h1>
           </motion.div>
-          
+
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -120,7 +126,12 @@ export default function Buy() {
           >
             Discover your dream property in Jordan's finest locations
           </motion.p>
-          <PropertyStats total={156} avgPrice={125000} priceLabel="JOD" />
+          <PropertyStats
+            total={stats.sale.count}
+            avgPrice={stats.sale.avg_price}
+            neighborhoods={stats.neighborhoods}
+            priceLabel="JOD"
+          />
           <SearchBar onSearch={setSearchQuery} placeholder="Search by location, property type..." />
           <QuickFilters
             filters={quickFilters}
@@ -138,7 +149,7 @@ export default function Buy() {
           </button>
 
           <div className="flex items-center gap-4">
-            <select 
+            <select
               value={sort}
               onChange={(e) => setSort(e.target.value)}
               className="px-5 py-3 bg-card/80 backdrop-blur-sm rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-secondary border border-border appearance-none cursor-pointer font-medium text-primary"
@@ -151,10 +162,10 @@ export default function Buy() {
             <ViewToggle view={view} onViewChange={setView} />
           </div>
         </div>
-        <PropertyListings 
-          filterType="sale" 
+        <PropertyListings
+          filterType="sale"
           onPropertyClick={(id) => navigate(`/property/${id}`)}
-          filters={{ ...filters, q: searchQuery }}
+          filters={combinedFilters}
           sort={sort}
           view={view}
         />

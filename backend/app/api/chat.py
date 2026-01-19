@@ -18,6 +18,7 @@ class ChatIn(BaseModel):
     question: str
     mode: Optional[str] = None
     jurisdiction: Optional[str] = None
+    property_id: Optional[int] = None
 
 class ChatOut(BaseModel):
     answer: str
@@ -79,7 +80,7 @@ def search_properties_context(db: Session, query: str, limit: int = 3) -> str:
             price_str = f"{p.rent_price:,.0f} JOD/mo"
         
         context_parts.append(
-            f"- ID {p.id}: {p.title} in {p.city}, {p.neighborhood}. "
+            f"- Link: /property/{p.id} | ID: {p.id} | Title: {p.title} | Location: {p.city}, {p.neighborhood}. "
             f"Price: {price_str}. "
             f"{p.bedrooms} beds, {p.bathrooms} baths, {p.area_sqm} sqm. "
             f"Type: {p.property_type}."
@@ -95,15 +96,44 @@ def chat(payload: ChatIn, db: Session = Depends(get_db), _=Depends(get_current_u
     try:
         docs_ctx = top_k_context(db, payload.question, k=3)
         
-        props_ctx = search_properties_context(db, payload.question, limit=3)
+        props_ctx = ""
+        if payload.property_id:
+            p = db.query(Property).filter(Property.id == payload.property_id).first()
+            if p:
+                price_str = f"{p.price:,.0f} JOD" if p.price else "N/A"
+                if p.is_for_rent:
+                    price_str = f"{p.rent_price:,.0f} JOD/mo"
+                
+                props_ctx = (
+                    f"=== Selected Property Details ===\n"
+                    f"- ID: {p.id}\n"
+                    f"- Title: {p.title}\n"
+                    f"- Location: {p.city}, {p.neighborhood}\n"
+                    f"- Price: {price_str}\n"
+                    f"- Bedrooms: {p.bedrooms}\n"
+                    f"- Bathrooms: {p.bathrooms}\n"
+                    f"- Area: {p.area_sqm} sqm\n"
+                    f"- Type: {p.property_type}\n"
+                    f"- Furnished: {'Yes' if p.furnished else 'No'}\n"
+                    f"- Floor: {p.floor if p.floor is not None else 'N/A'}\n"
+                    f"- Age: {p.building_age if p.building_age else 'New'}\n"
+                    f"- Lister: {p.owner.name if p.owner.name else 'Verified Agent'}\n"
+                    f"- Contact: {p.owner.phone if p.owner.phone else 'Available on platform'}\n"
+                    f"- Description: {p.description or 'No description available.'}\n"
+                )
+        
+        if not props_ctx:
+            props_ctx = search_properties_context(db, payload.question, limit=3)
         
         system = (
             "You are Aqarak AI, a premium real estate concierge for Jordan. "
             "Your tone is professional, sophisticated, yet warm and helpful. "
             "Format your responses beautifully using bullet points for lists and bold headers for sections. "
-            "Be concise but thorough. When answering about laws, use clear numbered steps. "
-            "Use the provided context to offer expert advice. "
-            "If referring to specific properties, highlight their key selling points. "
+            "Be concise but thorough. Use the provided context to offer expert advice. "
+            "When answering about laws, use clear numbered steps. "
+            "If a specific property is provided in the 'Selected Property Details' context, use those EXACT details to answer. "
+            "Do not provide generic placeholders or ask the user for basic details that are already in the context. "
+            "If referring to specific properties, YOU MUST format them as clickable links like this: `[Property Title](/property/ID)`. "
             "Always reply in the same language as the user (English or Arabic)."
         )
         
