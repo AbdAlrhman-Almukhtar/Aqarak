@@ -20,18 +20,14 @@ The platform provides advanced tools for everyone. Buyers can get fair price est
 - **Aqarak AI Concierge**
   - A sophisticated AI assistant integrated directly into the platform.
   - Context-aware: It knows about the properties you are viewing and can answer questions like *"Is this price fair for this neighborhood?"* or *"What are the legal steps to buy this home?"*.
-  - RAG (Retrieval-Augmented Generation) pipeline fetches real-time legal data and property details to give accurate, hallucination-free answers.
-
-- **Advanced Property Management**
-  - Comprehensive dashboard for sellers and agents to manage listings.
-  - High-performance image uploads and gallery management.
-  - Real-time market statistics and insights.
+  - RAG (Retrieval-Augmented Generation) pipeline fetches real-time legal data and property details to give accurate answers.
 
 ## Tech Stack
 
-- **Frontend:** React, TypeScript, Tailwind CSS, Vite
+- **Frontend:** React, TypeScript, Tailwind CSS, GSAP, Vite
 - **Backend:** Python, FastAPI, SQLAlchemy
 - **Database:** PostgreSQL (with pgvector extension)
+- **Storage:** AWS S3 (for image storage)
 - **AI/ML:** XGBoost, OpenAI API
 
 ## Prerequisites
