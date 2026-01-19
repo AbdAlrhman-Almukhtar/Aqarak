@@ -4,13 +4,13 @@ Aqarak is a real estate platform for the Jordanian market. It uses Artificial In
 
 The platform provides advanced tools for everyone. Buyers can get fair price estimates, sellers can value their homes accurately, and renters can find exactly what they are looking for using smart search filters. Aqarak aims to make the real estate process easier and more transparent.
 
-**Live Demo:** [Click here to view the deployed application](aqarak-bzu1.onrender.com)
+**Live Demo:** [Click here to view the deployed application](https://aqarak-bzu1.onrender.com)
 
 ## Key Features
 
 - **AI Price Predictor**
   - Powered by a custom-trained **XGBoost** model.
-  - Accurately estimates property values based on deep analysis of local market data (location, area, finishing, age, etc.).
+  - Accurately estimates property values based on deep analysis of local market data: property type, location, area, finishing, age, bedrooms, bathrooms, and floor details (number of floors for villas or floor level for apartments).
   - Helps users make informed financial decisions with confidence.
 
 - **Smart Semantic Search**
